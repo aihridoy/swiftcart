@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import Navbar from "@/components/Navbar";
 import NewArrival from "@/components/NewArrival";
+import ProductDetails from "@/components/ProductDetails";
 import ShopByCategory from "@/components/ShopByCategory";
 import Trending from "@/components/Trending";
 
@@ -22,6 +23,7 @@ export default function Home() {
       <Trending />
       <Footer />
       <CopyRight />
+      <ProductDetails />
     </>
   );
 }
