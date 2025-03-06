@@ -1,3 +1,4 @@
+import Account from "@/components/Account";
 import Ads from "@/components/Ads";
 import Banner from "@/components/Banner";
 import CopyRight from "@/components/CopyRight";
@@ -23,7 +24,8 @@ export default function Home() {
       <Trending />
       <Footer />
       <CopyRight />
-      <ProductDetails />
+      {/* <ProductDetails /> */}
+      <Account />
     </>
   );
 }
