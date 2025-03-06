@@ -9,6 +9,7 @@ import Header from "@/components/Header";
 import Navbar from "@/components/Navbar";
 import NewArrival from "@/components/NewArrival";
 import ProductDetails from "@/components/ProductDetails";
+import Shop from "@/components/Shop";
 import ShopByCategory from "@/components/ShopByCategory";
 import Trending from "@/components/Trending";
 
@@ -27,7 +28,8 @@ export default function Home() {
       <CopyRight />
       {/* <ProductDetails /> */}
       {/* <Account /> */}
-      <Checkout />
+      {/* <Checkout /> */}
+      <Shop />
     </>
   );
 }
