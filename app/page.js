@@ -1,6 +1,7 @@
 import Account from "@/components/Account";
 import Ads from "@/components/Ads";
 import Banner from "@/components/Banner";
+import Checkout from "@/components/Checkout";
 import CopyRight from "@/components/CopyRight";
 import Features from "@/components/Features";
 import Footer from "@/components/Footer";
@@ -25,7 +26,8 @@ export default function Home() {
       <Footer />
       <CopyRight />
       {/* <ProductDetails /> */}
-      <Account />
+      {/* <Account /> */}
+      <Checkout />
     </>
   );
 }
