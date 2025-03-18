@@ -1,12 +1,11 @@
-// app/add-product/page.js
-
 "use client";
 
 import { useState } from "react";
-import Head from "next/head";
+import { useMutation } from "@tanstack/react-query";
 import Header from "@/components/Header";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { addProduct } from "@/actions/products";
 
 export default function AddProduct() {
   const [formData, setFormData] = useState({
@@ -22,6 +21,8 @@ export default function AddProduct() {
     mainImage: "",
     thumbnails: ["", "", "", "", ""],
   });
+
+  const [message, setMessage] = useState(""); 
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -44,10 +45,33 @@ export default function AddProduct() {
     }
   };
 
+  const mutation = useMutation({
+    mutationFn: addProduct,
+    onSuccess: (data) => {
+      setMessage("Product added successfully!");
+      setFormData({
+        title: "",
+        availability: "In Stock",
+        brand: "",
+        category: "",
+        sku: "",
+        price: "",
+        originalPrice: "",
+        description: "",
+        quantity: 4,
+        mainImage: "",
+        thumbnails: ["", "", "", "", ""],
+      }); // Reset form
+    },
+    onError: (error) => {
+      setMessage(`Error: ${error.message}`);
+    },
+  });
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
-    // Add your API call or logic here
+    setMessage(""); 
+    mutation.mutate(formData); // Trigger the mutation
   };
 
   return (
@@ -59,6 +83,15 @@ export default function AddProduct() {
           <h1 className="text-3xl font-semibold text-gray-800 mb-8 text-center">
             Add New Product
           </h1>
+          {message && (
+            <div
+              className={`p-3 mb-4 text-center ${
+                message.includes("success") ? "text-green-700 bg-green-100" : "text-red-700 bg-red-100"
+              } rounded-lg`}
+            >
+              {message}
+            </div>
+          )}
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Product Title */}
             <div>
@@ -306,8 +339,9 @@ export default function AddProduct() {
                 type="submit"
                 className="bg-teal-400 font-semibold px-8 py-3 rounded-lg transition-colors duration-300 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-teal-400"
                 onClick={() => console.log("Button clicked")}
+                disabled={mutation.isLoading} // Disable button while loading
               >
-                Add Product
+                {mutation.isLoading ? "Adding..." : "Add Product"}
               </button>
             </div>
           </form>
