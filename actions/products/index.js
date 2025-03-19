@@ -1,17 +1,7 @@
 //add new product
+import api from "@/lib/axios";
+
 export const addProduct = async (productData) => {
-  const response = await fetch("/api/products", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(productData),
-  });
-
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.error || "Failed to add product");
-  }
-
-  return response.json();
+  const response = await api.post("/products", productData);
+  return response.data;
 };

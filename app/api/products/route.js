@@ -1,4 +1,3 @@
-// app/api/products/route.js
 import { NextResponse } from "next/server";
 import { dbConnect } from "@/service/mongo";
 import { Product } from "@/models/product-model";

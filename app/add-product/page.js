@@ -6,6 +6,7 @@ import Header from "@/components/Header";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { addProduct } from "@/actions/products";
+import { toast } from "react-toastify";
 
 export default function AddProduct() {
   const [formData, setFormData] = useState({
@@ -17,7 +18,7 @@ export default function AddProduct() {
     price: "",
     originalPrice: "",
     description: "",
-    quantity: 4,
+    quantity: 0,
     mainImage: "",
     thumbnails: ["", "", "", "", ""],
   });
@@ -49,6 +50,15 @@ export default function AddProduct() {
     mutationFn: addProduct,
     onSuccess: (data) => {
       setMessage("Product added successfully!");
+      toast.success("Product added successfully!", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
       setFormData({
         title: "",
         availability: "In Stock",
@@ -58,13 +68,22 @@ export default function AddProduct() {
         price: "",
         originalPrice: "",
         description: "",
-        quantity: 4,
+        quantity: 0,
         mainImage: "",
         thumbnails: ["", "", "", "", ""],
       }); // Reset form
     },
     onError: (error) => {
       setMessage(`Error: ${error.message}`);
+      toast.error(`Error: ${error.message}`, {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     },
   });
 
@@ -337,11 +356,11 @@ export default function AddProduct() {
             <div className="text-center">
               <button
                 type="submit"
-                className="bg-teal-400 font-semibold px-8 py-3 rounded-lg transition-colors duration-300 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-teal-400"
+                className="bg-teal-500 text-white font-semibold px-8 py-3 rounded-lg transition-colors duration-300 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 hover:bg-teal-600"
                 onClick={() => console.log("Button clicked")}
                 disabled={mutation.isLoading} // Disable button while loading
               >
-                {mutation.isLoading ? "Adding..." : "Add Product"}
+                {mutation.isPending ? "Adding..." : "Add Product"}
               </button>
             </div>
           </form>
