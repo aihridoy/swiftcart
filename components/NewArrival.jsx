@@ -10,7 +10,7 @@ import { getProducts } from "@/actions/products";
 const NewArrival = () => {
   const { data, error, isLoading } = useQuery({
     queryKey: ["products"],
-    queryFn: () => getProducts({ limit: 4, sort: "-createdAt" }),
+    queryFn: () => getProducts({ limit: 8, sort: "-createdAt" }),
     onError: (error) => {
       toast.error(`Error fetching new arrivals: ${error.message}`, {
         position: "top-right",
