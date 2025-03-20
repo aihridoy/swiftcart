@@ -2,13 +2,26 @@ import { Product } from "@/models/product-model";
 import { dbConnect } from "@/service/mongo";
 import { NextResponse } from "next/server";
 
-export async function GET() {
+export async function GET(req) {
     await dbConnect();
 
     try {
-        const products = await Product.find().lean(); // find all products and converts to plain object
-        return NextResponse.json({ products }, { status: 200 });
-    } catch (error) {
-        return NextResponse.json({ error: error.message }, { status: 500 });
-    }   
+        const { searchParams } = new URL(req.url);
+        const limit = parseInt(searchParams.get("limit")) || 0;
+        const sort = searchParams.get("sort") || "-createdAt";
+    
+        let query = Product.find();
+        query = query.sort(sort);
+        if (limit > 0) {
+          query = query.limit(limit);
+        }
+    
+        const products = await query.lean();
+        return NextResponse.json({ products }, {
+          status: 200,
+        });
+      } catch (error) {
+        console.error("Error fetching products:", error);
+        return NextResponse.json({ error: "Failed to fetch products" }, { status: 500 });
+      } 
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Header from "@/components/Header";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -9,6 +9,8 @@ import { addProduct } from "@/actions/products";
 import { toast } from "react-toastify";
 
 export default function AddProduct() {
+  const queryClient = useQueryClient();
+
   const [formData, setFormData] = useState({
     title: "",
     availability: "In Stock",
@@ -72,6 +74,8 @@ export default function AddProduct() {
         mainImage: "",
         thumbnails: ["", "", "", "", ""],
       }); // Reset form
+
+      queryClient.invalidateQueries({ queryKey: ["products"] });
     },
     onError: (error) => {
       setMessage(`Error: ${error.message}`);
