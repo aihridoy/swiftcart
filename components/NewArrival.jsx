@@ -3,7 +3,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import Image from "next/image";
-import Link from "next/link"; 
+import Link from "next/link";
+import { FaEye, FaHeart } from "react-icons/fa";
 import { getProducts } from "@/actions/products";
 
 const NewArrival = () => {
@@ -26,7 +27,9 @@ const NewArrival = () => {
   if (isLoading) {
     return (
       <div className="container pb-16">
-        <h2 className="text-2xl font-medium text-gray-800 uppercase mb-6">Top New Arrival</h2>
+        <h2 className="text-2xl font-medium text-gray-800 uppercase mb-6">
+          Top New Arrival
+        </h2>
         <p>Loading new arrivals...</p>
       </div>
     );
@@ -35,7 +38,9 @@ const NewArrival = () => {
   if (error) {
     return (
       <div className="container pb-16">
-        <h2 className="text-2xl font-medium text-gray-800 uppercase mb-6">Top New Arrival</h2>
+        <h2 className="text-2xl font-medium text-gray-800 uppercase mb-6">
+          Top New Arrival
+        </h2>
         <p>Failed to load new arrivals. Please try again later.</p>
       </div>
     );
@@ -46,7 +51,9 @@ const NewArrival = () => {
   return (
     <div className="container pb-16">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-medium text-gray-800 uppercase">Top New Arrival</h2>
+        <h2 className="text-2xl font-medium text-gray-800 uppercase">
+          Top New Arrival
+        </h2>
         <Link href="/products">
           <button className="bg-primary text-white px-4 py-2 rounded hover:bg-gray-800 transition">
             See All Products
@@ -71,28 +78,29 @@ const NewArrival = () => {
                   className="object-fill absolute inset-0"
                 />
                 <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition">
+                  <Link
+                    href={`/products/${product._id}`}
+                    className="text-white text-lg w-9 h-8 rounded-full bg-primary flex items-center justify-center hover:bg-gray-800 transition"
+                    title="View Product"
+                  >
+                    <FaEye />
+                  </Link>
+
                   <a
                     href="#"
                     className="text-white text-lg w-9 h-8 rounded-full bg-primary flex items-center justify-center hover:bg-gray-800 transition"
-                    title="view product"
+                    title="Add to Wishlist"
                   >
-                    <i className="fa-solid fa-magnifying-glass"></i>
-                  </a>
-                  <a
-                    href="#"
-                    className="text-white text-lg w-9 h-8 rounded-full bg-primary flex items-center justify-center hover:bg-gray-800 transition"
-                    title="add to wishlist"
-                  >
-                    <i className="fa-solid fa-heart"></i>
+                    <FaHeart />
                   </a>
                 </div>
               </div>
               <div className="pt-4 pb-3 px-4">
-                <a href="#">
+                <Link href={`/products/${product._id}`}>
                   <h4 className="uppercase font-medium text-xl mb-2 text-gray-800 hover:text-primary transition">
                     {product.title}
                   </h4>
-                </a>
+                </Link>
                 <div className="flex items-baseline mb-1 space-x-2">
                   <p className="text-xl text-primary font-semibold">
                     ${product.price.toFixed(2)}
@@ -105,11 +113,21 @@ const NewArrival = () => {
                 </div>
                 <div className="flex items-center">
                   <div className="flex gap-1 text-sm text-yellow-400">
-                    <span><i className="fa-solid fa-star"></i></span>
-                    <span><i className="fa-solid fa-star"></i></span>
-                    <span><i className="fa-solid fa-star"></i></span>
-                    <span><i className="fa-solid fa-star"></i></span>
-                    <span><i className="fa-solid fa-star"></i></span>
+                    <span>
+                      <i className="fa-solid fa-star"></i>
+                    </span>
+                    <span>
+                      <i className="fa-solid fa-star"></i>
+                    </span>
+                    <span>
+                      <i className="fa-solid fa-star"></i>
+                    </span>
+                    <span>
+                      <i className="fa-solid fa-star"></i>
+                    </span>
+                    <span>
+                      <i className="fa-solid fa-star"></i>
+                    </span>
                   </div>
                   <div className="text-xs text-gray-500 ml-3">(150)</div>
                 </div>

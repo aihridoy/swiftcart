@@ -18,3 +18,9 @@ export const getProducts = async ({ limit, sort } = {}) => {
     });
     return response.data;
   };
+
+  //get product by id
+  export const getProductById = async (id) => {
+    const response = await api.get(`/products/${id}`);
+    return response.data;
+  };
