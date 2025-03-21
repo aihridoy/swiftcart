@@ -48,6 +48,10 @@ const ProductSchema = new mongoose.Schema({
     type: [String],
     default: [],
   },
+  popularityScore: {
+    type: Number,
+    default: 0,
+  },
   createdAt: {
     type: Date,
     default: Date.now,

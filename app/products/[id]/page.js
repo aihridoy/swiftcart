@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { toast } from 'react-toastify';
 import { useQuery } from '@tanstack/react-query';
@@ -8,7 +8,7 @@ import Header from '@/components/Header';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import RelatedProducts from '@/components/RelatedProducts';
-import { getProductById } from '@/actions/products';
+import { getProductById, incrementPopularity } from '@/actions/products';
 
 const ProductDetails = ({ params }) => {
   const { id } = params;
@@ -29,6 +29,18 @@ const ProductDetails = ({ params }) => {
       });
     },
   });
+
+  useEffect(() => {
+    const increment = async () => {
+      try {
+        await incrementPopularity(id, 1);
+      } catch (error) {
+        console.error('Failed to increment popularity:', error);
+      }
+    };
+
+    increment();
+  }, [id]);
 
   if (isLoading) {
     return (
