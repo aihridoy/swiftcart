@@ -1,4 +1,3 @@
-// app/products/page.js
 'use client';
 
 import React, { useState } from 'react';
@@ -14,7 +13,6 @@ import { getProducts } from '@/actions/products';
 const Products = () => {
   const [displayCount, setDisplayCount] = useState(20);
 
-  // Fetch all products using React Query
   const { data, error, isLoading } = useQuery({
     queryKey: ["products"],
     queryFn: () => getProducts(),
@@ -31,7 +29,6 @@ const Products = () => {
     },
   });
 
-  // Handle loading state
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -40,7 +37,6 @@ const Products = () => {
     );
   }
 
-  // Handle error state
   if (error) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -51,7 +47,6 @@ const Products = () => {
 
   const products = data?.products || [];
 
-  // Handle case where no products are found
   if (products.length === 0) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -60,12 +55,10 @@ const Products = () => {
     );
   }
 
-  // Function to handle "Show More" button click
   const handleShowMore = () => {
     setDisplayCount((prev) => prev + 20);
   };
 
-  // Slice the products array to display only up to displayCount
   const displayedProducts = products.slice(0, displayCount);
 
   return (

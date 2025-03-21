@@ -49,100 +49,96 @@ const NewArrival = () => {
   const products = data?.products || [];
 
   return (
-    <div className="container pb-16">
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-medium text-gray-800 uppercase">
-          Top New Arrival
-        </h2>
-        <Link href="/products">
-          <button className="bg-primary text-white px-4 py-2 rounded hover:bg-gray-800 transition">
-            See All Products
-          </button>
-        </Link>
-      </div>
-      {products.length === 0 ? (
-        <p className="text-center text-gray-600">No new arrivals found.</p>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          {products.map((product) => (
-            <div
-              key={product._id}
-              className="bg-white shadow rounded overflow-hidden group"
-            >
-              <div className="relative pt-[60%]">
-                <Image
-                  src={product.mainImage}
-                  alt={product.title}
-                  fill
-                  sizes="(max-width: 768px) 100vw, 25vw"
-                  className="object-fill absolute inset-0"
-                />
-                <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition">
-                  <Link
-                    href={`/products/${product._id}`}
-                    className="text-white text-lg w-9 h-8 rounded-full bg-primary flex items-center justify-center hover:bg-gray-800 transition"
-                    title="View Product"
-                  >
-                    <FaEye />
-                  </Link>
-
-                  <a
-                    href="#"
-                    className="text-white text-lg w-9 h-8 rounded-full bg-primary flex items-center justify-center hover:bg-gray-800 transition"
-                    title="Add to Wishlist"
-                  >
-                    <FaHeart />
-                  </a>
-                </div>
-              </div>
-              <div className="pt-4 pb-3 px-4">
-                <Link href={`/products/${product._id}`}>
-                  <h4 className="uppercase font-medium text-xl mb-2 text-gray-800 hover:text-primary transition">
-                    {product.title}
-                  </h4>
-                </Link>
-                <div className="flex items-baseline mb-1 space-x-2">
-                  <p className="text-xl text-primary font-semibold">
-                    ${product.price.toFixed(2)}
-                  </p>
-                  <p className="text-sm text-gray-400 line-through">
-                    {product.originalPrice
-                      ? `$${product.originalPrice.toFixed(2)}`
-                      : ""}
-                  </p>
-                </div>
-                <div className="flex items-center">
-                  <div className="flex gap-1 text-sm text-yellow-400">
-                    <span>
-                      <i className="fa-solid fa-star"></i>
-                    </span>
-                    <span>
-                      <i className="fa-solid fa-star"></i>
-                    </span>
-                    <span>
-                      <i className="fa-solid fa-star"></i>
-                    </span>
-                    <span>
-                      <i className="fa-solid fa-star"></i>
-                    </span>
-                    <span>
-                      <i className="fa-solid fa-star"></i>
-                    </span>
-                  </div>
-                  <div className="text-xs text-gray-500 ml-3">(150)</div>
-                </div>
-              </div>
+    <div className="container py-16 bg-white">
+  <div className="flex justify-between items-center mb-6">
+    <h2 className="text-2xl font-medium text-gray-800 uppercase">
+      Top New Arrival
+    </h2>
+    <Link href="/products">
+      <button className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition">
+        See All Products
+      </button>
+    </Link>
+  </div>
+  {products.length === 0 ? (
+    <p className="text-center text-gray-600">No new arrivals found.</p>
+  ) : (
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+      {products.map((product) => (
+        <div
+          key={product._id}
+          className="bg-white shadow-md rounded-lg overflow-hidden h-[400px] w-full flex flex-col group"
+        >
+          {/* Product Image with Hover Effect */}
+          <div className="relative w-full h-48">
+            <Link href={`/products/${product._id}`}>
+              <Image
+                src={product.mainImage}
+                alt={product.title}
+                width={500}
+                height={300}
+                className="w-full h-full object-cover"
+              />
+            </Link>
+            <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition">
+              <Link
+                href={`/products/${product._id}`}
+                className="text-white text-lg w-9 h-8 rounded-full bg-primary flex items-center justify-center hover:bg-gray-800 transition"
+                title="View Product"
+              >
+                <FaEye />
+              </Link>
               <a
                 href="#"
-                className="block w-full py-1 text-center text-white bg-primary border border-primary rounded-b hover:bg-transparent hover:text-primary transition"
+                className="text-white text-lg w-9 h-8 rounded-full bg-primary flex items-center justify-center hover:bg-gray-800 transition"
+                title="Add to Wishlist"
               >
-                Add to cart
+                <FaHeart />
               </a>
             </div>
-          ))}
+          </div>
+
+          {/* Product Info */}
+          <div className="p-4 flex flex-col flex-grow">
+            <Link href={`/products/${product._id}`}>
+              <h4 className="font-medium text-base text-gray-800 uppercase mb-2 hover:text-primary transition line-clamp-2">
+                {product.title}
+              </h4>
+            </Link>
+            <div className="flex items-center mb-2">
+              <p className="text-lg text-primary font-semibold">
+                ${product.price.toFixed(2)}
+              </p>
+              {product.originalPrice && (
+                <p className="text-sm text-gray-400 line-through ml-2">
+                  ${product.originalPrice.toFixed(2)}
+                </p>
+              )}
+            </div>
+            <div className="flex items-center mb-2">
+              <div className="flex gap-1 text-sm text-yellow-400">
+                {Array.from({ length: 5 }, (_, index) => (
+                  <span key={index}>
+                    <i className="fa-solid fa-star"></i>
+                  </span>
+                ))}
+              </div>
+              <div className="text-xs text-gray-500 ml-2">(150)</div>
+            </div>
+
+            {/* Add to Cart Button */}
+            <a
+              href="#"
+              className="mt-auto block w-full py-2 text-center text-white bg-red-500 rounded-lg font-medium uppercase hover:bg-red-600 transition"
+            >
+              Add to cart
+            </a>
+          </div>
         </div>
-      )}
+      ))}
     </div>
+  )}
+</div>
   );
 };
 
