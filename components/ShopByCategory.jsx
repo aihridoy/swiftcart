@@ -8,7 +8,7 @@ import CategoryItem from '@/components/CategoryItem';
 
 const ShopByCategory = () => {
   const { data, error, isLoading } = useQuery({
-    queryKey: ["products"],
+    queryKey: ["categoryProducts"],
     queryFn: () => getProducts(),
     onError: (error) => {
       toast.error(`Error fetching categories: ${error.message}`, {

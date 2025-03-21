@@ -8,7 +8,7 @@ export async function GET(req) {
     try {
         const { searchParams } = new URL(req.url);
         const limit = parseInt(searchParams.get("limit")) || 0;
-        const sort = searchParams.get("sort") || "-createdAt";
+        const sort = searchParams.get("sort");
         const category = searchParams.get("category") || null;
     
         let query = Product.find();

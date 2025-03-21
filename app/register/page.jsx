@@ -4,8 +4,8 @@ import React from "react";
 
 const RegisterPage = () => {
   return (
-    <div className="flex items-center justify-center min-h-screen py-16">
-      <div className="max-w-lg w-full mx-auto shadow px-6 py-7 rounded overflow-hidden">
+    <div className="flex items-center justify-center min-h-screen py-16 bg-gray-100">
+      <div className="max-w-lg w-full mx-auto shadow px-6 py-7 rounded overflow-hidden bg-white">
         <h2 className="text-2xl uppercase font-medium mb-1">Create an account</h2>
         <p className="text-gray-600 mb-6 text-sm">Register as a new customer</p>
         <form action="#" method="post" autoComplete="off">

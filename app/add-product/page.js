@@ -361,8 +361,7 @@ export default function AddProduct() {
               <button
                 type="submit"
                 className="bg-teal-500 text-white font-semibold px-8 py-3 rounded-lg transition-colors duration-300 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 hover:bg-teal-600"
-                onClick={() => console.log("Button clicked")}
-                disabled={mutation.isLoading} // Disable button while loading
+                disabled={mutation.isLoading}
               >
                 {mutation.isPending ? "Adding..." : "Add Product"}
               </button>

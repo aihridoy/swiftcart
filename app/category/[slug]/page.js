@@ -22,7 +22,7 @@ const CategoryPage = ({ params }) => {
     .join(' ');
 
   const { data, error, isLoading } = useQuery({
-    queryKey: ["products", slug],
+    queryKey: ["categoryProducts", slug],
     queryFn: () => getProducts({ category: decodedSlug }),
     onError: (error) => {
       toast.error(`Error fetching products: ${error.message}`, {
