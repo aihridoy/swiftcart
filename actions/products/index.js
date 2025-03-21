@@ -7,9 +7,9 @@ export const addProduct = async (productData) => {
 };
 
 //get all products
-export const getProducts = async ({ limit, sort } = {}) => {
+export const getProducts = async ({ limit, sort, category } = {}) => {
     const response = await api.get("/products", {
-      params: { limit, sort },
+      params: { limit, sort, category },
       headers: {
         'Cache-Control': 'no-cache, no-store, must-revalidate',
         'Pragma': 'no-cache',
