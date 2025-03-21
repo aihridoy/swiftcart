@@ -1,10 +1,11 @@
 import React from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 
 const Ads = () => {
     return (
         <div className="container pb-16">
-            <a href="#" className="relative block group">
+            <Link href="/products" className="relative block group">
                 <Image 
                     src="/images/offer.jpg" 
                     alt="ads" 
@@ -13,7 +14,7 @@ const Ads = () => {
                     height={500} 
                     className="transition-transform duration-300 group-hover:scale-105"
                 />
-            </a>
+            </Link>
         </div>
     );
 };
