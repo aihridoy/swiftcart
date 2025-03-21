@@ -24,3 +24,14 @@ export const getProducts = async ({ limit, sort, category } = {}) => {
     const response = await api.get(`/products/${id}`);
     return response.data;
   };
+
+  // Increment popularityScore for a product
+export const incrementPopularity = async (id, incrementBy = 1) => {
+  try {
+    const response = await api.post(`/products/${id}/increment-popularity`, { incrementBy });
+    return response.data;
+  } catch (error) {
+    console.error(`Error incrementing popularity for product ${id}:`, error);
+    throw error;
+  }
+};
