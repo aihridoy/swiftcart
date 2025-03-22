@@ -16,6 +16,29 @@
   }
 }
 
+/* styles/globals.css */
+@layer utilities {
+  .clip-path-wave {
+    clip-path: polygon(
+      0 0,
+      100% 0,
+      100% 100%,
+      0 100%,
+      0 85%,
+      10% 95%,
+      20% 85%,
+      30% 95%,
+      40% 85%,
+      50% 95%,
+      60% 85%,
+      70% 95%,
+      80% 85%,
+      90% 95%,
+      100% 85%
+    );
+  }
+}
+
 @layer components {
   .size-selector input:checked + label {
     @apply bg-primary text-white;
