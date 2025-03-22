@@ -65,7 +65,7 @@ const Navbar = () => {
               Shop
             </Link>
             <Link
-              href="/about"
+              href="/about-us"
               className="text-gray-200 hover:text-white transition"
             >
               About Us
