@@ -2,6 +2,7 @@
 "use client";
 
 import Link from "next/link";
+import { signIn } from 'next-auth/react';
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
@@ -115,6 +116,44 @@ const RegisterPage = () => {
       setSubmitStatus("error");
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    try {
+      const result = await signIn("google", { redirect: false, callbackUrl: "/" });
+      if (result?.error) {
+        toast.error(`Google sign-in failed: ${result.error}`, {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      } else {
+        toast.success("Google sign-in successful! Redirecting...", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      }
+    } catch (error) {
+      console.error("Error during Google sign-in:", error);
+      toast.error("Failed to sign in with Google. Please try again.", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     }
   };
 
@@ -242,12 +281,12 @@ const RegisterPage = () => {
           >
             Facebook
           </a>
-          <a
-            href="#"
+          <button
+            onClick={handleGoogleSignIn}
             className="w-1/2 py-2 text-center text-white bg-red-600 rounded uppercase font-medium text-sm hover:bg-red-500"
           >
             Google
-          </a>
+          </button>
         </div>
 
         <p className="mt-4 text-center text-gray-600">
