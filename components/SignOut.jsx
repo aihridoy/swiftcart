@@ -1,4 +1,4 @@
-import { doSignOut } from "@/actions/register";
+import { doSignOut } from "@/actions/signout";
 import React from "react";
 
 const SignOut = () => {

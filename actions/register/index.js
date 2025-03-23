@@ -1,7 +1,3 @@
-"use server";
-
-import { signOut } from "@/auth";
-
 export const registerUser = async (userData) => {
   try {
     const response = await fetch(`/api/register`, {
@@ -27,9 +23,3 @@ export const registerUser = async (userData) => {
     };
   }
 };
-
-//signout user
-export async function doSignOut() {
-  await signOut();
-  // window.location.reload();
-}
