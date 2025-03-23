@@ -237,9 +237,9 @@ const RegisterPage = () => {
               />
               <label htmlFor="agreement" className="text-gray-600 ml-3 cursor-pointer">
                 I have read and agree to the{" "}
-                <a href="#" className="text-primary">
+                <Link href="terms-conditions" className="text-primary">
                   terms & conditions
-                </a>
+                </Link>
               </label>
             </div>
           </div>
