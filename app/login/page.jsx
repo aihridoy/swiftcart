@@ -31,6 +31,7 @@ const LoginPage = () => {
         });
         setTimeout(() => {
           router.push("/");
+          router.refresh();
         }, 2000);
       } 
     } catch (error) {

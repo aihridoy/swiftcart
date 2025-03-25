@@ -4,9 +4,6 @@ import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { toast } from 'react-toastify';
 import { useQuery } from '@tanstack/react-query';
-import Header from '@/components/Header';
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
 import RelatedProducts from '@/components/RelatedProducts';
 import { getProductById, incrementPopularity } from '@/actions/products';
 
@@ -78,8 +75,8 @@ const ProductDetails = ({ params }) => {
 
   return (
     <>
-      <Header />
-      <Navbar />
+      {/* <Header />
+      <Navbar /> */}
 
       {/* Main Product Section */}
       <div className="container grid grid-cols-1 md:grid-cols-2 gap-6 py-5">
@@ -221,8 +218,6 @@ const ProductDetails = ({ params }) => {
 
       {/* Related Products */}
       <RelatedProducts />
-
-      <Footer />
     </>
   );
 };

@@ -1,6 +1,6 @@
 "use server";
 
-import { signIn, signOut } from "@/auth";
+import { auth, signIn, signOut } from "@/auth";
 
 export async function login(formData) {
   try {
@@ -13,6 +13,11 @@ export async function login(formData) {
   } catch (err) {
       throw err;
   }
+}
+
+export async function session() {
+    const authResult = await auth();
+    return authResult || null;
 }
 
 export async function doSignOut() {

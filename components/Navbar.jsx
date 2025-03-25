@@ -2,7 +2,7 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { FaBars } from "react-icons/fa";
-import { auth } from "@/auth";
+import { session } from "@/actions/auth-utils";
 import SignOut from "./SignOut";
 
 const categories = [
@@ -31,7 +31,7 @@ const DropdownItem = ({ name, icon }) => (
 );
 
 const Navbar = async () => {
-  const session = await auth();
+  const userSession = await session(); 
 
   return (
     <nav className="bg-gray-800">
@@ -76,24 +76,24 @@ const Navbar = async () => {
               Contact Us
             </Link>
           </div>
-          {session?.user ? (
+          {userSession?.user ? (
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-2">
-                {session.user.image ? (
+                {userSession.user.image ? (
                   <Image
-                    src={session.user.image}
-                    alt={session.user.name}
+                    src={userSession.user.image}
+                    alt={userSession.user.name}
                     width={32}
                     height={32}
                     className="rounded-full"
                   />
                 ) : (
                   <span className="text-gray-200">
-                    Welcome, {session.user.name}!
+                    Welcome, {userSession.user.name}!
                   </span>
                 )}
               </div>
-             <SignOut />
+              <SignOut />
             </div>
           ) : (
             <Link
