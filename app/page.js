@@ -12,14 +12,16 @@ import Trending from "@/components/Trending";
 export default function Home() {
   return (
     <>
-      {/* <Header />
-      <Navbar /> */}
+      <Header />
+      <Navbar />
       <Banner />
       <Features />
       <ShopByCategory />
       <NewArrival />
       <Ads />
       <Trending />
+      <Footer />
+      <CopyRight />
     </>
   );
 }

@@ -5,11 +5,6 @@ import "./globals.css";
 import ReactQueryProvider from "@/providers/ReactQueryProvider";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Navbar from "@/components/Navbar";
-import Header from "@/components/Header";
-import ClientLayout from "./ClientLayout";
-import Footer from "@/components/Footer";
-import CopyRight from "@/components/CopyRight";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -50,23 +45,18 @@ export default function RootLayout({ children }) {
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <ReactQueryProvider>
-          <Header />
-          <Navbar />
-          <ClientLayout>{children}</ClientLayout>
+          {children}
           <ToastContainer
             position="top-right"
             autoClose={3000}
-            hideProgressBar={false}
-            newestOnTop={false}
             closeOnClick
-            rtl={false}
-            pauseOnFocusLoss
+            pauseOnHover={false}
             draggable
-            pauseOnHover
             theme="light"
+            newestOnTop={false}
+            limit={3}
+            closeButton={false}
           />
-          <Footer />
-          <CopyRight />
         </ReactQueryProvider>
       </body>
     </html>

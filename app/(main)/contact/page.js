@@ -3,9 +3,6 @@
 import React, { useState } from "react";
 import { FaMapMarkerAlt, FaPhone, FaEnvelope } from "react-icons/fa";
 import { toast } from "react-toastify";
-import Header from "@/components/Header";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import { sendEmail } from "@/actions/contact";
 
 const ContactUs = () => {
@@ -83,8 +80,6 @@ const ContactUs = () => {
 
   return (
     <>
-      <Header />
-      <Navbar />
       <div className="min-h-screen bg-gray-50">
         {/* Hero Section */}
         <section className="relative bg-gradient-to-r from-gray-100 to-gray-200 py-20">
@@ -259,7 +254,6 @@ const ContactUs = () => {
           </div>
         </section>
       </div>
-      <Footer />
     </>
   );
 };
