@@ -88,6 +88,46 @@ const LoginPage = () => {
     }
   };
 
+  const handleFacebookSignIn = async () => {
+    try {
+      const result = await signIn("facebook", { redirect: false, callbackUrl: "/" });
+
+      if (result?.error) {
+        console.error("Facebook sign-in error:", result.error);
+        toast.error(`Facebook sign-in failed: ${result.error}`, {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      } else {
+        toast.success("Facebook sign-in successful! Redirecting...", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      }
+    } catch (error) {
+      console.error("Error during Facebook sign-in:", error);
+      toast.error("Failed to sign in with Facebook. Please try again.", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    }
+  };
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-lg mx-auto shadow px-6 py-7 rounded bg-white">
@@ -164,12 +204,12 @@ const LoginPage = () => {
         </div>
 
         <div className="mt-4 flex gap-4">
-          <a
-            href="#"
+          <button 
+            onClick={handleFacebookSignIn}
             className="w-1/2 py-2 text-center text-white bg-blue-800 rounded uppercase font-medium text-sm hover:bg-blue-700"
           >
             Facebook
-          </a>
+          </button>
           <button
             onClick={handleGoogleSignIn}
             className="w-1/2 py-2 text-center text-white bg-red-600 rounded uppercase font-medium text-sm hover:bg-red-500"
