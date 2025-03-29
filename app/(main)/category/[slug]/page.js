@@ -6,9 +6,6 @@ import { toast } from 'react-toastify';
 import Image from 'next/image';
 import Link from 'next/link';
 import { FaEye, FaHeart } from "react-icons/fa";
-import Header from '@/components/Header';
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
 import { getProducts } from '@/actions/products';
 
 const CategoryPage = ({ params }) => {
@@ -57,8 +54,8 @@ const CategoryPage = ({ params }) => {
 
   return (
     <>
-      <Header />
-      <Navbar />
+      
+      {/* <Navbar /> */}
       <div className="min-h-screen py-10 bg-white">
         <div className="mx-auto max-w-7xl px-4">
           <h1 className="text-2xl font-semibold text-gray-800 mb-8 text-center uppercase">
@@ -139,7 +136,6 @@ const CategoryPage = ({ params }) => {
           )}
         </div>
       </div>
-      <Footer />
     </>
   );
 };

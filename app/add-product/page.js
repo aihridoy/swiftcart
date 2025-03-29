@@ -2,9 +2,6 @@
 
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import Header from "@/components/Header";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import { addProduct } from "@/actions/products";
 import { toast } from "react-toastify";
 
@@ -99,8 +96,6 @@ export default function AddProduct() {
 
   return (
     <>
-      <Header />
-      <Navbar />
       <div className="min-h-screen flex items-center justify-center py-10 bg-gradient-to-br from-teal-50 via-blue-50 to-pink-50">
         <div className="bg-white/80 backdrop-blur-lg p-8 rounded-xl shadow-lg w-full max-w-4xl border border-gray-100">
           <h1 className="text-3xl font-semibold text-gray-800 mb-8 text-center">
@@ -369,7 +364,6 @@ export default function AddProduct() {
           </form>
         </div>
       </div>
-      <Footer />
     </>
   );
 }

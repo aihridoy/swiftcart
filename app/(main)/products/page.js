@@ -5,9 +5,6 @@ import { useQuery } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 import Image from 'next/image';
 import Link from 'next/link';
-import Header from '@/components/Header';
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
 import { getProducts } from '@/actions/products';
 
 const Products = () => {
@@ -63,8 +60,6 @@ const Products = () => {
 
   return (
     <>
-      <Header />
-      <Navbar />
       <div className="min-h-screen py-10 bg-white">
         <div className="mx-auto max-w-7xl px-4">
           {/* Page Title */}
@@ -145,7 +140,6 @@ const Products = () => {
           )}
         </div>
       </div>
-      <Footer />
     </>
   );
 };

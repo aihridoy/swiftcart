@@ -3,9 +3,6 @@
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import Header from '@/components/Header';
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
 
 const AboutUs = () => {
   // Team members data (you can replace with real data)
@@ -29,8 +26,6 @@ const AboutUs = () => {
 
   return (
     <>
-        <Header />
-        <Navbar />
         <div className="bg-gray-50">
       {/* Hero Section */}
       <section className="relative bg-white">
@@ -204,7 +199,6 @@ const AboutUs = () => {
         </div>
       </section>
     </div>
-    <Footer />
     </>
   );
 };

@@ -2,6 +2,8 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { FaBars } from "react-icons/fa";
+import { session } from "@/actions/auth-utils";
+import SignOut from "./SignOut";
 
 const categories = [
   { name: "Sofa", icon: "/images/icons/sofa.svg" },
@@ -28,11 +30,12 @@ const DropdownItem = ({ name, icon }) => (
   </Link>
 );
 
-const Navbar = () => {
+const Navbar = async () => {
+  const userSession = await session(); 
+
   return (
     <nav className="bg-gray-800">
       <div className="container flex">
-        {/* Categories Dropdown */}
         <div className="px-8 py-4 bg-primary md:flex items-center cursor-pointer relative group hidden">
           <span className="text-white">
             <FaBars size={20} />
@@ -40,16 +43,12 @@ const Navbar = () => {
           <span className="capitalize ml-2 text-white hidden">
             All Categories
           </span>
-
-          {/* Dropdown */}
           <div className="absolute w-64 left-0 top-full bg-white shadow-md py-3 divide-y divide-gray-300 divide-dashed hidden group-hover:block transition duration-300 z-10">
             {categories.map((item, index) => (
               <DropdownItem key={index} {...item} />
             ))}
           </div>
         </div>
-
-        {/* Navigation Links */}
         <div className="flex items-center justify-between flex-grow md:pl-12 py-5">
           <div className="flex items-center space-x-6 capitalize">
             <Link
@@ -77,13 +76,33 @@ const Navbar = () => {
               Contact Us
             </Link>
           </div>
-
-          <Link
-            href="/login"
-            className="text-gray-200 hover:text-white transition"
-          >
-            Login
-          </Link>
+          {userSession?.user ? (
+            <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-2">
+                {userSession.user.image ? (
+                  <Image
+                    src={userSession.user.image}
+                    alt={userSession.user.name}
+                    width={32}
+                    height={32}
+                    className="rounded-full"
+                  />
+                ) : (
+                  <span className="text-gray-200">
+                    Welcome, {userSession.user.name}!
+                  </span>
+                )}
+              </div>
+              <SignOut />
+            </div>
+          ) : (
+            <Link
+              href="/login"
+              className="text-gray-200 hover:text-white transition"
+            >
+              Login
+            </Link>
+          )}
         </div>
       </div>
     </nav>
