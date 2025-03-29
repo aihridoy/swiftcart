@@ -275,15 +275,15 @@ const RegisterPage = () => {
           <div className="absolute left-0 top-3 w-full border-b-2 border-gray-200"></div>
         </div>
         <div className="mt-4 flex gap-4">
-          <a
+          {/* <a
             href="#"
             className="w-1/2 py-2 text-center text-white bg-blue-800 rounded uppercase font-medium text-sm hover:bg-blue-700"
           >
             Facebook
-          </a>
+          </a> */}
           <button
             onClick={handleGoogleSignIn}
-            className="w-1/2 py-2 text-center text-white bg-red-600 rounded uppercase font-medium text-sm hover:bg-red-500"
+            className="w-full py-3 text-center text-white bg-red-600 rounded uppercase font-medium text-sm hover:bg-red-500"
           >
             Google
           </button>

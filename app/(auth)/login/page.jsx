@@ -204,15 +204,15 @@ const LoginPage = () => {
         </div>
 
         <div className="mt-4 flex gap-4">
-          <button 
+          {/* <button 
             onClick={handleFacebookSignIn}
             className="w-1/2 py-2 text-center text-white bg-blue-800 rounded uppercase font-medium text-sm hover:bg-blue-700"
           >
             Facebook
-          </button>
+          </button> */}
           <button
             onClick={handleGoogleSignIn}
-            className="w-1/2 py-2 text-center text-white bg-red-600 rounded uppercase font-medium text-sm hover:bg-red-500"
+            className="w-full py-3 text-center text-white bg-red-600 rounded uppercase font-medium text-sm hover:bg-red-500"
           >
             Google
           </button>
