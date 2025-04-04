@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { toast } from "react-toastify";
+import { forgetPassword } from "@/actions/password-utils";
 
 const ForgotPasswordPage = () => {
   const [email, setEmail] = useState("");
@@ -14,17 +15,9 @@ const ForgotPasswordPage = () => {
     setSubmitStatus(null);
 
     try {
-      const response = await fetch("/api/forgot-password", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email }),
-      });
+      const result = await forgetPassword(email);
 
-      const result = await response.json();
-
-      if (response.ok) {
+      if (result.success) {
         toast.success("Password reset email sent! Please check your inbox.", {
           position: "top-right",
           autoClose: 3000,
@@ -36,20 +29,23 @@ const ForgotPasswordPage = () => {
         });
         setSubmitStatus("success");
         setEmail("");
-      } else {
-        throw new Error(result.error || "Failed to send password reset email");
       }
     } catch (error) {
       console.error("Error submitting forgot password request:", error);
-      toast.error(error.message === "Email not found" ? "Email not found. Please try again." : "Failed to send password reset email. Please try again.", {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
+      toast.error(
+        error.message === "Email not found"
+          ? "Email not found. Please try again."
+          : "Failed to send password reset email. Please try again.",
+        {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        }
+      );
       setSubmitStatus("error");
     } finally {
       setIsSubmitting(false);
@@ -59,7 +55,9 @@ const ForgotPasswordPage = () => {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-lg mx-auto shadow px-6 py-7 rounded bg-white">
-        <h2 className="text-2xl uppercase font-medium mb-1 text-center">Forgot Password</h2>
+        <h2 className="text-2xl uppercase font-medium mb-1 text-center">
+          Forgot Password
+        </h2>
         <p className="text-gray-600 mb-6 text-sm text-center">
           Enter your email address to receive a password reset link.
         </p>
