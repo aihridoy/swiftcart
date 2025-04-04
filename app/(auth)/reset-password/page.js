@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "react-toastify";
 import Link from "next/link";
+import { resetPassword } from "@/actions/password-utils";
 
 const ResetPasswordPage = () => {
   const router = useRouter();
@@ -49,17 +50,8 @@ const ResetPasswordPage = () => {
     }
 
     try {
-      const response = await fetch("/api/reset-password", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ token, newPassword }),
-      });
-
-      const result = await response.json();
-
-      if (response.ok) {
+      const result = await resetPassword(token, newPassword);
+      if (result.success) {
         toast.success("Password reset successful! Redirecting to login...", {
           position: "top-right",
           autoClose: 3000,
