@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { toast } from 'react-toastify';
 import { useQuery } from '@tanstack/react-query';
 import RelatedProducts from '@/components/RelatedProducts';
-import { getProductById, incrementPopularity } from '@/actions/products';
+import { getProductById, getProducts, incrementPopularity } from '@/actions/products';
 
 const ProductDetails = ({ params }) => {
   const { id } = params;
@@ -16,6 +16,23 @@ const ProductDetails = ({ params }) => {
     queryFn: () => getProductById(id),
     onError: (error) => {
       toast.error(`Error fetching product: ${error.message}`, {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    },
+  });
+
+  const { data: relatedProducts, error: relatedError, isLoading: relatedLoading } = useQuery({
+    queryKey: ["relatedProducts", id],
+    queryFn: () => getProducts({ limit: 4, sort: "popularity", category: data?.product.category }),
+    enabled: !!data?.product.category,
+    onError: (error) => {
+      toast.error(`Error fetching related products: ${error.message}`, {
         position: "top-right",
         autoClose: 3000,
         hideProgressBar: false,
@@ -75,9 +92,6 @@ const ProductDetails = ({ params }) => {
 
   return (
     <>
-      {/* <Header />
-      <Navbar /> */}
-
       {/* Main Product Section */}
       <div className="container grid grid-cols-1 md:grid-cols-2 gap-6 py-5">
         {/* Product Images Section */}
@@ -217,7 +231,7 @@ const ProductDetails = ({ params }) => {
       </div>
 
       {/* Related Products */}
-      <RelatedProducts />
+      <RelatedProducts relatedProducts={relatedProducts} relatedError={relatedError} relatedLoading={relatedLoading} />
     </>
   );
 };
