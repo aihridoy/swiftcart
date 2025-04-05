@@ -4,6 +4,7 @@ import Image from "next/image";
 import { FaBars } from "react-icons/fa";
 import { session } from "@/actions/auth-utils";
 import SignOut from "./SignOut";
+import ActiveLink from "./ActiveLink";
 
 const categories = [
   { name: "Sofa", icon: "/images/icons/sofa.svg" },
@@ -31,7 +32,14 @@ const DropdownItem = ({ name, icon }) => (
 );
 
 const Navbar = async () => {
-  const userSession = await session(); 
+  const userSession = await session();
+    
+  const navLinks = [
+    { name: "Home", path: "/" },
+    { name: "Shop", path: "/products" },
+    { name: "About Us", path: "/about-us" },
+    { name: "Contact Us", path: "/contact" }
+  ];
 
   return (
     <nav className="bg-gray-800">
@@ -51,30 +59,11 @@ const Navbar = async () => {
         </div>
         <div className="flex items-center justify-between flex-grow md:pl-12 py-5">
           <div className="flex items-center space-x-6 capitalize">
-            <Link
-              href="/"
-              className="text-gray-200 hover:text-white transition"
-            >
-              Home
-            </Link>
-            <Link
-              href="/products"
-              className="text-gray-200 hover:text-white transition"
-            >
-              Shop
-            </Link>
-            <Link
-              href="/about-us"
-              className="text-gray-200 hover:text-white transition"
-            >
-              About Us
-            </Link>
-            <Link
-              href="/contact"
-              className="text-gray-200 hover:text-white transition"
-            >
-              Contact Us
-            </Link>
+            {navLinks.map((link) => (
+              <ActiveLink key={link.path} href={link.path}>
+                {link.name}
+              </ActiveLink>
+            ))}
           </div>
           {userSession?.user ? (
             <div className="flex items-center space-x-4">
@@ -96,12 +85,9 @@ const Navbar = async () => {
               <SignOut />
             </div>
           ) : (
-            <Link
-              href="/login"
-              className="text-gray-200 hover:text-white transition"
-            >
+            <ActiveLink href="/login">
               Login
-            </Link>
+            </ActiveLink>
           )}
         </div>
       </div>
