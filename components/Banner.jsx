@@ -17,7 +17,7 @@ const Banner = () => {
         </p>
         <div className="mt-8">
           <Link
-            href="/shop"
+            href="/products"
             className="bg-primary border border-primary text-white px-6 py-3 font-medium rounded-md hover:bg-transparent hover:text-primary transition duration-300"
           >
             Shop Now
