@@ -4,7 +4,6 @@ import React from "react";
 import { FaEye, FaHeart } from "react-icons/fa";
 
 const RelatedProducts = ({relatedProducts, relatedError, relatedLoading}) => {
-  console.log(relatedProducts)
   return (
     <div className="container pb-16">
       <h2 className="text-2xl font-medium text-gray-800 uppercase mb-6">
