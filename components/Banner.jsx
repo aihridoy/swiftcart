@@ -12,8 +12,7 @@ const Banner = () => {
           Best collection for <br /> home decoration
         </h1>
         <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Aperiam <br />
-          accusantium perspiciatis, sapiente magni eos dolorum ex quos dolores odio.
+        Transform your living space with our curated collection of home decor essentials! From <br /> elegant furniture to stylish accents, our handpicked pieces blend functionality and aesthetics <br/> to elevate every corner of your home. Discover the perfect items to reflect your unique style and <br/> create a warm, inviting atmosphere today.
         </p>
         <div className="mt-8">
           <Link
