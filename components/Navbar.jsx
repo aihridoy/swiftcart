@@ -5,23 +5,15 @@ import { FaBars } from "react-icons/fa";
 import { session } from "@/actions/auth-utils";
 import SignOut from "./SignOut";
 import ActiveLink from "./ActiveLink";
+import api from "@/lib/axios";
 
-const categories = [
-  { name: "Sofa", icon: "/images/icons/sofa.svg" },
-  { name: "Terrace", icon: "/images/icons/terrace.svg" },
-  { name: "Bed", icon: "/images/icons/bed.svg" },
-  { name: "Office", icon: "/images/icons/office.svg" },
-  { name: "Outdoor", icon: "/images/icons/outdoor-cafe.svg" },
-  { name: "Mattress", icon: "/images/icons/bed-2.svg" },
-];
-
-const DropdownItem = ({ name, icon }) => (
+const DropdownItem = ({ name, slug, image }) => (
   <Link
-    href="#"
+    href={`/category/${slug}`}
     className="flex items-center px-6 py-3 hover:bg-gray-100 transition"
   >
     <Image
-      src={icon}
+      src={image}
       alt={name}
       width={20}
       height={20}
@@ -33,12 +25,44 @@ const DropdownItem = ({ name, icon }) => (
 
 const Navbar = async () => {
   const userSession = await session();
-    
+  const productsData = await api
+    .get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/products`, {
+      headers: {
+        "Cache-Control": "no-cache, no-store, must-revalidate",
+        Pragma: "no-cache",
+        Expires: "0",
+      },
+    })
+    .then((response) => response.data)
+    .catch((error) => {
+      console.error("Error fetching products:", error);
+      return null;
+    });
+
+  const categoryMap = productsData?.products?.reduce((acc, product) => {
+    const category = product.category;
+    if (!acc[category]) {
+      acc[category] = {
+        name: category
+          .split(" ")
+          .map(
+            (word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+          )
+          .join(" "),
+        slug: category.toLowerCase(),
+        image: product.mainImage,
+      };
+    }
+    return acc;
+  }, {});
+
+  const categories = Object.values(categoryMap);
+
   const navLinks = [
     { name: "Home", path: "/" },
     { name: "Shop", path: "/products" },
     { name: "About Us", path: "/about-us" },
-    { name: "Contact Us", path: "/contact" }
+    { name: "Contact Us", path: "/contact" },
   ];
 
   return (
@@ -85,9 +109,7 @@ const Navbar = async () => {
               <SignOut />
             </div>
           ) : (
-            <ActiveLink href="/login">
-              Login
-            </ActiveLink>
+            <ActiveLink href="/login">Login</ActiveLink>
           )}
         </div>
       </div>
