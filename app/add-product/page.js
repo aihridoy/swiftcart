@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { addProduct } from "@/actions/products";
 import { toast } from "react-toastify";
+import Image from "next/image";
 
 export default function AddProduct() {
   const queryClient = useQueryClient();
@@ -314,7 +315,9 @@ export default function AddProduct() {
               />
               {formData.mainImage && (
                 <div className="mt-3">
-                  <img
+                  <Image
+                    width={500}
+                    height={500}
                     src={formData.mainImage}
                     alt="Main Product Preview"
                     className="w-full h-64 object-cover rounded-lg shadow-md"
@@ -341,7 +344,9 @@ export default function AddProduct() {
                       placeholder={`Thumbnail ${index + 1} URL`}
                     />
                     {thumbnail && (
-                      <img
+                      <Image
+                        width={100}
+                        height={100}
                         src={thumbnail}
                         alt={`Thumbnail ${index + 1}`}
                         className="w-16 h-16 object-cover rounded-lg shadow-sm hover:shadow-md transition-all"

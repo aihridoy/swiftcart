@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import React from 'react';
 
 const Wishlist = () => {
@@ -8,7 +9,7 @@ const Wishlist = () => {
         <div class="mx-auto space-y-4 max-w-6xl">
             <div class="flex items-center justify-between border gap-6 p-4 border-gray-200 rounded">
                 <div class="w-28">
-                    <img src="/images/products/product6.jpg" alt="product 6" class="w-full" />
+                    <Image width={500} height={500} src="/images/products/product6.jpg" alt="product 6" class="w-full" />
                 </div>
                 <div class="w-1/3">
                     <h2 class="text-gray-800 text-xl font-medium uppercase">Italian L shape</h2>
@@ -26,7 +27,7 @@ const Wishlist = () => {
 
             <div class="flex items-center justify-between border gap-6 p-4 border-gray-200 rounded">
                 <div class="w-28">
-                    <img src="/images/products/product5.jpg" alt="product 6" class="w-full" />
+                    <Image width={500} height={500}  src="/images/products/product5.jpg" alt="product 6" class="w-full" />
                 </div>
                 <div class="w-1/3">
                     <h2 class="text-gray-800 text-xl font-medium uppercase">Dining Table</h2>
@@ -44,7 +45,7 @@ const Wishlist = () => {
 
             <div class="flex items-center justify-between border gap-6 p-4 border-gray-200 rounded">
                 <div class="w-28">
-                    <img src="/images/products/product10.jpg" alt="product 6" class="w-full" />
+                    <Image width={500} height={500}  src="/images/products/product10.jpg" alt="product 6" class="w-full" />
                 </div>
                 <div class="w-1/3">
                     <h2 class="text-gray-800 text-xl font-medium uppercase">Sofa</h2>

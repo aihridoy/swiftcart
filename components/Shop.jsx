@@ -1,3 +1,4 @@
+import Image from "next/image";
 import React from "react";
 
 const Shop = () => {
@@ -361,7 +362,9 @@ const Shop = () => {
         <div class="grid md:grid-cols-3 grid-cols-2 gap-6">
           <div class="bg-white shadow rounded overflow-hidden group">
             <div class="relative">
-              <img
+              <Image
+                width={500}
+                height={500}
                 src="/images/products/product1.jpg"
                 alt="product 1"
                 class="w-full"
@@ -427,7 +430,9 @@ const Shop = () => {
 
           <div class="bg-white shadow rounded overflow-hidden group">
             <div class="relative">
-              <img
+              <Image
+                width={500}
+                height={500}
                 src="/images/products/product2.jpg"
                 alt="product 1"
                 class="w-full"
@@ -493,7 +498,9 @@ const Shop = () => {
 
           <div class="bg-white shadow rounded overflow-hidden group">
             <div class="relative">
-              <img
+              <Image
+                width={500}
+                height={500}
                 src="/images/products/product3.jpg"
                 alt="product 1"
                 class="w-full"
@@ -559,7 +566,9 @@ const Shop = () => {
 
           <div class="bg-white shadow rounded overflow-hidden group">
             <div class="relative">
-              <img
+              <Image
+                width={500}
+                height={500}
                 src="/images/products/product4.jpg"
                 alt="product 1"
                 class="w-full"
@@ -625,7 +634,9 @@ const Shop = () => {
 
           <div class="bg-white shadow rounded overflow-hidden group">
             <div class="relative">
-              <img
+              <Image
+                width={500}
+                height={500}
                 src="/images/products/product5.jpg"
                 alt="product 1"
                 class="w-full"
@@ -691,7 +702,9 @@ const Shop = () => {
 
           <div class="bg-white shadow rounded overflow-hidden group">
             <div class="relative">
-              <img
+              <Image
+                width={500}
+                height={500}
                 src="/images/products/product6.jpg"
                 alt="product 1"
                 class="w-full"

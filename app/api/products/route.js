@@ -2,11 +2,13 @@ import { Product } from "@/models/product-model";
 import { dbConnect } from "@/service/mongo";
 import { NextResponse } from "next/server";
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(req) {
     await dbConnect();
 
     try {
-        const { searchParams } = new URL(req.url);
+        const searchParams = req.nextUrl.searchParams;
         const limit = parseInt(searchParams.get("limit")) || 0;
         const sort = searchParams.get("sort");
         const category = searchParams.get("category") || null;
