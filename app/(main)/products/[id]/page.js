@@ -1,16 +1,19 @@
-'use client';
+"use client";
 
-import React, { useEffect, useState } from 'react';
-import Image from 'next/image';
-import { toast } from 'react-toastify';
-import { useQuery } from '@tanstack/react-query';
-import RelatedProducts from '@/components/RelatedProducts';
-import { getProductById, getProducts, incrementPopularity } from '@/actions/products';
+import React, { useEffect, useState } from "react";
+import Image from "next/image";
+import { toast } from "react-toastify";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import RelatedProducts from "@/components/RelatedProducts";
+import { getProductById, getProducts, incrementPopularity } from "@/actions/products";
+import { getWishlist, updateWishlist } from "@/actions/wishlist";
 
 const ProductDetails = ({ params }) => {
   const { id } = params;
-  const [quantity, setQuantity] = useState(1); 
+  const [quantity, setQuantity] = useState(1);
+  const queryClient = useQueryClient();
 
+  // Fetch product details
   const { data, error, isLoading } = useQuery({
     queryKey: ["product", id],
     queryFn: () => getProductById(id),
@@ -27,6 +30,7 @@ const ProductDetails = ({ params }) => {
     },
   });
 
+  // Fetch related products
   const { data: relatedProducts, error: relatedError, isLoading: relatedLoading } = useQuery({
     queryKey: ["relatedProducts", id],
     queryFn: () => getProducts({ limit: 4, sort: "popularity", category: data?.product.category }),
@@ -44,17 +48,106 @@ const ProductDetails = ({ params }) => {
     },
   });
 
+ // For wishlist query
+const { data: wishlistData, error: wishlistError, isLoading: wishlistLoading } = useQuery({
+  queryKey: ["wishlist"],
+  queryFn: getWishlist,
+  onError: (error) => {
+    if (error.message.includes("Unauthorized")) {
+      toast.error("Please log in to view your wishlist.", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      // Redirect to login page
+      window.location.href = "/login";
+    } else {
+      toast.error(`Error fetching wishlist: ${error.message}`, {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    }
+  },
+});
+
+// For wishlist mutation
+const mutation = useMutation({
+  mutationFn: ({ productId, action }) => updateWishlist(productId, action),
+  onSuccess: (data) => {
+    queryClient.invalidateQueries(["wishlist"]);
+    toast.success(data.message, {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  },
+  onError: (error) => {
+    if (error.message.includes("Unauthorized")) {
+      toast.error("Please log in to manage your wishlist.", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      setTimeout(() => {
+        window.location.href = "/login";
+      }
+      , 3000);
+    } else {
+      toast.error(`Error: ${error.message}`, {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    }
+  },
+});
+
+  // Increment popularity on page load
   useEffect(() => {
     const increment = async () => {
       try {
         await incrementPopularity(id, 1);
       } catch (error) {
-        console.error('Failed to increment popularity:', error);
+        console.error("Failed to increment popularity:", error);
       }
     };
 
     increment();
   }, [id]);
+
+  // Check if the product is in the wishlist
+  const isInWishlist = wishlistData?.wishlist?.some(
+    (item) => item._id.toString() === id
+  );
+
+  // Handle wishlist toggle
+  const handleWishlistToggle = () => {
+    if (wishlistLoading || mutation.isLoading) return;
+
+    const action = isInWishlist ? "remove" : "add";
+    mutation.mutate({ productId: id, action });
+  };
 
   if (isLoading) {
     return (
@@ -197,12 +290,20 @@ const ProductDetails = ({ params }) => {
             >
               <i className="fa-solid fa-bag-shopping"></i> Add to cart
             </a>
-            <a
-              href="#"
-              className="border border-gray-300 text-gray-600 px-8 py-2 font-medium rounded uppercase flex items-center gap-2 hover:text-primary transition"
+            <button
+              onClick={handleWishlistToggle}
+              disabled={wishlistLoading || mutation.isLoading}
+              className={`border px-8 py-2 font-medium rounded uppercase flex items-center gap-2 transition ${
+                isInWishlist
+                  ? "border-red-500 text-red-500 hover:bg-red-50"
+                  : "border-gray-300 text-gray-600 hover:text-red-500 hover:border-red-500"
+              } ${wishlistLoading || mutation.isLoading ? "opacity-50 cursor-not-allowed" : ""}`}
             >
-              <i className="fa-solid fa-heart"></i> Wishlist
-            </a>
+              <i
+                className={`fa-heart ${isInWishlist ? "fa-solid text-red-500" : "fa-regular"}`}
+              ></i>
+              {isInWishlist ? "Remove from Wishlist" : "Add to Wishlist"}
+            </button>
           </div>
 
           {/* Social Sharing */}
