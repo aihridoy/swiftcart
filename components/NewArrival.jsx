@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import Image from "next/image";
@@ -7,12 +8,12 @@ import Link from "next/link";
 import { FaEye, FaHeart, FaRegHeart, FaStar } from "react-icons/fa";
 import { getProducts } from "@/actions/products";
 import { getWishlist, updateWishlist } from "@/actions/wishlist";
-import { addToCart } from "@/actions/cart-utils";
+import { addToCart, getCart } from "@/actions/cart-utils";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 const NewArrival = () => {
-  const queryClient = useQueryClient(); 
+  const queryClient = useQueryClient();
   const { data: session } = useSession();
   const router = useRouter();
 
@@ -37,6 +38,7 @@ const NewArrival = () => {
   const { data: wishlistData, error: wishlistError, isLoading: wishlistLoading } = useQuery({
     queryKey: ["wishlist"],
     queryFn: getWishlist,
+    enabled: !!session,
     onError: (error) => {
       if (error.message.includes("Unauthorized")) {
         toast.error("Please log in to view your wishlist.", {
@@ -48,10 +50,44 @@ const NewArrival = () => {
           draggable: true,
           progress: undefined,
         });
-        // Redirect to login page
-        window.location.href = "/login";
+        setTimeout(() => {
+          router.push("/login");
+        }, 3000);
       } else {
         toast.error(`Error fetching wishlist: ${error.message}`, {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      }
+    },
+  });
+
+  // Fetch cart
+  const { data: cartData, error: cartError, isLoading: cartLoading } = useQuery({
+    queryKey: ["cart"],
+    queryFn: getCart,
+    enabled: !!session,
+    onError: (error) => {
+      if (error.message.includes("Unauthorized")) {
+        toast.error("Please log in to view your cart.", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+        setTimeout(() => {
+          router.push("/login");
+        }, 3000);
+      } else {
+        toast.error(`Error fetching cart: ${error.message}`, {
           position: "top-right",
           autoClose: 3000,
           hideProgressBar: false,
@@ -91,7 +127,7 @@ const NewArrival = () => {
           progress: undefined,
         });
         setTimeout(() => {
-          window.location.href = "/login";
+          router.push("/login");
         }, 3000);
       } else {
         toast.error(`Error: ${error.message}`, {
@@ -151,7 +187,23 @@ const NewArrival = () => {
   });
 
   // Handle wishlist toggle
-  const handleWishlistToggle = (productId) => {
+  const handleWishlistToggle = (productId, e) => {
+    e.preventDefault();
+    if (!session) {
+      toast.error("Please log in to manage your wishlist.", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      setTimeout(() => {
+        router.push("/login");
+      }, 3000);
+      return;
+    }
     if (wishlistLoading || mutation.isLoading) return;
 
     const isInWishlist = wishlistData?.wishlist?.some(
@@ -161,8 +213,15 @@ const NewArrival = () => {
     mutation.mutate({ productId, action });
   };
 
-  // Handle add to cart
-  const handleAddToCart = (productId, e) => {
+  // Check if a product is in the cart
+  const isInCart = (productId) => {
+    return cartData?.cart?.items?.some(
+      (item) => item.product._id.toString() === productId
+    ) || false;
+  };
+
+  // Handle add to cart or view cart
+  const handleCartAction = (productId, e) => {
     e.preventDefault();
     if (!session) {
       toast.error("Please log in to add to cart.", {
@@ -179,8 +238,15 @@ const NewArrival = () => {
       }, 3000);
       return;
     }
-    if (cartMutation.isLoading) return;
-    cartMutation.mutate({ productId, quantity: 1 });
+
+    if (isInCart(productId)) {
+      // If product is already in cart, redirect to cart page
+      router.push("/cart");
+    } else {
+      // If product is not in cart, add it
+      if (cartMutation.isLoading) return;
+      cartMutation.mutate({ productId, quantity: 1 });
+    }
   };
 
   if (isLoading) {
@@ -220,7 +286,17 @@ const NewArrival = () => {
         </Link>
       </div>
       {products.length === 0 ? (
-        <p className="text-center text-gray-600">No new arrivals found.</p>
+        <div className="flex flex-col items-center justify-center h-full">
+          <p className="text-center text-gray-600 text-lg mb-4">
+            No new arrivals found.
+          </p>
+          <Link
+            href="/products"
+            className="px-6 py-2 text-center text-sm text-white bg-primary border border-primary rounded hover:bg-transparent hover:text-primary transition uppercase font-roboto font-medium"
+          >
+            Browse All Products
+          </Link>
+        </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
           {products.map((product) => {
@@ -228,6 +304,9 @@ const NewArrival = () => {
             const isInWishlist = wishlistData?.wishlist?.some(
               (item) => item._id.toString() === product._id
             );
+
+            // Check if the product is in the cart
+            const productInCart = isInCart(product._id);
 
             return (
               <div
@@ -254,13 +333,17 @@ const NewArrival = () => {
                       <FaEye />
                     </Link>
                     <button
-                      onClick={() => handleWishlistToggle(product._id)}
-                      disabled={wishlistLoading || mutation.isLoading}
+                      onClick={(e) => handleWishlistToggle(product._id, e)}
+                      disabled={wishlistLoading || (mutation.isLoading && mutation.variables?.productId === product._id)}
                       className={`text-white text-lg w-9 h-8 rounded-full flex items-center justify-center transition ${
                         isInWishlist
                           ? "bg-red-500 hover:bg-red-600"
                           : "bg-primary hover:bg-gray-800"
-                      } ${wishlistLoading || mutation.isLoading ? "opacity-50 cursor-not-allowed" : ""}`}
+                      } ${
+                        wishlistLoading || (mutation.isLoading && mutation.variables?.productId === product._id)
+                          ? "opacity-50 cursor-not-allowed"
+                          : ""
+                      }`}
                       title={isInWishlist ? "Remove from Wishlist" : "Add to Wishlist"}
                     >
                       {mutation.isLoading && mutation.variables?.productId === product._id ? (
@@ -321,13 +404,15 @@ const NewArrival = () => {
                     <div className="text-xs text-gray-500 ml-2">(150)</div>
                   </div>
 
-                  {/* Add to Cart Button */}
+                  {/* Add to Cart / View Cart Button */}
                   <button
-                    onClick={(e) => handleAddToCart(product._id, e)}
+                    onClick={(e) => handleCartAction(product._id, e)}
                     disabled={cartMutation.isLoading && cartMutation.variables?.productId === product._id}
                     className={`mt-auto block w-full py-2 text-center text-white rounded-lg font-medium uppercase transition ${
                       cartMutation.isLoading && cartMutation.variables?.productId === product._id
                         ? "bg-red-400 cursor-not-allowed"
+                        : productInCart
+                        ? "bg-blue-500 hover:bg-blue-600" // Different color for "View Cart"
                         : "bg-red-500 hover:bg-red-600"
                     }`}
                   >
@@ -352,6 +437,8 @@ const NewArrival = () => {
                           d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                         ></path>
                       </svg>
+                    ) : productInCart ? (
+                      "View In Cart"
                     ) : (
                       "Add to cart"
                     )}

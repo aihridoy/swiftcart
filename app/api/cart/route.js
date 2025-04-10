@@ -68,7 +68,7 @@ export async function GET() {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    await connectDB();
+    await dbConnect();
 
     const cart = await Cart.findOne({ user: userSession.user.id }).populate(
       "items.product"
@@ -93,7 +93,7 @@ export async function DELETE(request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    await connectDB();
+    await dbConnect();
 
     const { productId } = await request.json();
 
