@@ -5,9 +5,10 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import Image from "next/image";
 import Link from "next/link";
-import { FaEye, FaHeart, FaRegHeart, FaStar } from "react-icons/fa";
+import { FaEye, FaHeart, FaRegHeart, FaStar, FaRegStar } from "react-icons/fa";
 import { getProducts } from "@/actions/products";
 import { getWishlist, updateWishlist } from "@/actions/wishlist";
+import { addToCart, getCart } from "@/actions/cart-utils"; 
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
@@ -45,7 +46,7 @@ const CategoryPage = ({ params }) => {
   const { data: wishlistData, error: wishlistError, isLoading: wishlistLoading } = useQuery({
     queryKey: ["wishlist"],
     queryFn: getWishlist,
-    enabled: !!session, // Only fetch if user is authenticated
+    enabled: !!session,
     onError: (error) => {
       if (!error.message.includes("Unauthorized")) {
         toast.error(`Error fetching wishlist: ${error.message}`, {
@@ -61,11 +62,44 @@ const CategoryPage = ({ params }) => {
     },
   });
 
+  // Fetch cart
+  const { data: cartData, error: cartError, isLoading: cartLoading } = useQuery({
+    queryKey: ["cart"],
+    queryFn: getCart,
+    enabled: !!session,
+    onError: (error) => {
+      if (error.message.includes("Unauthorized")) {
+        toast.error("Please log in to view your cart.", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+        setTimeout(() => {
+          router.push("/login");
+        }, 3000);
+      } else {
+        toast.error(`Error fetching cart: ${error.message}`, {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      }
+    },
+  });
+
   // Mutation to add/remove product from wishlist
-  const mutation = useMutation({
+  const wishlistMutation = useMutation({
     mutationFn: ({ productId, action }) => updateWishlist(productId, action),
     onSuccess: (data) => {
-      queryClient.invalidateQueries(["wishlist"]); // Update wishlist count in Header
+      queryClient.invalidateQueries(["wishlist"]);
       toast.success(data.message, {
         position: "top-right",
         autoClose: 3000,
@@ -104,9 +138,59 @@ const CategoryPage = ({ params }) => {
     },
   });
 
+  // Cart mutation
+  const cartMutation = useMutation({
+    mutationFn: ({ productId, quantity }) => addToCart(productId, quantity),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries(["cart"]); // Update cart count in Header
+      toast.success("Product added to cart successfully!", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    },
+    onError: (error) => {
+      if (error.message.includes("Unauthorized")) {
+        toast.error("Please log in to add to cart.", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+        setTimeout(() => {
+          router.push("/login");
+        }, 3000);
+      } else {
+        toast.error(`Error: ${error.message}`, {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      }
+    },
+  });
+
   // Check if a product is in the wishlist
   const wishlist = wishlistData?.wishlist || [];
   const isInWishlist = (productId) => wishlist.some((item) => item._id === productId);
+
+  // Check if a product is in the cart
+  const isInCart = (productId) => {
+    return cartData?.cart?.items?.some(
+      (item) => item.product._id.toString() === productId
+    ) || false;
+  };
 
   // Handle adding/removing from wishlist
   const handleToggleWishlist = (productId, e) => {
@@ -126,9 +210,38 @@ const CategoryPage = ({ params }) => {
       }, 3000);
       return;
     }
-    if (wishlistLoading || mutation.isLoading) return;
+    if (wishlistLoading || wishlistMutation.isLoading) return;
     const action = isInWishlist(productId) ? "remove" : "add";
-    mutation.mutate({ productId, action });
+    wishlistMutation.mutate({ productId, action });
+  };
+
+  // Handle add to cart or view cart
+  const handleCartAction = (productId, e) => {
+    e.preventDefault();
+    if (!session) {
+      toast.error("Please log in to add to cart.", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      setTimeout(() => {
+        router.push("/login");
+      }, 3000);
+      return;
+    }
+
+    if (isInCart(productId)) {
+      // If product is already in cart, redirect to cart page
+      router.push("/cart");
+    } else {
+      // If product is not in cart, add it
+      if (cartMutation.isLoading) return;
+      cartMutation.mutate({ productId, quantity: 1 });
+    }
   };
 
   if (isLoading) {
@@ -171,46 +284,120 @@ const CategoryPage = ({ params }) => {
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-              {products.map((product) => (
-                <div
-                  key={product._id}
-                  className="bg-white shadow-md rounded-lg overflow-hidden h-[400px] w-full flex flex-col group"
-                >
-                  <div className="relative w-full h-48">
-                    <Link href={`/products/${product._id}`}>
-                      <Image
-                        src={product.mainImage}
-                        alt={product.title}
-                        width={500}
-                        height={300}
-                        className="w-full h-full object-cover"
-                      />
-                    </Link>
-                    <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition">
-                      <Link
-                        href={`/products/${product._id}`}
-                        className="text-white text-lg w-9 h-8 rounded-full bg-primary flex items-center justify-center hover:bg-gray-800 transition"
-                        title="View Product"
-                      >
-                        <FaEye />
+              {products.map((product) => {
+                const productInCart = isInCart(product._id);
+                return (
+                  <div
+                    key={product._id}
+                    className="bg-white shadow-md rounded-lg overflow-hidden h-[400px] w-full flex flex-col group"
+                  >
+                    <div className="relative w-full h-48">
+                      <Link href={`/products/${product._id}`}>
+                        <Image
+                          src={product.mainImage}
+                          alt={product.title}
+                          width={500}
+                          height={300}
+                          className="w-full h-full object-cover"
+                        />
                       </Link>
+                      <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition">
+                        <Link
+                          href={`/products/${product._id}`}
+                          className="text-white text-lg w-9 h-8 rounded-full bg-primary flex items-center justify-center hover:bg-gray-800 transition"
+                          title="View Product"
+                        >
+                          <FaEye />
+                        </Link>
+                        <button
+                          onClick={(e) => handleToggleWishlist(product._id, e)}
+                          disabled={wishlistLoading || (wishlistMutation.isLoading && wishlistMutation.variables?.productId === product._id)}
+                          className={`text-white text-lg w-9 h-8 rounded-full flex items-center justify-center transition ${
+                            isInWishlist(product._id)
+                              ? "bg-red-500 hover:bg-red-600"
+                              : "bg-primary hover:bg-gray-800"
+                          } ${
+                            wishlistLoading || (wishlistMutation.isLoading && wishlistMutation.variables?.productId === product._id)
+                              ? "opacity-50 cursor-not-allowed"
+                              : ""
+                          }`}
+                          title={isInWishlist(product._id) ? "Remove from Wishlist" : "Add to Wishlist"}
+                        >
+                          {wishlistMutation.isLoading && wishlistMutation.variables?.productId === product._id ? (
+                            <svg
+                              className="animate-spin h-5 w-5 text-white"
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                            >
+                              <circle
+                                className="opacity-25"
+                                cx="12"
+                                cy="12"
+                                r="10"
+                                stroke="currentColor"
+                                strokeWidth="4"
+                              ></circle>
+                              <path
+                                className="opacity-75"
+                                fill="currentColor"
+                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                              ></path>
+                            </svg>
+                          ) : isInWishlist(product._id) ? (
+                            <FaHeart className="text-white" />
+                          ) : (
+                            <FaRegHeart className="text-white" />
+                          )}
+                        </button>
+                      </div>
+                    </div>
+                    <div className="p-4 flex flex-col flex-grow">
+                      <Link href={`/products/${product._id}`}>
+                        <h4 className="font-medium text-base text-gray-800 uppercase mb-2 hover:text-primary transition line-clamp-2">
+                          {product.title}
+                        </h4>
+                      </Link>
+                      <div className="flex items-center mb-2">
+                        <p className="text-lg text-primary font-semibold">
+                          ${product.price.toFixed(2)}
+                        </p>
+                        {product.originalPrice && (
+                          <p className="text-sm text-gray-400 line-through ml-2">
+                            ${product.originalPrice.toFixed(2)}
+                          </p>
+                        )}
+                      </div>
+                      <div className="flex items-center mb-2">
+                        <div className="flex gap-1 text-sm text-yellow-400">
+                          {Array.from({ length: 5 }, (_, index) => (
+                            <span key={index}>
+                              {index < (product.rating || 0) ? (
+                                <FaStar />
+                              ) : (
+                                <FaRegStar />
+                              )}
+                            </span>
+                          ))}
+                        </div>
+                        <div className="text-xs text-gray-500 ml-2">
+                          ({product.reviewCount || 150})
+                        </div>
+                      </div>
                       <button
-                        onClick={(e) => handleToggleWishlist(product._id, e)}
-                        disabled={wishlistLoading || (mutation.isLoading && mutation.variables?.productId === product._id)}
-                        className={`text-white text-lg w-9 h-8 rounded-full flex items-center justify-center transition ${
-                          isInWishlist(product._id)
-                            ? "bg-red-500 hover:bg-red-600"
-                            : "bg-primary hover:bg-gray-800"
-                        } ${
-                          wishlistLoading || (mutation.isLoading && mutation.variables?.productId === product._id)
-                            ? "opacity-50 cursor-not-allowed"
-                            : ""
+                        onClick={(e) => handleCartAction(product._id, e)}
+                        disabled={cartLoading || (cartMutation.isLoading && cartMutation.variables?.productId === product._id)}
+                        className={`mt-auto block w-full py-2 text-center text-white rounded-lg font-medium uppercase transition ${
+                          cartMutation.isLoading && cartMutation.variables?.productId === product._id
+                            ? "bg-red-400 cursor-not-allowed"
+                            : productInCart
+                            ? "bg-blue-500 hover:bg-blue-600"
+                            : "bg-red-500 hover:bg-red-600"
                         }`}
-                        title={isInWishlist(product._id) ? "Remove from Wishlist" : "Add to Wishlist"}
                       >
-                        {mutation.isLoading && mutation.variables?.productId === product._id ? (
+                        {cartMutation.isLoading && cartMutation.variables?.productId === product._id ? (
                           <svg
-                            className="animate-spin h-5 w-5 text-white"
+                            className="animate-spin h-5 w-5 text-white mx-auto"
                             xmlns="http://www.w3.org/2000/svg"
                             fill="none"
                             viewBox="0 0 24 24"
@@ -229,49 +416,16 @@ const CategoryPage = ({ params }) => {
                               d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                             ></path>
                           </svg>
-                        ) : isInWishlist(product._id) ? (
-                          <FaHeart className="text-white" />
+                        ) : productInCart ? (
+                          "View In Cart"
                         ) : (
-                          <FaRegHeart className="text-white" />
+                          "Add to cart"
                         )}
                       </button>
                     </div>
                   </div>
-                  <div className="p-4 flex flex-col flex-grow">
-                    <Link href={`/products/${product._id}`}>
-                      <h4 className="font-medium text-base text-gray-800 uppercase mb-2 hover:text-primary transition line-clamp-2">
-                        {product.title}
-                      </h4>
-                    </Link>
-                    <div className="flex items-center mb-2">
-                      <p className="text-lg text-primary font-semibold">
-                        ${product.price.toFixed(2)}
-                      </p>
-                      {product.originalPrice && (
-                        <p className="text-sm text-gray-400 line-through ml-2">
-                          ${product.originalPrice.toFixed(2)}
-                        </p>
-                      )}
-                    </div>
-                    <div className="flex items-center mb-2">
-                      <div className="flex gap-1 text-sm text-yellow-400">
-                        {Array.from({ length: 5 }, (_, index) => (
-                          <span key={index}>
-                            <FaStar />
-                          </span>
-                        ))}
-                      </div>
-                      <div className="text-xs text-gray-500 ml-2">(150)</div>
-                    </div>
-                    <a
-                      href="#"
-                      className="mt-auto block w-full py-2 text-center text-white bg-red-500 rounded-lg font-medium uppercase hover:bg-red-600 transition"
-                    >
-                      Add to Cart
-                    </a>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>

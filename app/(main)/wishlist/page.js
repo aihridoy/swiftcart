@@ -7,7 +7,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { FaTrash } from "react-icons/fa";
 import { getWishlist, updateWishlist } from "@/actions/wishlist";
-import { addToCart, getCart } from "@/actions/cart-utils"; // Import cart actions
+import { addToCart, getCart } from "@/actions/cart-utils";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
