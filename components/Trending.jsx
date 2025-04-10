@@ -6,10 +6,15 @@ import { toast } from "react-toastify";
 import Link from "next/link";
 import { getProducts } from "@/actions/products";
 import { getWishlist, updateWishlist } from "@/actions/wishlist";
+import { addToCart, getCart } from "@/actions/cart-utils";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import ProductCard from "./ProductCard";
 
 const Trending = () => {
   const queryClient = useQueryClient();
+  const { data: session } = useSession();
+  const router = useRouter();
 
   // Fetch trending products
   const { data, error, isLoading } = useQuery({
@@ -32,6 +37,7 @@ const Trending = () => {
   const { data: wishlistData, error: wishlistError, isLoading: wishlistLoading } = useQuery({
     queryKey: ["wishlist"],
     queryFn: getWishlist,
+    enabled: !!session,
     onError: (error) => {
       if (error.message.includes("Unauthorized")) {
         toast.error("Please log in to view your wishlist.", {
@@ -43,7 +49,9 @@ const Trending = () => {
           draggable: true,
           progress: undefined,
         });
-        window.location.href = "/login";
+        setTimeout(() => {
+          router.push("/login");
+        }, 3000);
       } else {
         toast.error(`Error fetching wishlist: ${error.message}`, {
           position: "top-right",
@@ -58,8 +66,41 @@ const Trending = () => {
     },
   });
 
+  // Fetch cart
+  const { data: cartData, error: cartError, isLoading: cartLoading } = useQuery({
+    queryKey: ["cart"],
+    queryFn: getCart,
+    enabled: !!session,
+    onError: (error) => {
+      if (error.message.includes("Unauthorized")) {
+        toast.error("Please log in to view your cart.", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+        setTimeout(() => {
+          router.push("/login");
+        }, 3000);
+      } else {
+        toast.error(`Error fetching cart: ${error.message}`, {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      }
+    },
+  });
+
   // Wishlist mutation
-  const mutation = useMutation({
+  const wishlistMutation = useMutation({
     mutationFn: ({ productId, action }) => updateWishlist(productId, action),
     onSuccess: (data) => {
       queryClient.invalidateQueries(["wishlist"]);
@@ -85,7 +126,50 @@ const Trending = () => {
           progress: undefined,
         });
         setTimeout(() => {
-          window.location.href = "/login";
+          router.push("/login");
+        }, 3000);
+      } else {
+        toast.error(`Error: ${error.message}`, {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      }
+    },
+  });
+
+  // Cart mutation
+  const cartMutation = useMutation({
+    mutationFn: ({ productId, quantity }) => addToCart(productId, quantity),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries(["cart"]); // Update cart count in Header
+      toast.success("Product added to cart successfully!", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    },
+    onError: (error) => {
+      if (error.message.includes("Unauthorized")) {
+        toast.error("Please log in to add to cart.", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+        setTimeout(() => {
+          router.push("/login");
         }, 3000);
       } else {
         toast.error(`Error: ${error.message}`, {
@@ -102,14 +186,66 @@ const Trending = () => {
   });
 
   // Handle wishlist toggle
-  const handleWishlistToggle = (productId) => {
-    if (wishlistLoading || mutation.isLoading) return;
+  const handleWishlistToggle = (productId, e) => {
+    e.preventDefault();
+    if (!session) {
+      toast.error("Please log in to manage your wishlist.", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      setTimeout(() => {
+        router.push("/login");
+      }, 3000);
+      return;
+    }
+    if (wishlistLoading || wishlistMutation.isLoading) return;
 
     const isInWishlist = wishlistData?.wishlist?.some(
       (item) => item._id.toString() === productId
     );
     const action = isInWishlist ? "remove" : "add";
-    mutation.mutate({ productId, action });
+    wishlistMutation.mutate({ productId, action });
+  };
+
+  // Check if a product is in the cart
+  const isInCart = (productId) => {
+    return cartData?.cart?.items?.some(
+      (item) => item.product._id.toString() === productId
+    ) || false;
+  };
+
+  // Handle add to cart or view cart
+  const handleCartAction = (productId, e) => {
+    e.preventDefault();
+    if (!session) {
+      toast.error("Please log in to add to cart.", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      setTimeout(() => {
+        router.push("/login");
+      }, 3000);
+      return;
+    }
+
+    if (isInCart(productId)) {
+      // If product is already in cart, redirect to cart page
+      router.push("/cart");
+    } else {
+      // If product is not in cart, add it
+      if (cartMutation.isLoading) return;
+      cartMutation.mutate({ productId, quantity: 1 });
+    }
   };
 
   if (isLoading) {
@@ -142,7 +278,17 @@ const Trending = () => {
         Trending Products
       </h2>
       {products.length === 0 ? (
-        <p className="text-center text-gray-600">No trending products found.</p>
+        <div className="flex flex-col items-center justify-center h-full">
+          <p className="text-center text-gray-600 text-lg mb-4">
+            No trending products found.
+          </p>
+          <Link
+            href="/products"
+            className="px-6 py-2 text-center text-sm text-white bg-primary border border-primary rounded hover:bg-transparent hover:text-primary transition uppercase font-roboto font-medium"
+          >
+            Browse All Products
+          </Link>
+        </div>
       ) : (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
           {products.map((product) => (
@@ -151,8 +297,13 @@ const Trending = () => {
               product={product}
               wishlistData={wishlistData}
               wishlistLoading={wishlistLoading}
-              mutation={mutation}
+              mutation={wishlistMutation}
               handleWishlistToggle={handleWishlistToggle}
+              cartData={cartData} 
+              cartLoading={cartLoading} 
+              cartMutation={cartMutation} 
+              handleCartAction={handleCartAction}
+              isInCart={isInCart}
             />
           ))}
         </div>
