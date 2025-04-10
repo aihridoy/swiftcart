@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import Image from "next/image";
@@ -14,6 +14,10 @@ const CartPage = () => {
   const queryClient = useQueryClient();
   const { data: session } = useSession();
   const router = useRouter();
+  
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10; 
 
   // Fetch cart
   const { data, error, isLoading } = useQuery({
@@ -100,6 +104,54 @@ const CartPage = () => {
     mutation.mutate(productId);
   };
 
+  // Handle page change
+  const handlePageChange = (page) => {
+    if (page < 1 || page > totalPages) return;
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  // Generate page numbers for pagination display
+  const getPageNumbers = (totalPages, currentPage) => {
+    const pageNumbers = [];
+    const maxVisiblePages = 5;
+    
+    if (totalPages <= maxVisiblePages) {
+      // Show all pages if total pages is less than max visible
+      for (let i = 1; i <= totalPages; i++) {
+        pageNumbers.push(i);
+      }
+    } else {
+      // Show a limited set of pages with ellipsis
+      if (currentPage <= 3) {
+        // Near the start
+        for (let i = 1; i <= 4; i++) {
+          pageNumbers.push(i);
+        }
+        pageNumbers.push('...');
+        pageNumbers.push(totalPages);
+      } else if (currentPage >= totalPages - 2) {
+        // Near the end
+        pageNumbers.push(1);
+        pageNumbers.push('...');
+        for (let i = totalPages - 3; i <= totalPages; i++) {
+          pageNumbers.push(i);
+        }
+      } else {
+        // Middle area
+        pageNumbers.push(1);
+        pageNumbers.push('...');
+        for (let i = currentPage - 1; i <= currentPage + 1; i++) {
+          pageNumbers.push(i);
+        }
+        pageNumbers.push('...');
+        pageNumbers.push(totalPages);
+      }
+    }
+    
+    return pageNumbers;
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -122,6 +174,20 @@ const CartPage = () => {
     0
   );
 
+  // Pagination logic
+  const totalItems = cart.items.length;
+  const totalPages = Math.max(1, Math.ceil(totalItems / itemsPerPage));
+  
+  // Ensure current page is within valid range
+  const validCurrentPage = Math.min(Math.max(1, currentPage), totalPages);
+  if (validCurrentPage !== currentPage) {
+    setCurrentPage(validCurrentPage);
+  }
+  
+  const startIndex = (validCurrentPage - 1) * itemsPerPage;
+  const endIndex = Math.min(startIndex + itemsPerPage, totalItems);
+  const paginatedItems = cart.items.slice(startIndex, endIndex);
+
   return (
     <div className="min-h-screen py-10 bg-white">
       <div className="mx-auto max-w-7xl px-4">
@@ -142,8 +208,13 @@ const CartPage = () => {
           </div>
         ) : (
           <div className="space-y-6">
+            {/* Cart items summary */}
+            <div className="mb-4 text-gray-600">
+              Showing {startIndex + 1}-{endIndex} of {totalItems} items in your cart
+            </div>
+            
             {/* Cart Items */}
-            {cart.items.map((item) => (
+            {paginatedItems.map((item) => (
               <div
                 key={item.product._id}
                 className="flex items-center bg-white shadow-md rounded-lg p-4"
@@ -207,7 +278,64 @@ const CartPage = () => {
               </div>
             ))}
 
-            {/* Cart Summary */}
+            {/* Pagination Controls */}
+            {totalPages > 1 && (
+              <div className="flex justify-center mt-8">
+                <nav className="flex items-center gap-2">
+                  {/* Previous Button */}
+                  <button
+                    onClick={() => handlePageChange(validCurrentPage - 1)}
+                    disabled={validCurrentPage === 1}
+                    className={`px-4 py-2 text-sm font-medium rounded ${
+                      validCurrentPage === 1
+                        ? "bg-gray-200 text-gray-500 cursor-not-allowed"
+                        : "bg-primary text-white hover:bg-primary-dark"
+                    }`}
+                  >
+                    Previous
+                  </button>
+
+                  {/* Page Numbers with Ellipsis */}
+                  {getPageNumbers(totalPages, validCurrentPage).map((page, index) => (
+                    page === '...' ? (
+                      <span 
+                        key={`ellipsis-${index}`} 
+                        className="px-4 py-2 text-sm font-medium"
+                      >
+                        {page}
+                      </span>
+                    ) : (
+                      <button
+                        key={`page-${page}`}
+                        onClick={() => handlePageChange(page)}
+                        className={`px-4 py-2 text-sm font-medium rounded ${
+                          validCurrentPage === page
+                            ? "bg-primary text-white"
+                            : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                        }`}
+                      >
+                        {page}
+                      </button>
+                    )
+                  ))}
+
+                  {/* Next Button */}
+                  <button
+                    onClick={() => handlePageChange(validCurrentPage + 1)}
+                    disabled={validCurrentPage === totalPages}
+                    className={`px-4 py-2 text-sm font-medium rounded ${
+                      validCurrentPage === totalPages
+                        ? "bg-gray-200 text-gray-500 cursor-not-allowed"
+                        : "bg-primary text-white hover:bg-primary-dark"
+                    }`}
+                  >
+                    Next
+                  </button>
+                </nav>
+              </div>
+            )}
+
+            {/* Cart Summary - Always visible */}
             <div className="flex justify-between items-center bg-gray-100 p-4 rounded-lg">
               <h3 className="text-lg font-semibold text-gray-800">
                 Total: ${total.toFixed(2)}
