@@ -7,6 +7,7 @@ import { FaSearch, FaHeart, FaShoppingBag, FaUser } from "react-icons/fa";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { getWishlist } from "@/actions/wishlist";
+import { getCart } from "@/actions/cart-utils";
 import { useRouter } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
 
@@ -22,8 +23,31 @@ const Header = () => {
     enabled: !!session, // Only fetch if user is authenticated
     onError: (error) => {
       if (error.message.includes("Unauthorized")) {
+        // Do nothing, handled by handleProtectedNavigation
       } else {
         toast.error(`Error fetching wishlist: ${error.message}`, {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      }
+    },
+  });
+
+  // Fetch cart
+  const { data: cartData, error: cartError } = useQuery({
+    queryKey: ["cart"],
+    queryFn: getCart,
+    enabled: !!session, // Only fetch if user is authenticated
+    onError: (error) => {
+      if (error.message.includes("Unauthorized")) {
+        // Do nothing, handled by handleProtectedNavigation
+      } else {
+        toast.error(`Error fetching cart: ${error.message}`, {
           position: "top-right",
           autoClose: 3000,
           hideProgressBar: false,
@@ -39,7 +63,8 @@ const Header = () => {
   // Handle logout
   const handleLogout = async () => {
     await signOut({ redirect: false });
-    queryClient.invalidateQueries(["wishlist"]); 
+    queryClient.invalidateQueries(["wishlist"]);
+    queryClient.invalidateQueries(["cart"]); // Invalidate cart on logout
     toast.success("Logged out successfully!", {
       position: "top-right",
       autoClose: 3000,
@@ -55,10 +80,14 @@ const Header = () => {
   // Wishlist count
   const wishlistCount = wishlistData?.wishlist?.length || 0;
 
+  // Cart count
+  const cartCount = cartData?.cart?.items?.length || 0;
+
   // Handle navigation for protected routes
   const handleProtectedNavigation = (href) => {
     if (!session) {
-      toast.error(`Please log in to access your ${href === "/wishlist" ? "wishlist" : "account"}.`, {
+      const destination = href === "/wishlist" ? "wishlist" : href === "/cart" ? "cart" : "account";
+      toast.error(`Please log in to access your ${destination}.`, {
         position: "top-right",
         autoClose: 3000,
         hideProgressBar: false,
@@ -117,9 +146,20 @@ const Header = () => {
             href="/cart"
             icon={<FaShoppingBag />}
             label="Cart"
-            count={2} // Replace with dynamic cart count if available
+            count={cartCount} // Use dynamic cart count
+            onClick={() => handleProtectedNavigation("/cart")} // Add navigation protection
           />
-           <NavItem href="#" icon={<FaUser />} label="Account" />
+          <NavItem
+            href={session ? "#" : "/login"}
+            icon={<FaUser />}
+            label={session ? "Logout" : "Account"}
+            onClick={(e) => {
+              if (session) {
+                e.preventDefault();
+                handleLogout();
+              }
+            }}
+          />
         </div>
       </div>
     </header>
