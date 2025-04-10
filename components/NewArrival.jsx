@@ -4,12 +4,17 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import Image from "next/image";
 import Link from "next/link";
-import { FaEye, FaHeart, FaRegHeart } from "react-icons/fa";
+import { FaEye, FaHeart, FaRegHeart, FaStar } from "react-icons/fa";
 import { getProducts } from "@/actions/products";
 import { getWishlist, updateWishlist } from "@/actions/wishlist";
+import { addToCart } from "@/actions/cart-utils";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 const NewArrival = () => {
   const queryClient = useQueryClient(); 
+  const { data: session } = useSession();
+  const router = useRouter();
 
   // Fetch new arrival products
   const { data, error, isLoading } = useQuery({
@@ -102,6 +107,49 @@ const NewArrival = () => {
     },
   });
 
+  // Cart mutation
+  const cartMutation = useMutation({
+    mutationFn: ({ productId, quantity }) => addToCart(productId, quantity),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries(["cart"]); // Update cart count in Header
+      toast.success("Product added to cart successfully!", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    },
+    onError: (error) => {
+      if (error.message.includes("Unauthorized")) {
+        toast.error("Please log in to add to cart.", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+        setTimeout(() => {
+          router.push("/login");
+        }, 3000);
+      } else {
+        toast.error(`Error: ${error.message}`, {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      }
+    },
+  });
+
   // Handle wishlist toggle
   const handleWishlistToggle = (productId) => {
     if (wishlistLoading || mutation.isLoading) return;
@@ -111,6 +159,28 @@ const NewArrival = () => {
     );
     const action = isInWishlist ? "remove" : "add";
     mutation.mutate({ productId, action });
+  };
+
+  // Handle add to cart
+  const handleAddToCart = (productId, e) => {
+    e.preventDefault();
+    if (!session) {
+      toast.error("Please log in to add to cart.", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      setTimeout(() => {
+        router.push("/login");
+      }, 3000);
+      return;
+    }
+    if (cartMutation.isLoading) return;
+    cartMutation.mutate({ productId, quantity: 1 });
   };
 
   if (isLoading) {
@@ -244,7 +314,7 @@ const NewArrival = () => {
                     <div className="flex gap-1 text-sm text-yellow-400">
                       {Array.from({ length: 5 }, (_, index) => (
                         <span key={index}>
-                          <i className="fa-solid fa-star"></i>
+                          <FaStar />
                         </span>
                       ))}
                     </div>
@@ -252,12 +322,40 @@ const NewArrival = () => {
                   </div>
 
                   {/* Add to Cart Button */}
-                  <a
-                    href="#"
-                    className="mt-auto block w-full py-2 text-center text-white bg-red-500 rounded-lg font-medium uppercase hover:bg-red-600 transition"
+                  <button
+                    onClick={(e) => handleAddToCart(product._id, e)}
+                    disabled={cartMutation.isLoading && cartMutation.variables?.productId === product._id}
+                    className={`mt-auto block w-full py-2 text-center text-white rounded-lg font-medium uppercase transition ${
+                      cartMutation.isLoading && cartMutation.variables?.productId === product._id
+                        ? "bg-red-400 cursor-not-allowed"
+                        : "bg-red-500 hover:bg-red-600"
+                    }`}
                   >
-                    Add to cart
-                  </a>
+                    {cartMutation.isLoading && cartMutation.variables?.productId === product._id ? (
+                      <svg
+                        className="animate-spin h-5 w-5 text-white mx-auto"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        ></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        ></path>
+                      </svg>
+                    ) : (
+                      "Add to cart"
+                    )}
+                  </button>
                 </div>
               </div>
             );
