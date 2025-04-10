@@ -1,16 +1,24 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import Image from "next/image";
 import Link from "next/link";
 import { getProducts } from "@/actions/products";
+import { addToCart, getCart } from "@/actions/cart-utils"; 
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { FaStar, FaRegStar } from "react-icons/fa"; 
 
 const Products = () => {
+  const queryClient = useQueryClient();
+  const { data: session } = useSession();
+  const router = useRouter();
+
   const [displayCount, setDisplayCount] = useState(20);
   const [sortOption, setSortOption] = useState("default");
-  const [priceRange, setPriceRange] = useState({ min: '', max: '' });
+  const [priceRange, setPriceRange] = useState({ min: "", max: "" });
   const [filters, setFilters] = useState({
     category: "all",
     rating: 0,
@@ -19,6 +27,7 @@ const Products = () => {
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [showFilters, setShowFilters] = useState(false);
 
+  // Fetch products
   const { data, error, isLoading } = useQuery({
     queryKey: ["products"],
     queryFn: () => getProducts(),
@@ -35,6 +44,82 @@ const Products = () => {
     },
   });
 
+  // Fetch cart
+  const { data: cartData, error: cartError, isLoading: cartLoading } = useQuery({
+    queryKey: ["cart"],
+    queryFn: getCart,
+    enabled: !!session,
+    onError: (error) => {
+      if (error.message.includes("Unauthorized")) {
+        toast.error("Please log in to view your cart.", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+        setTimeout(() => {
+          router.push("/login");
+        }, 3000);
+      } else {
+        toast.error(`Error fetching cart: ${error.message}`, {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      }
+    },
+  });
+
+  // Cart mutation
+  const cartMutation = useMutation({
+    mutationFn: ({ productId, quantity }) => addToCart(productId, quantity),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries(["cart"]); // Update cart count in Header
+      toast.success("Product added to cart successfully!", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    },
+    onError: (error) => {
+      if (error.message.includes("Unauthorized")) {
+        toast.error("Please log in to add to cart.", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+        setTimeout(() => {
+          router.push("/login");
+        }, 3000);
+      } else {
+        toast.error(`Error: ${error.message}`, {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      }
+    },
+  });
+
   const products = React.useMemo(() => data?.products || [], [data]);
 
   // Categories derived from products
@@ -43,7 +128,7 @@ const Products = () => {
     ...new Set(products.map((product) => product.category || "uncategorized")),
   ];
 
-  // Apply sorting and filtering whenever products, sort option, or filters change
+  // Apply sorting and filtering
   useEffect(() => {
     if (products.length === 0) return;
 
@@ -64,9 +149,9 @@ const Products = () => {
     }
 
     // Apply price range filter
-    result = result.filter(product => {
-      const minValid = priceRange.min === '' || product.price >= Number(priceRange.min);
-      const maxValid = priceRange.max === '' || product.price <= Number(priceRange.max);
+    result = result.filter((product) => {
+      const minValid = priceRange.min === "" || product.price >= Number(priceRange.min);
+      const maxValid = priceRange.max === "" || product.price <= Number(priceRange.max);
       return minValid && maxValid;
     });
 
@@ -93,12 +178,47 @@ const Products = () => {
         result.sort((a, b) => (b.rating || 0) - (a.rating || 0));
         break;
       default:
-        // Default sorting (newest or featured)
         break;
     }
 
     setFilteredProducts(result);
   }, [products, sortOption, filters, priceRange]);
+
+  // Check if a product is in the cart
+  const isInCart = (productId) => {
+    return cartData?.cart?.items?.some(
+      (item) => item.product._id.toString() === productId
+    ) || false;
+  };
+
+  // Handle add to cart or view cart
+  const handleCartAction = (productId, e) => {
+    e.preventDefault();
+    if (!session) {
+      toast.error("Please log in to add to cart.", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      setTimeout(() => {
+        router.push("/login");
+      }, 3000);
+      return;
+    }
+
+    if (isInCart(productId)) {
+      // If product is already in cart, redirect to cart page
+      router.push("/cart");
+    } else {
+      // If product is not in cart, add it
+      if (cartMutation.isLoading) return;
+      cartMutation.mutate({ productId, quantity: 1 });
+    }
+  };
 
   const handleShowMore = () => {
     setDisplayCount((prev) => prev + 20);
@@ -113,13 +233,13 @@ const Products = () => {
   };
 
   const handlePriceRangeChange = (type, value) => {
-    const processedValue = value === '' ? '' : Number(value);
-  setPriceRange(prev => ({ ...prev, [type]: processedValue }));
+    const processedValue = value === "" ? "" : Number(value);
+    setPriceRange((prev) => ({ ...prev, [type]: processedValue }));
   };
 
   const resetFilters = () => {
     setFilters({ category: "all", rating: 0, inStock: false });
-    setPriceRange({ min: '', max: '' });
+    setPriceRange({ min: "", max: "" });
     setSortOption("default");
   };
 
@@ -378,70 +498,104 @@ const Products = () => {
 
           {/* Products Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-            {displayedProducts.map((product) => (
-              <div
-                key={product._id}
-                className="bg-white shadow-md rounded-lg overflow-hidden h-[400px] w-full flex flex-col"
-              >
-                {/* Product Image */}
-                <Link href={`/products/${product._id}`}>
-                  <div className="w-full h-48">
-                    <Image
-                      src={product.mainImage}
-                      alt={product.title}
-                      width={500}
-                      height={300}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                </Link>
+            {displayedProducts.map((product) => {
+              const productInCart = isInCart(product._id);
 
-                {/* Product Info */}
-                <div className="p-4 flex flex-col flex-grow">
+              return (
+                <div
+                  key={product._id}
+                  className="bg-white shadow-md rounded-lg overflow-hidden h-[400px] w-full flex flex-col"
+                >
+                  {/* Product Image */}
                   <Link href={`/products/${product._id}`}>
-                    <h4 className="font-medium text-base text-gray-800 uppercase mb-2 hover:text-primary transition line-clamp-2">
-                      {product.title}
-                    </h4>
+                    <div className="w-full h-48">
+                      <Image
+                        src={product.mainImage}
+                        alt={product.title}
+                        width={500}
+                        height={300}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
                   </Link>
-                  <div className="flex items-center mb-2">
-                    <p className="text-lg text-primary font-semibold">
-                      ${product.price.toFixed(2)}
-                    </p>
-                    {product.originalPrice && (
-                      <p className="text-sm text-gray-400 line-through ml-2">
-                        ${product.originalPrice.toFixed(2)}
-                      </p>
-                    )}
-                  </div>
-                  <div className="flex items-center mb-2">
-                    <div className="flex gap-1 text-sm text-yellow-400">
-                      {Array.from({ length: 5 }, (_, index) => (
-                        <span key={index}>
-                          <i
-                            className={`fa-${
-                              index < (product.rating || 0)
-                                ? "solid"
-                                : "regular"
-                            } fa-star`}
-                          ></i>
-                        </span>
-                      ))}
-                    </div>
-                    <div className="text-xs text-gray-500 ml-2">
-                      ({product.reviewCount || 0})
-                    </div>
-                  </div>
 
-                  {/* Add to Cart Button */}
-                  <a
-                    href="#"
-                    className="mt-auto block w-full py-2 text-center text-white bg-red-500 rounded-lg font-medium uppercase hover:bg-red-600 transition"
-                  >
-                    Add to Cart
-                  </a>
+                  {/* Product Info */}
+                  <div className="p-4 flex flex-col flex-grow">
+                    <Link href={`/products/${product._id}`}>
+                      <h4 className="font-medium text-base text-gray-800 uppercase mb-2 hover:text-primary transition line-clamp-2">
+                        {product.title}
+                      </h4>
+                    </Link>
+                    <div className="flex items-center mb-2">
+                      <p className="text-lg text-primary font-semibold">
+                        ${product.price.toFixed(2)}
+                      </p>
+                      {product.originalPrice && (
+                        <p className="text-sm text-gray-400 line-through ml-2">
+                          ${product.originalPrice.toFixed(2)}
+                        </p>
+                      )}
+                    </div>
+                    <div className="flex items-center mb-2">
+                      <div className="flex gap-1 text-sm text-yellow-400">
+                        {Array.from({ length: 5 }, (_, index) => (
+                          <span key={index}>
+                            {index < (product.rating || 0) ? (
+                              <FaStar />
+                            ) : (
+                              <FaRegStar />
+                            )}
+                          </span>
+                        ))}
+                      </div>
+                      <div className="text-xs text-gray-500 ml-2">
+                        ({product.reviewCount || 0})
+                      </div>
+                    </div>
+
+                    {/* Add to Cart / View Cart Button */}
+                    <button
+                      onClick={(e) => handleCartAction(product._id, e)}
+                      disabled={cartLoading || (cartMutation.isLoading && cartMutation.variables?.productId === product._id)}
+                      className={`mt-auto block w-full py-2 text-center text-white rounded-lg font-medium uppercase transition ${
+                        cartMutation.isLoading && cartMutation.variables?.productId === product._id
+                          ? "bg-red-400 cursor-not-allowed"
+                          : productInCart
+                          ? "bg-blue-500 hover:bg-blue-600"
+                          : "bg-red-500 hover:bg-red-600"
+                      }`}
+                    >
+                      {cartMutation.isLoading && cartMutation.variables?.productId === product._id ? (
+                        <svg
+                          className="animate-spin h-5 w-5 text-white mx-auto"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                        >
+                          <circle
+                            className="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            strokeWidth="4"
+                          ></circle>
+                          <path
+                            className="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                          ></path>
+                        </svg>
+                      ) : productInCart ? (
+                        "View In Cart"
+                      ) : (
+                        "Add to cart"
+                      )}
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
           {/* Show More Button */}
