@@ -56,7 +56,7 @@ const Navbar = async () => {
     return acc;
   }, {});
 
-  const categories = Object.values(categoryMap);
+  const categories = categoryMap ? Object.values(categoryMap) : [];
 
   const navLinks = [
     { name: "Home", path: "/" },
