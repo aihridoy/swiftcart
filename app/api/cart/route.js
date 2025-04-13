@@ -4,7 +4,7 @@ import { dbConnect } from "@/service/mongo";
 import { Cart } from "@/models/cart-model";
 import { Product } from "@/models/product-model";
 
-// Add or update item in cart (POST /api/cart)
+// Add or update item in cart
 export async function POST(request) {
   try {
     const userSession = await session();
@@ -60,7 +60,7 @@ export async function POST(request) {
   }
 }
 
-// Fetch cart (GET /api/cart)
+// Fetch cart 
 export async function GET() {
   try {
     const userSession = await session();
@@ -85,7 +85,7 @@ export async function GET() {
   }
 }
 
-// Remove item from cart (DELETE /api/cart)
+// Remove item from cart
 export async function DELETE(request) {
   try {
     const userSession = await session();
@@ -117,6 +117,60 @@ export async function DELETE(request) {
     console.error("Error removing from cart:", error);
     return NextResponse.json(
       { error: "Failed to remove product from cart" },
+      { status: 500 }
+    );
+  }
+}
+
+// Update item quantity in cart
+export async function PUT(request) {
+  try {
+    const userSession = await session();
+    if (!userSession || !userSession.user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    await dbConnect();
+
+    const { productId, quantity } = await request.json();
+
+    if (!productId || quantity === undefined || quantity < 1) {
+      return NextResponse.json(
+        { error: "Invalid productId or quantity" },
+        { status: 400 }
+      );
+    }
+
+    const cart = await Cart.findOne({ user: userSession.user.id });
+    if (!cart) {
+      return NextResponse.json({ error: "Cart not found" }, { status: 404 });
+    }
+
+    // Find the item in the cart
+    const itemIndex = cart.items.findIndex(
+      (item) => item.product.toString() === productId
+    );
+
+    if (itemIndex === -1) {
+      return NextResponse.json(
+        { error: "Product not found in cart" },
+        { status: 404 }
+      );
+    }
+
+    // Update the quantity
+    cart.items[itemIndex].quantity = quantity;
+
+    await cart.save();
+
+    return NextResponse.json(
+      { message: "Cart updated successfully!", cart },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Error updating cart quantity:", error);
+    return NextResponse.json(
+      { error: "Failed to update cart quantity" },
       { status: 500 }
     );
   }

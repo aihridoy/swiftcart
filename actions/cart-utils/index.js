@@ -51,3 +51,26 @@ export const removeFromCart = async (productId) => {
     throw new Error(error.message);
   }
 };
+
+// Update product quantity in cart
+export const updateCartQuantity = async (productId, quantity) => {
+  try {
+    const result = await api.put(
+      "/cart",
+      {
+        productId,
+        quantity,
+      },
+      {
+        headers: {
+          "Cache-Control": "no-cache, no-store, must-revalidate",
+          Pragma: "no-cache",
+          Expires: "0",
+        },
+      }
+    );
+    return result.data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
