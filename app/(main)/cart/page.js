@@ -517,7 +517,7 @@ const CartPage = () => {
               <h3 className="text-lg font-semibold text-gray-800">
                 Total: ${total.toFixed(2)}
               </h3>
-              <Link href="/checkout">
+              <Link href={`/cart/${cart._id}`}>
                 <button className="bg-primary text-white px-6 py-2 rounded hover:bg-primary-dark transition uppercase font-medium">
                   Proceed to Checkout
                 </button>

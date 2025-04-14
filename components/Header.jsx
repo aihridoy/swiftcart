@@ -3,11 +3,12 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { FaSearch, FaHeart, FaShoppingBag, FaUser } from "react-icons/fa";
+import { FaSearch, FaHeart, FaShoppingBag, FaUser, FaBox } from "react-icons/fa"; 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { getWishlist } from "@/actions/wishlist";
 import { getCart } from "@/actions/cart-utils";
+import { getOrders } from "@/actions/order-utils"; 
 import { useRouter } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
 
@@ -20,7 +21,7 @@ const Header = () => {
   const { data: wishlistData, error: wishlistError } = useQuery({
     queryKey: ["wishlist"],
     queryFn: getWishlist,
-    enabled: !!session, // Only fetch if user is authenticated
+    enabled: !!session,
     onError: (error) => {
       if (error.message.includes("Unauthorized")) {
         // Do nothing, handled by handleProtectedNavigation
@@ -42,7 +43,7 @@ const Header = () => {
   const { data: cartData, error: cartError } = useQuery({
     queryKey: ["cart"],
     queryFn: getCart,
-    enabled: !!session, // Only fetch if user is authenticated
+    enabled: !!session,
     onError: (error) => {
       if (error.message.includes("Unauthorized")) {
         // Do nothing, handled by handleProtectedNavigation
@@ -60,11 +61,34 @@ const Header = () => {
     },
   });
 
+  // Fetch orders
+  const { data: ordersData, error: ordersError } = useQuery({
+    queryKey: ["orders"],
+    queryFn: getOrders,
+    enabled: !!session,
+    onError: (error) => {
+      if (error.message.includes("Unauthorized")) {
+        // Do nothing, handled by handleProtectedNavigation
+      } else {
+        toast.error(`Error fetching orders: ${error.message}`, {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      }
+    },
+  });
+
   // Handle logout
   const handleLogout = async () => {
     await signOut({ redirect: false });
     queryClient.invalidateQueries(["wishlist"]);
-    queryClient.invalidateQueries(["cart"]); // Invalidate cart on logout
+    queryClient.invalidateQueries(["cart"]);
+    queryClient.invalidateQueries(["orders"]); // Invalidate orders on logout
     toast.success("Logged out successfully!", {
       position: "top-right",
       autoClose: 3000,
@@ -83,10 +107,13 @@ const Header = () => {
   // Cart count
   const cartCount = cartData?.cart?.items?.length || 0;
 
+  // Orders count
+  const ordersCount = ordersData?.orders?.length || 0;
+
   // Handle navigation for protected routes
   const handleProtectedNavigation = (href) => {
     if (!session) {
-      const destination = href === "/wishlist" ? "wishlist" : href === "/cart" ? "cart" : "account";
+      const destination = href === "/wishlist" ? "wishlist" : href === "/cart" ? "cart" : href === "/orders" ? "orders" : "account";
       toast.error(`Please log in to access your ${destination}.`, {
         position: "top-right",
         autoClose: 3000,
@@ -146,8 +173,15 @@ const Header = () => {
             href="/cart"
             icon={<FaShoppingBag />}
             label="Cart"
-            count={cartCount} // Use dynamic cart count
-            onClick={() => handleProtectedNavigation("/cart")} // Add navigation protection
+            count={cartCount}
+            onClick={() => handleProtectedNavigation("/cart")}
+          />
+          <NavItem
+            href="/orders"
+            icon={<FaBox />}
+            label="Orders"
+            count={ordersCount}
+            onClick={() => handleProtectedNavigation("/orders")}
           />
           <NavItem
             href={session ? "#" : "/login"}
