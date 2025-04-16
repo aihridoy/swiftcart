@@ -47,9 +47,8 @@ const OrderDetails = () => {
   // Function to generate and download the PDF receipt
 const downloadReceipt = async (order) => {
   try {
-    // Create a new PDF document
     const pdfDoc = await PDFDocument.create();
-    let page = pdfDoc.addPage([595, 842]); // A4 size in points
+    let page = pdfDoc.addPage([595, 842]); 
     const { width, height } = page.getSize();
 
     // Embed fonts
@@ -58,12 +57,12 @@ const downloadReceipt = async (order) => {
     const italicFont = await pdfDoc.embedFont(StandardFonts.HelveticaOblique);
 
     // Define colors
-    const primaryColor = rgb(0, 0.53, 0.87); // Blue (#0087de)
-    const lightGray = rgb(0.95, 0.95, 0.95); // Light gray for backgrounds
-    const borderColor = rgb(0.8, 0.8, 0.8); // Light gray for borders
-    const blackColor = rgb(0, 0, 0); // Black for text
-    const pendingColor = rgb(0.9, 0.6, 0); // Orange for pending status
-    const completedColor = rgb(0, 0.6, 0.3); // Green for completed status
+    const primaryColor = rgb(0, 0.53, 0.87); 
+    const lightGray = rgb(0.95, 0.95, 0.95); 
+    const borderColor = rgb(0.8, 0.8, 0.8); 
+    const blackColor = rgb(0, 0, 0); 
+    const pendingColor = rgb(0.9, 0.6, 0); 
+    const completedColor = rgb(0, 0.6, 0.3); 
 
     const margin = 50;
     const contentWidth = width - (2 * margin);
@@ -112,7 +111,7 @@ const downloadReceipt = async (order) => {
       
       page.drawRectangle({
         x,
-        y: y - h, // Adjust y coordinate for rectangle
+        y: y - h,
         width: w,
         height: h,
         ...drawOptions,

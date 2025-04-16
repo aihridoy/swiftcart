@@ -2,12 +2,13 @@
 
 import React, { useState, useEffect } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { createOrder } from "@/actions/order-utils"; 
+import { createOrder } from "@/actions/order-utils";
 import { useParams } from "next/navigation";
 import { toast } from "react-toastify";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { getCartItemById } from "@/actions/cart-utils";
+import { sendEmail } from "@/actions/contact";
 
 const Checkout = () => {
   const { cartId } = useParams();
@@ -30,7 +31,7 @@ const Checkout = () => {
   // Fetch cart data
   const { data, error, isLoading } = useQuery({
     queryKey: ["checkout", cartId],
-    queryFn: () => getCartItemById(cartId), 
+    queryFn: () => getCartItemById(cartId),
     enabled: !!cartId && !!session,
     onError: (error) => {
       if (error.message.includes("Unauthorized")) {
@@ -50,21 +51,86 @@ const Checkout = () => {
     },
   });
 
-  // Mutation to create an order
+  // Mutation to create an order and send email
   const orderMutation = useMutation({
-    mutationFn: (orderData) => createOrder(orderData),
+    mutationFn: async (orderData) => {
+      const orderResponse = await createOrder(orderData);
+      // Prepare email content
+      const emailHtml = `
+        <h1 style="color: #0087de;">SwiftCart Order Confirmation</h1>
+        <h2>Order Overview</h2>
+        <p><strong>Order ID:</strong> ${orderResponse?.order?._id}</p>
+        <p><strong>Placed on:</strong> ${new Date(orderResponse?.order?.createdAt).toLocaleDateString()}</p>
+        <p><strong>Status:</strong> ${orderResponse?.order?.status}</p>
+        
+        <h2>Shipping Details</h2>
+        <p><strong>Name:</strong> ${orderResponse?.order?.shippingDetails?.firstName} ${orderResponse?.order?.shippingDetails?.lastName}</p>
+        ${
+          orderResponse?.order?.shippingDetails?.company
+            ? `<p><strong>Company:</strong> ${orderResponse.order.shippingDetails.company}</p>`
+            : ""
+        }
+        <p><strong>Address:</strong> ${orderResponse?.order?.shippingDetails?.address}</p>
+        <p><strong>City, Country:</strong> ${orderResponse?.order?.shippingDetails?.city}, ${orderResponse?.order?.shippingDetails?.country}</p>
+        <p><strong>Phone:</strong> ${orderResponse?.order?.shippingDetails?.phone}</p>
+        <p><strong>Email:</strong> ${orderResponse?.order?.shippingDetails?.email}</p>
+        
+        <h2>Items</h2>
+        <table style="width: 100%; border-collapse: collapse;">
+          <thead>
+            <tr style="background-color: #e6f0fa;">
+              <th style="border: 1px solid #ddd; padding: 8px;">Product ID</th>
+              <th style="border: 1px solid #ddd; padding: 8px;">Quantity</th>
+              <th style="border: 1px solid #ddd; padding: 8px;">Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${orderResponse?.order?.items
+              ?.map(
+                (item) => `
+                  <tr>
+                    <td style="border: 1px solid #ddd; padding: 8px;">${item?.product}</td>
+                    <td style="border: 1px solid #ddd; padding: 8px;">${item?.quantity}</td>
+                    <td style="border: 1px solid #ddd; padding: 8px;">$${(item?.price * item?.quantity).toFixed(2)}</td>
+                  </tr>
+                `
+              )
+              .join("")}
+          </tbody>
+        </table>
+        
+        <h2>Order Summary</h2>
+        <p><strong>Subtotal:</strong> $${orderResponse?.order?.subtotal?.toFixed(2)}</p>
+        <p><strong>Shipping:</strong> ${
+          orderResponse?.order?.shipping === 0
+            ? "Free"
+            : `$${orderResponse?.order?.shipping?.toFixed(2)}`
+        }</p>
+        <p><strong>Total:</strong> $${orderResponse?.order?.total?.toFixed(2)}</p>
+        
+        <p style="color: #0087de;">Thank you for shopping with SwiftCart!</p>
+        <p style="color: #0087de;">Contact us: <a href="mailto:support@swiftcart.com">support@swiftcart.com</a></p>
+      `;
+      // Send confirmation email
+      await sendEmail({
+        to: orderResponse?.order?.shippingDetails?.email,
+        subject: `SwiftCart Order Confirmation - ${orderResponse?.order?._id}`,
+        html: emailHtml,
+      });
+      return orderResponse;
+    },
     onSuccess: (data) => {
-      toast.success("Order placed successfully!", {
+      toast.success("Order placed successfully and confirmation email sent!", {
         position: "top-right",
         autoClose: 3000,
       });
       // Redirect to an order confirmation page or homepage
       setTimeout(() => {
-        router.push("/"); 
+        router.push("/");
       }, 3000);
     },
     onError: (error) => {
-      toast.error(`Error placing order: ${error.message}`, {
+      toast.error(`Error placing order or sending email: ${error?.message}`, {
         position: "top-right",
         autoClose: 3000,
       });
@@ -143,8 +209,8 @@ const Checkout = () => {
     (sum, item) => sum + item.price * item.quantity,
     0
   );
-  
-  const shipping = 0; 
+
+  const shipping = 0;
   const total = subtotal + shipping;
 
   return (
@@ -286,12 +352,12 @@ const Checkout = () => {
           </div>
           <button
             type="submit"
-            disabled={orderMutation.isLoading}
+            disabled={orderMutation.isPending}
             className={`block w-full py-3 px-4 text-center text-white bg-primary border border-primary rounded-md hover:bg-transparent hover:text-primary transition font-medium ${
-              orderMutation.isLoading ? "opacity-50 cursor-not-allowed" : ""
+              orderMutation.isPending ? "opacity-50 cursor-not-allowed" : ""
             }`}
           >
-            {orderMutation.isLoading ? "Placing Order..." : "Place Order"}
+            {orderMutation.isPending ? "Placing Order..." : "Place Order"}
           </button>
         </form>
       </div>
@@ -308,7 +374,9 @@ const Checkout = () => {
                   {item.product?.title || "Product"}
                 </h5>
                 {item.product?.size && (
-                  <p className="text-sm text-gray-600">Size: {item.product.size}</p>
+                  <p className="text-sm text-gray-600">
+                    Size: {item.product.size}
+                  </p>
                 )}
               </div>
               <p className="text-gray-600">x{item.quantity}</p>

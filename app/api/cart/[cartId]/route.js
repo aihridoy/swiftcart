@@ -4,7 +4,6 @@ import { dbConnect } from "@/service/mongo";
 import { Cart } from "@/models/cart-model";
 
 export async function GET(request, { params }) {
-    console.log("Fetching cart with ID:", params);
   try {
     const userSession = await session();
     if (!userSession || !userSession.user) {
