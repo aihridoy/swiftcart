@@ -8,7 +8,7 @@ export const POST = async (req) => {
         const { to, subject, html } = body;
 
         const emailResponse = await resend.emails.send({
-            from: "LWSkart <noreply@aihridoy.com>",
+            from: "SwiftCart <noreply@aihridoy.com>",
             to,
             subject,
             html,

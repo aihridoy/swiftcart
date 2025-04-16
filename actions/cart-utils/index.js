@@ -74,3 +74,19 @@ export const updateCartQuantity = async (productId, quantity) => {
     throw new Error(error.message);
   }
 };
+
+// Fetch a specific cart item by itemId
+export const getCartItemById = async (cartId) => {
+  try {
+    const result = await api.get(`/cart/${cartId}`, {
+      headers: {
+        "Cache-Control": "no-cache, no-store, must-revalidate",
+        Pragma: "no-cache",
+        Expires: "0",
+      },
+    });
+    return result.data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
