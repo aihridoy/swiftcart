@@ -36,7 +36,7 @@ const Header = () => {
     const debouncedSetSearchTerm = debounce((value) => {
       setDebouncedSearchTerm(value);
       setIsDropdownOpen(value.length > 0);
-    }, 300);
+    }, 500);
     debouncedSetSearchTerm(searchTerm);
   }, [searchTerm, debounce]);
 
