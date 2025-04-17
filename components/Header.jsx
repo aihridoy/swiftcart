@@ -119,24 +119,6 @@ const Header = () => {
     },
   });
 
-  // Handle logout
-  const handleLogout = async () => {
-    await signOut({ redirect: false });
-    queryClient.invalidateQueries(["wishlist"]);
-    queryClient.invalidateQueries(["cart"]);
-    queryClient.invalidateQueries(["orders"]);
-    toast.success("Logged out successfully!", {
-      position: "top-right",
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
-    router.push("/login");
-  };
-
   // Handle search form submission
   const handleSearchSubmit = (e) => {
     e.preventDefault();
@@ -282,15 +264,9 @@ const Header = () => {
             onClick={() => handleProtectedNavigation("/orders")}
           />
           <NavItem
-            href={session ? "#" : "/login"}
+            href="/profile"
             icon={<FaUser />}
-            label={session ? "Logout" : "Account"}
-            onClick={(e) => {
-              if (session) {
-                e.preventDefault();
-                handleLogout();
-              }
-            }}
+            label="Account"
           />
         </div>
       </div>

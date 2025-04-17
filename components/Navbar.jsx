@@ -25,6 +25,7 @@ const DropdownItem = ({ name, slug, image }) => (
 
 const Navbar = async () => {
   const userSession = await session();
+  console.log("User session:", userSession);
   const productsData = await api
     .get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/products`, {
       headers: {
