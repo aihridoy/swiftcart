@@ -35,3 +35,14 @@ export const incrementPopularity = async (id, incrementBy = 1) => {
     throw error;
   }
 };
+
+//search products
+export const searchProducts = async (query) => {
+  try {
+    const response = await api.get(`/products/search?q=${encodeURIComponent(query)}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error searching products:", error);
+    throw error;
+  }
+};
