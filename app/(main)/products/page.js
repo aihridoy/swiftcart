@@ -256,6 +256,7 @@ const Products = () => {
   }
 
   if (error) {
+    console.error("Error fetching products:", error);
     return (
       <div className="min-h-screen flex items-center justify-center">
         <p>Failed to load products. Please try again later.</p>

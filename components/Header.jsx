@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { FaSearch, FaHeart, FaShoppingBag, FaUser, FaBox } from "react-icons/fa"; 
@@ -11,11 +11,47 @@ import { getCart } from "@/actions/cart-utils";
 import { getOrders } from "@/actions/order-utils"; 
 import { useRouter } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
+import { searchProducts } from "@/actions/products";
 
 const Header = () => {
   const queryClient = useQueryClient();
   const router = useRouter();
   const { data: session, status } = useSession();
+
+  // Search state
+  const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  // Debounce search term
+  const debounce = useCallback((func, delay) => {
+    let timer;
+    return (...args) => {
+      clearTimeout(timer);
+      timer = setTimeout(() => func(...args), delay);
+    };
+  }, []);
+
+  useEffect(() => {
+    const debouncedSetSearchTerm = debounce((value) => {
+      setDebouncedSearchTerm(value);
+      setIsDropdownOpen(value.length > 0);
+    }, 500);
+    debouncedSetSearchTerm(searchTerm);
+  }, [searchTerm, debounce]);
+
+  // Fetch search results
+  const { data: searchResults, isLoading: searchLoading } = useQuery({
+    queryKey: ["search", debouncedSearchTerm],
+    queryFn: () => searchProducts(debouncedSearchTerm),
+    enabled: !!debouncedSearchTerm,
+    onError: (error) => {
+      toast.error(`Error searching products: ${error.message}`, {
+        position: "top-right",
+        autoClose: 3000,
+      });
+    },
+  });
 
   // Fetch wishlist
   const { data: wishlistData, error: wishlistError } = useQuery({
@@ -88,7 +124,7 @@ const Header = () => {
     await signOut({ redirect: false });
     queryClient.invalidateQueries(["wishlist"]);
     queryClient.invalidateQueries(["cart"]);
-    queryClient.invalidateQueries(["orders"]); // Invalidate orders on logout
+    queryClient.invalidateQueries(["orders"]);
     toast.success("Logged out successfully!", {
       position: "top-right",
       autoClose: 3000,
@@ -99,6 +135,23 @@ const Header = () => {
       progress: undefined,
     });
     router.push("/login");
+  };
+
+  // Handle search form submission
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    if (searchTerm.trim()) {
+      router.push(`/search?q=${encodeURIComponent(searchTerm)}`);
+      setIsDropdownOpen(false);
+      setSearchTerm("");
+    }
+  };
+
+  // Handle clicking a search result
+  const handleResultClick = (productId) => {
+    router.push(`/products/${productId}`);
+    setIsDropdownOpen(false);
+    setSearchTerm("");
   };
 
   // Wishlist count
@@ -144,20 +197,65 @@ const Header = () => {
         </Link>
 
         {/* Search Bar */}
-        <div className="w-full max-w-xl relative flex">
-          <span className="absolute left-4 top-3 text-lg text-gray-400">
-            <FaSearch />
-          </span>
-          <input
-            type="text"
-            name="search"
-            id="search"
-            className="w-full border border-primary border-r-0 pl-12 py-3 pr-3 rounded-l-md focus:outline-none"
-            placeholder="Search"
-          />
-          <button className="bg-primary border border-primary text-white px-8 rounded-r-md hover:bg-transparent hover:text-primary transition">
-            Search
-          </button>
+        <div className="w-full max-w-xl relative">
+          <form onSubmit={handleSearchSubmit} className="flex">
+            <span className="absolute left-4 top-3 text-lg text-gray-400">
+              <FaSearch />
+            </span>
+            <input
+              type="text"
+              name="search"
+              id="search"
+              className="w-full border border-primary border-r-0 pl-12 py-3 pr-3 rounded-l-md focus:outline-none"
+              placeholder="Search Product"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              onFocus={() => debouncedSearchTerm && setIsDropdownOpen(true)}
+              onBlur={() => setTimeout(() => setIsDropdownOpen(false), 200)}
+            />
+            <button
+              type="submit"
+              className="bg-primary border border-primary text-white px-8 rounded-r-md hover:bg-transparent hover:text-primary transition"
+            >
+              Search
+            </button>
+          </form>
+
+          {/* Search Results Dropdown */}
+          {isDropdownOpen && (
+            <div className="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-md shadow-lg mt-1 max-h-60 overflow-y-auto z-10">
+              {searchLoading ? (
+                <div className="p-4 text-gray-500">Loading...</div>
+              ) : searchResults?.products?.length > 0 ? (
+                searchResults.products.map((product) => (
+                  <div
+                    key={product._id}
+                    onClick={() => handleResultClick(product._id)}
+                    className="p-4 hover:bg-gray-100 cursor-pointer flex items-center space-x-4"
+                  >
+                    {product.mainImage && (
+                      <Image
+                        src={product.mainImage}
+                        alt={product.title}
+                        width={40}
+                        height={40}
+                        className="w-10 h-10 object-cover rounded"
+                      />
+                    )}
+                    <div>
+                      <p className="text-gray-800 font-medium">{product.title}</p>
+                      <p className="text-gray-500 text-sm">
+                        {product.brand} - {product.category}
+                      </p>
+                      <p className="text-primary font-medium">${product.price.toFixed(2)}</p>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="p-4 text-gray-500">No products found</div>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Icons */}
