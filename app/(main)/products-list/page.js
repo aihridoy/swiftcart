@@ -1,13 +1,13 @@
 "use client";
-import { getProducts } from '@/actions/products';
-import { useQuery } from '@tanstack/react-query';
+import { getProducts, deleteProduct } from '@/actions/products';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import React, { useState } from 'react';
 import Image from 'next/image';
 import { toast } from 'react-toastify';
-import Link from 'next/link';
 
 const ProductsPage = () => {
   const [visibleProducts, setVisibleProducts] = useState(10);
+  const queryClient = useQueryClient();
 
   // Fetch products
   const { data: products, error, isLoading } = useQuery({
@@ -27,10 +27,46 @@ const ProductsPage = () => {
     },
   });
 
+  // Delete product mutation
+  const deleteProductMutation = useMutation({
+    mutationFn: deleteProduct,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["products"] });
+      toast.success("Product deleted successfully", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    },
+    onError: (error) => {
+      toast.error(`Error deleting produc client: ${error.message}`, {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    },
+  });
+
   const { products: productList } = products || {};
 
   const handleShowMore = () => {
     setVisibleProducts(prevCount => prevCount + 10);
+  };
+
+  const handleDeleteProduct = (id) => {
+    if (window.confirm("Are you sure you want to delete this product?")) {
+      deleteProductMutation.mutate(id);
+    }
   };
 
   if (isLoading) {
@@ -105,9 +141,21 @@ const ProductsPage = () => {
                   SKU: {product.sku}
                 </div>
                 
-                <Link href={`/products/${product._id}`} className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-6 rounded-md transition-colors duration-300">
-                  View Details
-                </Link>
+                <div className="flex gap-2">
+                  <button 
+                    className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-6 rounded-md transition-colors duration-300"
+                  >
+                    View Details
+                  </button>
+                  <button 
+                    onClick={() => handleDeleteProduct(product._id)}
+                    className="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-md transition-colors duration-300"
+                    disabled={deleteProductMutation.isPending}
+                  >
+                    {deleteProductMutation.isPending && product._id === deleteProductMutation.variables ? 
+                      'Deleting...' : 'Delete'}
+                  </button>
+                </div>
               </div>
             </div>
           </div>

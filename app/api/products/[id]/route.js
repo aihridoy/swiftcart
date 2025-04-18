@@ -30,3 +30,29 @@ export async function GET(req, { params }) {
     return NextResponse.json({ error: "Failed to fetch product" }, { status: 500 });
   }
 }
+
+export async function DELETE(req, { params }) {
+  await dbConnect();
+
+  try {
+    const { id } = params;
+
+    if (!id) {
+      return NextResponse.json({ error: "Product ID is required" }, { status: 400 });
+    }
+
+    const deletedProduct = await Product.findByIdAndDelete(id);
+
+    if (!deletedProduct) {
+      return NextResponse.json({ error: "Product not found" }, { status: 404 });
+    }
+
+    return NextResponse.json(
+      { message: "Product deleted successfully", product: deletedProduct },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Error deleting product server:", error);
+    return NextResponse.json({ error: "Failed to delete product" }, { status: 500 });
+  }
+}
