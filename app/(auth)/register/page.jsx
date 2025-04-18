@@ -67,6 +67,7 @@ const RegisterPage = () => {
         name: formData.name,
         email: formData.email,
         password: formData.password,
+        role: "user"
       });
 
       if (result.success) {

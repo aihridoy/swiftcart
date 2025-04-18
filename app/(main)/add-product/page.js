@@ -6,6 +6,27 @@ import { addProduct } from "@/actions/products";
 import { toast } from "react-toastify";
 import Image from "next/image";
 
+// Helper function to validate URLs
+const isValidImageUrl = (url) => {
+  // Check if the URL is a non-empty string
+  if (!url || typeof url !== "string") return false;
+
+  const urlPattern = /^https?:\/\//;
+  if (!urlPattern.test(url)) return false;
+
+  try {
+    const { hostname } = new URL(url);
+    const allowedHostnames = [
+      "images.unsplash.com",
+      "lh3.googleusercontent.com",
+      "platform-lookaside.fbsbx.com",
+    ];
+    return allowedHostnames.includes(hostname);
+  } catch (error) {
+    return false; 
+  }
+};
+
 export default function AddProduct() {
   const queryClient = useQueryClient();
 
@@ -23,7 +44,7 @@ export default function AddProduct() {
     thumbnails: ["", "", "", "", ""],
   });
 
-  const [message, setMessage] = useState(""); 
+  const [message, setMessage] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -91,8 +112,9 @@ export default function AddProduct() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setMessage(""); 
-    mutation.mutate(formData); // Trigger the mutation
+    setMessage("");
+    mutation.mutate(formData);
+
   };
 
   return (
@@ -105,7 +127,9 @@ export default function AddProduct() {
           {message && (
             <div
               className={`p-3 mb-4 text-center ${
-                message.includes("success") ? "text-green-700 bg-green-100" : "text-red-700 bg-red-100"
+                message.includes("success")
+                  ? "text-green-700 bg-green-100"
+                  : "text-red-700 bg-red-100"
               } rounded-lg`}
             >
               {message}
@@ -310,18 +334,24 @@ export default function AddProduct() {
                 value={formData.mainImage}
                 onChange={handleChange}
                 className="block w-full border border-gray-200 rounded-lg p-3 bg-gray-50/50 focus:outline-none focus:ring-2 focus:ring-teal-300 transition-all shadow-sm hover:shadow-md"
-                placeholder="Enter main image URL"
+                placeholder="Enter main image URL (e.g., https://images.unsplash.com/...)"
                 required
               />
               {formData.mainImage && (
                 <div className="mt-3">
-                  <Image
-                    width={500}
-                    height={500}
-                    src={formData.mainImage}
-                    alt="Main Product Preview"
-                    className="w-full h-64 object-cover rounded-lg shadow-md"
-                  />
+                  {isValidImageUrl(formData.mainImage) ? (
+                    <Image
+                      width={500}
+                      height={500}
+                      src={formData.mainImage}
+                      alt="Main Product Preview"
+                      className="w-full h-64 object-cover rounded-lg shadow-md"
+                    />
+                  ) : (
+                    <p className="text-red-500 text-sm">
+                      Invalid image URL. Please use a valid URL from Unsplash, Google, or Facebook.
+                    </p>
+                  )}
                 </div>
               )}
             </div>
@@ -341,16 +371,24 @@ export default function AddProduct() {
                         handleThumbnailChange(index, e.target.value)
                       }
                       className="block w-full border border-gray-200 rounded-lg p-3 bg-gray-50/50 focus:outline-none focus:ring-2 focus:ring-teal-300 transition-all shadow-sm hover:shadow-md"
-                      placeholder={`Thumbnail ${index + 1} URL`}
+                      placeholder={`Thumbnail ${index + 1} URL (e.g., https://images.unsplash.com/...)`}
                     />
                     {thumbnail && (
-                      <Image
-                        width={100}
-                        height={100}
-                        src={thumbnail}
-                        alt={`Thumbnail ${index + 1}`}
-                        className="w-16 h-16 object-cover rounded-lg shadow-sm hover:shadow-md transition-all"
-                      />
+                      <div>
+                        {isValidImageUrl(thumbnail) ? (
+                          <Image
+                            width={100}
+                            height={100}
+                            src={thumbnail}
+                            alt={`Thumbnail ${index + 1}`}
+                            className="w-16 h-16 object-cover rounded-lg shadow-sm hover:shadow-md transition-all"
+                          />
+                        ) : (
+                          <p className="text-red-500 text-sm">
+                            Invalid URL
+                          </p>
+                        )}
+                      </div>
                     )}
                   </div>
                 ))}

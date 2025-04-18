@@ -1,12 +1,18 @@
 import { NextResponse } from "next/server";
 import { dbConnect } from "@/service/mongo";
 import { Product } from "@/models/product-model";
+import { session } from "@/actions/auth-utils";
 
 export async function POST(req) {
   await dbConnect();
 
   try {
     const body = await req.json(); 
+    
+    const userSession = await session();
+    if (!userSession || !userSession.user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
 
     const { title, brand, category, sku, price, description, mainImage, quantity } = body;
     if (!title || !brand || !category || !sku || !price || !description || !mainImage || !quantity) {
@@ -14,6 +20,7 @@ export async function POST(req) {
     }
 
     const product = new Product({
+      user: userSession.user.id,
       title,
       availability: body.availability || "In Stock",
       brand,

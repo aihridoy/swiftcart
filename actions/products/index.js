@@ -25,6 +25,12 @@ export const getProducts = async ({ limit, sort, category } = {}) => {
     return response.data;
   };
 
+  //delete product 
+  export const deleteProduct = async (id) => {
+    const response = await api.delete(`/products/${id}`);
+    return response.data;
+  }
+
   // Increment popularityScore for a product
 export const incrementPopularity = async (id, incrementBy = 1) => {
   try {
