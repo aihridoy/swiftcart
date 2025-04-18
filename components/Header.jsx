@@ -9,14 +9,15 @@ import { toast } from "react-toastify";
 import { getWishlist } from "@/actions/wishlist";
 import { getCart } from "@/actions/cart-utils";
 import { getOrders } from "@/actions/order-utils"; 
-import { useRouter } from "next/navigation";
-import { useSession, signOut } from "next-auth/react";
 import { searchProducts } from "@/actions/products";
+import { useRouter } from "next/navigation";
+import { session } from "@/actions/auth-utils";
+
 
 const Header = () => {
   const queryClient = useQueryClient();
   const router = useRouter();
-  const { data: session, status } = useSession();
+  const [user, setUser] = useState(null);
 
   // Search state
   const [searchTerm, setSearchTerm] = useState("");
@@ -31,6 +32,20 @@ const Header = () => {
       timer = setTimeout(() => func(...args), delay);
     };
   }, []);
+
+  useEffect(() => {
+    const fetchUserSession = async () => {
+      const sessionData = await session();
+      if (!sessionData) {
+        setUser(null);
+        return;
+      }
+      setUser(sessionData);
+    };
+
+    fetchUserSession();
+  }
+  , []);
 
   useEffect(() => {
     const debouncedSetSearchTerm = debounce((value) => {
@@ -57,7 +72,7 @@ const Header = () => {
   const { data: wishlistData, error: wishlistError } = useQuery({
     queryKey: ["wishlist"],
     queryFn: getWishlist,
-    enabled: !!session,
+    enabled: !!user,
     onError: (error) => {
       if (error.message.includes("Unauthorized")) {
         // Do nothing, handled by handleProtectedNavigation
@@ -79,7 +94,7 @@ const Header = () => {
   const { data: cartData, error: cartError } = useQuery({
     queryKey: ["cart"],
     queryFn: getCart,
-    enabled: !!session,
+    enabled: !!user,
     onError: (error) => {
       if (error.message.includes("Unauthorized")) {
         // Do nothing, handled by handleProtectedNavigation
@@ -101,7 +116,7 @@ const Header = () => {
   const { data: ordersData, error: ordersError } = useQuery({
     queryKey: ["orders"],
     queryFn: getOrders,
-    enabled: !!session,
+    enabled: !!user,
     onError: (error) => {
       if (error.message.includes("Unauthorized")) {
         // Do nothing, handled by handleProtectedNavigation
@@ -124,30 +139,43 @@ const Header = () => {
     e.preventDefault();
     if (searchTerm.trim()) {
       router.push(`/search?q=${encodeURIComponent(searchTerm)}`);
-      setIsDropdownOpen(false);
       setSearchTerm("");
+      setIsDropdownOpen(false);
+      // Clear search queries to prevent stale results
+      queryClient.removeQueries({ queryKey: ["search"], exact: false });
     }
   };
 
   // Handle clicking a search result
   const handleResultClick = (productId) => {
     router.push(`/products/${productId}`);
-    setIsDropdownOpen(false);
     setSearchTerm("");
+    setIsDropdownOpen(false);
+    // Clear search queries to prevent stale results
+    queryClient.removeQueries({ queryKey: ["search"], exact: false });
+  };
+
+  // Handle dropdown close
+  const handleDropdownClose = () => {
+    setTimeout(() => {
+      setIsDropdownOpen(false);
+      // Clear search queries when dropdown closes
+      queryClient.removeQueries({ queryKey: ["search"], exact: false });
+    }, 200);
   };
 
   // Wishlist count
-  const wishlistCount = wishlistData?.wishlist?.length || 0;
+  const wishlistCount = user && wishlistData?.wishlist?.length || 0;
 
   // Cart count
-  const cartCount = cartData?.cart?.items?.length || 0;
+  const cartCount = user && cartData?.cart?.items?.length || 0;
 
   // Orders count
-  const ordersCount = ordersData?.orders?.length || 0;
+  const ordersCount = user && ordersData?.orders?.length || 0;
 
   // Handle navigation for protected routes
   const handleProtectedNavigation = (href) => {
-    if (!session) {
+    if (!user) {
       const destination = href === "/wishlist" ? "wishlist" : href === "/cart" ? "cart" : href === "/orders" ? "orders" : "account";
       toast.error(`Please log in to access your ${destination}.`, {
         position: "top-right",
@@ -193,7 +221,7 @@ const Header = () => {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               onFocus={() => debouncedSearchTerm && setIsDropdownOpen(true)}
-              onBlur={() => setTimeout(() => setIsDropdownOpen(false), 200)}
+              onBlur={handleDropdownClose}
             />
             <button
               type="submit"
@@ -267,6 +295,7 @@ const Header = () => {
             href="/profile"
             icon={<FaUser />}
             label="Account"
+            onClick={() => handleProtectedNavigation("/profile")}
           />
         </div>
       </div>
