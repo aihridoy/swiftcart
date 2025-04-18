@@ -63,6 +63,7 @@ const Navbar = async () => {
     { name: "Shop", path: "/products" },
     { name: "About Us", path: "/about-us" },
     { name: "Contact Us", path: "/contact" },
+    { name: "Products", path: "/products-list" }
   ];
 
   return (

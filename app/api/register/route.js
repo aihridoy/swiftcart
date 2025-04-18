@@ -7,10 +7,10 @@ export async function POST(req) {
   try {
     await dbConnect();
 
-    const { name, email, password } = await req.json();
+    const { name, email, password, role } = await req.json();
 
     // Validate input
-    if (!name || !email || !password) {
+    if (!name || !email || !password || !role) {
       return NextResponse.json(
         { message: "Name, email, and password are required" },
         { status: 400 }
@@ -52,10 +52,11 @@ export async function POST(req) {
       name,
       email,
       password: hashedPassword,
+      role
     });
 
     return NextResponse.json(
-      { message: "User registered successfully", user: { id: newUser._id, name: newUser.name, email: newUser.email } },
+      { message: "User registered successfully", user: { id: newUser._id, name: newUser.name, email: newUser.email, role: newUser.role } },
       { status: 201 }
     );
   } catch (error) {
