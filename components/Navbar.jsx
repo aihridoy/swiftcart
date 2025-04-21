@@ -62,9 +62,13 @@ const Navbar = async () => {
     { name: "Home", path: "/" },
     { name: "Shop", path: "/products" },
     { name: "About Us", path: "/about-us" },
-    { name: "Contact Us", path: "/contact" },
-    { name: "Products", path: "/products-list" }
+    { name: "Contact Us", path: "/contact" }
   ];
+
+   // Only show "Products" to admin
+   if (userSession?.user?.role === "admin") {
+    navLinks.push({ name: "Products", path: "/products-list" });
+  }
 
   return (
     <nav className="bg-gray-800">

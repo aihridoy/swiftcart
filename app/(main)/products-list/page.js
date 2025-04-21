@@ -61,14 +61,12 @@ const ProductsPage = () => {
       queryClient.invalidateQueries({ queryKey: ["products"] });
       toast.success("Product deleted successfully");
     },
-    onError: (error) =>
-      toast.error(`Error deleting product: ${error.message}`),
+    onError: (error) => toast.error(`Error deleting product: ${error.message}`),
   });
 
   const userProducts =
-    products?.products?.filter(
-      (product) => product.user === user?.user?.id
-    ) || [];
+    products?.products?.filter((product) => product.user === user?.user?.id) ||
+    [];
 
   const handleShowMore = () => setVisibleProducts((prev) => prev + 10);
 
@@ -108,100 +106,103 @@ const ProductsPage = () => {
       </div>
 
       <div className="divide-y divide-gray-200">
-  {userProducts.length === 0 ? (
-    <div className="flex justify-center items-center min-h-[200px] text-gray-500">
-      No products available
-    </div>
-  ) : (
-    userProducts.slice(0, visibleProducts).map((product) => {
-      const isOwner = user && product.user && user?.user.id === product.user;
-
-      return (
-        <div
-          key={product._id}
-          className="py-6 flex flex-col md:flex-row items-start gap-6 hover:bg-gray-50 transition-colors duration-200"
-        >
-          <div className="relative h-40 w-40 flex-shrink-0">
-            <Image
-              src={product.mainImage}
-              alt={product.title}
-              fill
-              className="object-cover rounded-md"
-            />
+        {userProducts.length === 0 ? (
+          <div className="flex justify-center items-center min-h-[200px] text-gray-500">
+            No products available
           </div>
+        ) : (
+          userProducts.slice(0, visibleProducts).map((product) => {
+            const isOwner =
+              user && product.user && user?.user.id === product.user;
 
-          <div className="flex-grow">
-            <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-2">
-              <div>
-                <h2 className="text-xl font-semibold">{product.title}</h2>
-                <p className="text-gray-600 text-sm">
-                  {product.brand} - {product.category}
-                </p>
-              </div>
-
-              <div className="flex flex-col items-start md:items-end">
-                <div className="flex items-center gap-2">
-                  <span className="font-bold text-lg">
-                    ${product.price.toFixed(2)}
-                  </span>
-                  {product.originalPrice &&
-                    product.originalPrice > product.price && (
-                      <span className="text-gray-400 line-through text-sm">
-                        ${product.originalPrice.toFixed(2)}
-                      </span>
-                    )}
+            return (
+              <div
+                key={product._id}
+                className="py-6 flex flex-col md:flex-row items-start gap-6 hover:bg-gray-50 transition-colors duration-200"
+              >
+                <div className="relative h-40 w-40 flex-shrink-0">
+                  <Image
+                    src={product.mainImage}
+                    alt={product.title}
+                    fill
+                    className="object-cover rounded-md"
+                  />
                 </div>
-                <span
-                  className={`text-sm ${product.availability === "In Stock" ? "text-green-500" : "text-red-500"}`}
-                >
-                  {product.availability}
-                </span>
+
+                <div className="flex-grow">
+                  <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-2">
+                    <div>
+                      <h2 className="text-xl font-semibold">{product.title}</h2>
+                      <p className="text-gray-600 text-sm">
+                        {product.brand} - {product.category}
+                      </p>
+                    </div>
+
+                    <div className="flex flex-col items-start md:items-end">
+                      <div className="flex items-center gap-2">
+                        <span className="font-bold text-lg">
+                          ${product.price.toFixed(2)}
+                        </span>
+                        {product.originalPrice &&
+                          product.originalPrice > product.price && (
+                            <span className="text-gray-400 line-through text-sm">
+                              ${product.originalPrice.toFixed(2)}
+                            </span>
+                          )}
+                      </div>
+                      <span
+                        className={`text-sm ${product.availability === "In Stock" ? "text-green-500" : "text-red-500"}`}
+                      >
+                        {product.availability}
+                      </span>
+                    </div>
+                  </div>
+
+                  <p className="text-gray-700 mt-2 mb-4">
+                    {product.description}
+                  </p>
+
+                  <div className="flex items-center justify-between mt-4">
+                    <div className="text-sm text-gray-500">
+                      SKU: {product.sku}
+                    </div>
+
+                    <div className="flex gap-2">
+                      <Link
+                        href={`/products/${product._id}`}
+                        className="border border-blue-600 text-blue-600 hover:bg-blue-50 font-medium py-2 px-6 rounded-md transition-all duration-300"
+                      >
+                        View Details
+                      </Link>
+                      {isOwner && (
+                        <>
+                          <Link
+                            href={`/edit-product/${product._id}`}
+                            className="bg-amber-500 hover:bg-amber-600 text-white py-2 px-4 font-medium rounded-md transition-colors duration-300"
+                          >
+                            Edit
+                          </Link>
+
+                          <button
+                            onClick={() => handleDeleteProduct(product._id)}
+                            className="bg-red-500 hover:bg-red-600 text-white py-2 px-4 font-medium rounded-md transition-colors duration-300"
+                            disabled={deleteProductMutation.isPending}
+                          >
+                            {deleteProductMutation.isPending &&
+                            product._id === deleteProductMutation.variables
+                              ? "Deleting..."
+                              : "Delete"}
+                          </button>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
-
-            <p className="text-gray-700 mt-2 mb-4">{product.description}</p>
-
-            <div className="flex items-center justify-between mt-4">
-              <div className="text-sm text-gray-500">
-                SKU: {product.sku}
-              </div>
-
-              <div className="flex gap-2">
-                <Link
-                  href={`/products/${product._id}`}
-                  className="border border-blue-600 text-blue-600 hover:bg-blue-50 font-medium py-2 px-6 rounded-md transition-all duration-300"
-                >
-                  View Details
-                </Link>
-                {isOwner && (
-                  <>
-                    <Link
-                      href={`/edit-product/${product._id}`}
-                      className="bg-amber-500 hover:bg-amber-600 text-white py-2 px-4 font-medium rounded-md transition-colors duration-300"
-                    >
-                      Edit
-                    </Link>
-
-                    <button
-                      onClick={() => handleDeleteProduct(product._id)}
-                      className="bg-red-500 hover:bg-red-600 text-white py-2 px-4 font-medium rounded-md transition-colors duration-300"
-                      disabled={deleteProductMutation.isPending}
-                    >
-                      {deleteProductMutation.isPending &&
-                      product._id === deleteProductMutation.variables
-                        ? "Deleting..."
-                        : "Delete"}
-                    </button>
-                  </>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-      );
-    })
-  )}
-</div>
+            );
+          })
+        )}
+      </div>
 
       {userProducts.length > visibleProducts && (
         <div className="flex justify-center mt-8">
