@@ -173,7 +173,7 @@ const ProductsPage = () => {
 
       <div className="divide-y divide-gray-200">
         {productList.slice(0, visibleProducts).map((product) => {
-          const canDelete = user && product.user && user?.user.id === product.user;
+          const isOwner = user && product.user && user?.user.id === product.user;
 
           return (
             <div
@@ -232,7 +232,15 @@ const ProductsPage = () => {
                     >
                       View Details
                     </Link>
-                    {canDelete && (
+                    {isOwner && (
+                      <>
+                      <Link
+                        href={`/edit-product/${product._id}`}
+                        className="bg-amber-500 hover:bg-amber-600 text-white py-2 px-4 font-medium rounded-md transition-colors duration-300"
+                      >
+                        Edit
+                      </Link>
+                      
                       <button
                         onClick={() => handleDeleteProduct(product._id)}
                         className="bg-red-500 hover:bg-red-600 text-white py-2 px-4 font-medium rounded-md transition-colors duration-300"
@@ -243,6 +251,7 @@ const ProductsPage = () => {
                           ? "Deleting..."
                           : "Delete"}
                       </button>
+                    </>
                     )}
                   </div>
                 </div>
