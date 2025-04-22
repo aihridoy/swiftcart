@@ -198,11 +198,11 @@ const Header = () => {
         {/* Logo */}
         <Link href="/">
           <Image
-            src="/images/logo.svg"
+            src="/images/swiftcart-logo.svg"
             alt="Logo"
             width={128}
             height={40}
-            className="w-32"
+            className="w-44 h-auto"
           />
         </Link>
 

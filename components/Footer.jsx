@@ -7,7 +7,7 @@ const Footer = () => {
       <div className="container grid grid-cols-1">
         <div className="col-span-1 space-y-4">
           <Image
-            src="/images/logo.svg"
+            src="/images/swiftcart-logo.svg"
             alt="logo"
             width={500}
             height={500}
