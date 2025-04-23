@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { getUsers } from "@/actions/user-utils";
-import toast from "react-toastify";
+import {toast} from "react-toastify";
 
 // Skeleton Loader Component
 const SkeletonRow = () => (
@@ -136,7 +136,7 @@ const UserList = () => {
                 </tr>
               </thead>
               <tbody>
-                {users.map((user, index) => (
+                {users.filter(user => user.role === 'user').map((user, index) => (
                   <tr
                     key={user._id}
                     className={`${

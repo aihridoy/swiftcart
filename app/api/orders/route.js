@@ -50,7 +50,7 @@ export async function POST(request) {
   }
 }
 
-export async function GET() {
+export async function GET(request) {
   try {
     const userSession = await session();
     if (!userSession || !userSession.user) {
@@ -59,11 +59,93 @@ export async function GET() {
 
     await dbConnect();
 
-    const orders = await Order.find({ user: userSession.user.id }).populate("items.product").sort({ createdAt: -1 });
+    // Get pagination parameters from query
+    const { searchParams } = new URL(request.url);
+    const page = parseInt(searchParams.get("page")) || 1;
+    const limit = parseInt(searchParams.get("limit")) || 10;
+    const skip = (page - 1) * limit;
 
-    return NextResponse.json({ orders }, { status: 200 });
+    let orders;
+    let totalOrders;
+
+    // Check if the user is an admin
+    const isAdmin = userSession.user.role === "admin";
+
+    if (isAdmin) {
+      // Fetch all orders for admin
+      orders = await Order.find({})
+        .populate("items.product")
+        .populate("user", "name email") // Populate user details for admin view
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit);
+
+      totalOrders = await Order.countDocuments();
+    } else {
+      // Fetch user-specific orders
+      orders = await Order.find({ user: userSession.user.id })
+        .populate("items.product")
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit);
+
+      totalOrders = await Order.countDocuments({ user: userSession.user.id });
+    }
+
+    const totalPages = Math.ceil(totalOrders / limit);
+
+    return NextResponse.json(
+      {
+        orders,
+        pagination: {
+          currentPage: page,
+          totalPages,
+          totalOrders,
+          limit,
+        },
+      },
+      { status: 200 }
+    );
   } catch (error) {
     console.error("Error fetching orders:", error);
     return NextResponse.json({ error: "Failed to fetch orders" }, { status: 500 });
+  }
+}
+
+export async function PATCH(request) {
+  try {
+    const userSession = await session();
+    if (!userSession || !userSession.user || userSession.user.role !== "admin") {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const body = await request.json();
+    const { orderId, status } = body;
+
+    if (!orderId || !status) {
+      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+    }
+
+    // Validate status against the enum defined in the order model
+    const validStatuses = ["Pending", "Processing", "Shipped", "Delivered", "Cancelled"];
+    if (!validStatuses.includes(status)) {
+      return NextResponse.json({ error: "Invalid status value" }, { status: 400 });
+    }
+
+    await dbConnect();
+
+    // Find and update the order
+    const order = await Order.findById(orderId);
+    if (!order) {
+      return NextResponse.json({ error: "Order not found" }, { status: 404 });
+    }
+
+    order.status = status;
+    await order.save();
+
+    return NextResponse.json({ message: "Order updated successfully", order }, { status: 200 });
+  } catch (error) {
+    console.error("Error updating order:", error);
+    return NextResponse.json({ error: "Failed to update order" }, { status: 500 });
   }
 }

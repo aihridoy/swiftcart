@@ -1,5 +1,5 @@
 
-import { NextResponse } from "next/server";// Adjust the path based on your folder structure
+import { NextResponse } from "next/server";
 import { User } from "@/models/user-model";
 import { dbConnect } from "@/service/mongo";
 
