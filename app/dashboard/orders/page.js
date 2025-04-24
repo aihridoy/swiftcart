@@ -1,66 +1,70 @@
 "use client";
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { getUsers } from "@/actions/user-utils";
 import { toast } from "react-toastify";
+import { getOrders, updateOrderStatus } from "@/actions/order-utils";
 import { 
+  FaShoppingCart, 
   FaUser, 
-  FaUsers, 
-  FaUserShield, 
-  FaEnvelope, 
+  FaBox, 
+  FaTruck, 
+  FaCheckCircle, 
+  FaTimesCircle, 
   FaCalendarAlt, 
-  FaAngleLeft, 
+  FaDollarSign,
+  FaAngleLeft,
   FaAngleRight,
   FaAngleDoubleLeft,
   FaAngleDoubleRight,
   FaSpinner,
-  FaSearch,
-  FaFilter,
-  FaCrown,
-  FaUserCog,
-  FaExclamationTriangle,
-  FaInfoCircle
+  FaSearch
 } from "react-icons/fa";
 
 // Skeleton Loader Component
 const SkeletonRow = () => (
   <tr className="animate-pulse">
     <td className="p-4">
-      <div className="flex items-center">
-        <div className="h-8 w-8 bg-gray-200 rounded-full mr-3"></div>
-        <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-      </div>
+      <div className="h-4 bg-gray-200 rounded w-3/4"></div>
     </td>
     <td className="p-4">
       <div className="h-4 bg-gray-200 rounded w-1/2"></div>
     </td>
     <td className="p-4">
-      <div className="h-4 bg-gray-200 rounded w-1/4 mx-auto"></div>
+      <div className="h-4 bg-gray-200 rounded w-1/4"></div>
+    </td>
+    <td className="p-4">
+      <div className="h-4 bg-gray-200 rounded w-1/4"></div>
+    </td>
+    <td className="p-4">
+      <div className="h-4 bg-gray-200 rounded w-1/4"></div>
+    </td>
+    <td className="p-4">
+      <div className="h-4 bg-gray-200 rounded w-1/4"></div>
     </td>
     <td className="p-4">
       <div className="h-4 bg-gray-200 rounded w-1/3"></div>
     </td>
     <td className="p-4">
-      <div className="h-8 bg-gray-200 rounded w-1/4"></div>
+      <div className="h-4 bg-gray-200 rounded w-1/4"></div>
     </td>
   </tr>
 );
 
-const UserList = () => {
+const OrderList = () => {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
-  const [roleFilter, setRoleFilter] = useState("all");
   const limit = 10;
 
-  // Fetch users with React Query
+  // Fetch orders with React Query
   const { data, error, isLoading } = useQuery({
-    queryKey: ["users", currentPage],
-    queryFn: () => getUsers({ page: currentPage, limit }),
+    queryKey: ["orders", currentPage],
+    queryFn: () => getOrders({ page: currentPage, limit }),
     onError: (error) => {
       if (error.message.includes("Unauthorized")) {
-        toast.error("Please log in to view users.", {
+        toast.error("Please log in to view orders.", {
           position: "top-right",
           autoClose: 3000,
         });
@@ -68,7 +72,7 @@ const UserList = () => {
           router.push("/login");
         }, 3000);
       } else {
-        toast.error(`Error loading users: ${error.message}`, {
+        toast.error(`Error loading orders: ${error.message}`, {
           position: "top-right",
           autoClose: 3000,
         });
@@ -76,28 +80,42 @@ const UserList = () => {
     },
   });
 
-  const users = data?.users || [];
+  // Mutation for updating order status
+  const mutation = useMutation({
+    mutationFn: updateOrderStatus,
+    onSuccess: () => {
+      // Refetch orders to update the UI
+      queryClient.invalidateQueries(["orders", currentPage]);
+      toast.success("Order status updated successfully", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+    },
+    onError: (error) => {
+      toast.error(`Failed to update order: ${error.message}`, {
+        position: "top-right",
+        autoClose: 3000,
+      });
+    },
+  });
+
+  const handleStatusChange = (orderId, newStatus) => {
+    mutation.mutate({ orderId, status: newStatus });
+  };
+
+  const orders = data?.orders || [];
   const pagination = data?.pagination || {
     currentPage: 1,
     totalPages: 1,
-    totalUsers: 0,
+    totalOrders: 0,
     limit,
   };
 
-  // Filter users based on search term and role filter
-  const filteredUsers = users.filter(user => {
-    const matchesSearch = 
-      user.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-      user.email.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    const matchesRole = roleFilter === "all" || user.role === roleFilter;
-    
-    return matchesSearch && matchesRole;
-  });
-
-  // Get user counts by role
-  const adminCount = users.filter(user => user.role === "admin").length;
-  const regularUserCount = users.filter(user => user.role === "user").length;
+  // Filter orders based on search term
+  const filteredOrders = orders.filter(order => 
+    order._id.toLowerCase().includes(searchTerm.toLowerCase()) || 
+    (order.user?.name && order.user.name.toLowerCase().includes(searchTerm.toLowerCase()))
+  );
 
   // Pagination controls
   const handlePageChange = (page) => {
@@ -123,41 +141,22 @@ const UserList = () => {
     pageNumbers.push(i);
   }
 
-  // Get user role icon
-  const getRoleIcon = (role) => {
-    switch (role) {
-      case "admin":
-        return <FaUserShield className="text-green-600" />;
-      case "user":
-        return <FaUser className="text-blue-600" />;
+  // Status icon selector
+  const getStatusIcon = (status) => {
+    switch (status) {
+      case "Pending":
+        return <FaShoppingCart className="text-yellow-600" />;
+      case "Processing":
+        return <FaBox className="text-orange-600" />;
+      case "Shipped":
+        return <FaTruck className="text-blue-600" />;
+      case "Delivered":
+        return <FaCheckCircle className="text-green-600" />;
+      case "Cancelled":
+        return <FaTimesCircle className="text-red-600" />;
       default:
-        return <FaUser className="text-gray-600" />;
+        return null;
     }
-  };
-
-  // Get initials for avatar placeholder
-  const getInitials = (name) => {
-    if (!name) return "U";
-    return name.split(" ").map(n => n[0]).join("").toUpperCase().substring(0, 2);
-  };
-
-  // Get random background color based on user ID
-  const getAvatarColor = (userId) => {
-    const colors = [
-      "bg-blue-200 text-blue-800",
-      "bg-green-200 text-green-800",
-      "bg-purple-200 text-purple-800",
-      "bg-yellow-200 text-yellow-800",
-      "bg-pink-200 text-pink-800",
-      "bg-indigo-200 text-indigo-800",
-      "bg-red-200 text-red-800",
-      "bg-teal-200 text-teal-800"
-    ];
-    
-    // Use the last character of the ID to pick a color
-    const lastChar = userId ? userId.toString().slice(-1) : "0";
-    const colorIndex = parseInt(lastChar, 16) % colors.length;
-    return colors[colorIndex];
   };
 
   if (isLoading) {
@@ -165,21 +164,24 @@ const UserList = () => {
       <div className="container mx-auto py-16">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-3xl font-bold flex items-center">
-            <FaUsers className="mr-2 text-blue-600" />
-            Users
+            <FaShoppingCart className="mr-2 text-blue-600" />
+            Orders
           </h1>
         </div>
         <div className="overflow-x-auto bg-white shadow-md rounded-lg">
           <div className="p-4 flex items-center justify-center">
             <FaSpinner className="animate-spin text-blue-600 text-2xl" />
-            <span className="ml-2 text-gray-600">Loading users...</span>
+            <span className="ml-2 text-gray-600">Loading orders...</span>
           </div>
           <table className="min-w-full">
             <thead>
               <tr className="bg-gray-100">
-                <th className="p-4 text-left text-sm font-semibold text-gray-600">Name</th>
-                <th className="p-4 text-left text-sm font-semibold text-gray-600">Email</th>
-                <th className="p-4 text-center text-sm font-semibold text-gray-600">Role</th>
+                <th className="p-4 text-left text-sm font-semibold text-gray-600">Order ID</th>
+                <th className="p-4 text-left text-sm font-semibold text-gray-600">Customer</th>
+                <th className="p-4 text-left text-sm font-semibold text-gray-600">Subtotal</th>
+                <th className="p-4 text-left text-sm font-semibold text-gray-600">Shipping</th>
+                <th className="p-4 text-left text-sm font-semibold text-gray-600">Total</th>
+                <th className="p-4 text-left text-sm font-semibold text-gray-600">Status</th>
                 <th className="p-4 text-left text-sm font-semibold text-gray-600">Created At</th>
                 <th className="p-4 text-left text-sm font-semibold text-gray-600">Actions</th>
               </tr>
@@ -199,8 +201,8 @@ const UserList = () => {
     return (
       <div className="container mx-auto py-16 flex justify-center">
         <div className="bg-red-50 p-6 rounded-lg shadow-md flex items-center">
-          <FaExclamationTriangle className="text-red-600 text-xl mr-2" />
-          <p className="text-red-600">Failed to load users. Please try again later.</p>
+          <FaTimesCircle className="text-red-600 text-xl mr-2" />
+          <p className="text-red-600">Failed to load orders. Please try again later.</p>
         </div>
       </div>
     );
@@ -210,108 +212,119 @@ const UserList = () => {
     <div className="container mx-auto py-16">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold flex items-center">
-          <FaUsers className="mr-2 text-blue-600" />
-          Users
+          <FaShoppingCart className="mr-2 text-blue-600" />
+          Orders
         </h1>
-        <div className="flex items-center space-x-4">
-          <div className="relative">
-            <input
-              type="text"
-              placeholder="Search users..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            <FaSearch className="absolute left-3 top-3 text-gray-400" />
-          </div>
-          <div className="relative">
-            <select
-              value={roleFilter}
-              onChange={(e) => setRoleFilter(e.target.value)}
-              className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none"
-            >
-              <option value="all">All Roles</option>
-              <option value="admin">Admin</option>
-              <option value="user">User</option>
-            </select>
-            <FaFilter className="absolute left-3 top-3 text-gray-400" />
-          </div>
+        <div className="relative">
+          <input
+            type="text"
+            placeholder="Search orders..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <FaSearch className="absolute left-3 top-3 text-gray-400" />
         </div>
       </div>
       
-      {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <div className="bg-white p-4 rounded-lg shadow-md flex items-center">
-          <div className="bg-blue-100 p-3 rounded-full mr-4">
-            <FaUsers className="text-blue-600 text-xl" />
-          </div>
-          <div>
-            <p className="text-sm text-gray-500">Total Users</p>
-            <p className="text-xl font-bold">{pagination.totalUsers}</p>
-          </div>
-        </div>
-        <div className="bg-white p-4 rounded-lg shadow-md flex items-center">
-          <div className="bg-green-100 p-3 rounded-full mr-4">
-            <FaUserShield className="text-green-600 text-xl" />
-          </div>
-          <div>
-            <p className="text-sm text-gray-500">Admins</p>
-            <p className="text-xl font-bold">{adminCount}</p>
-          </div>
-        </div>
-        <div className="bg-white p-4 rounded-lg shadow-md flex items-center">
-          <div className="bg-blue-100 p-3 rounded-full mr-4">
-            <FaUser className="text-blue-600 text-xl" />
-          </div>
-          <div>
-            <p className="text-sm text-gray-500">Regular Users</p>
-            <p className="text-xl font-bold">{regularUserCount}</p>
-          </div>
-        </div>
-      </div>
-      
-      {users.length === 0 ? (
+      {orders.length === 0 ? (
         <div className="bg-white p-6 rounded-lg shadow-md flex flex-col items-center justify-center py-12">
-          <FaUsers className="text-gray-400 text-5xl mb-4" />
-          <p className="text-gray-600 text-lg">No users found.</p>
+          <FaShoppingCart className="text-gray-400 text-5xl mb-4" />
+          <p className="text-gray-600 text-lg">No orders found.</p>
         </div>
-      ) : filteredUsers.length === 0 ? (
+      ) : filteredOrders.length === 0 ? (
         <div className="bg-white p-6 rounded-lg shadow-md flex flex-col items-center justify-center py-12">
           <FaSearch className="text-gray-400 text-5xl mb-4" />
-          <p className="text-gray-600 text-lg">No users match your search criteria.</p>
+          <p className="text-gray-600 text-lg">No orders match your search criteria.</p>
           <button 
-            onClick={() => {
-              setSearchTerm("");
-              setRoleFilter("all");
-            }}
+            onClick={() => setSearchTerm("")}
             className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
           >
-            Clear Filters
+            Clear Search
           </button>
         </div>
       ) : (
         <>
-          {/* User Table */}
+          {/* Stats Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+            <div className="bg-white p-4 rounded-lg shadow-md flex items-center">
+              <div className="bg-blue-100 p-3 rounded-full mr-4">
+                <FaShoppingCart className="text-blue-600 text-xl" />
+              </div>
+              <div>
+                <p className="text-sm text-gray-500">Total Orders</p>
+                <p className="text-xl font-bold">{pagination.totalOrders}</p>
+              </div>
+            </div>
+            <div className="bg-white p-4 rounded-lg shadow-md flex items-center">
+              <div className="bg-yellow-100 p-3 rounded-full mr-4">
+                <FaShoppingCart className="text-yellow-600 text-xl" />
+              </div>
+              <div>
+                <p className="text-sm text-gray-500">Pending</p>
+                <p className="text-xl font-bold">
+                  {orders.filter(order => order.status === "Pending").length}
+                </p>
+              </div>
+            </div>
+            <div className="bg-white p-4 rounded-lg shadow-md flex items-center">
+              <div className="bg-blue-100 p-3 rounded-full mr-4">
+                <FaTruck className="text-blue-600 text-xl" />
+              </div>
+              <div>
+                <p className="text-sm text-gray-500">Shipped</p>
+                <p className="text-xl font-bold">
+                  {orders.filter(order => order.status === "Shipped").length}
+                </p>
+              </div>
+            </div>
+            <div className="bg-white p-4 rounded-lg shadow-md flex items-center">
+              <div className="bg-green-100 p-3 rounded-full mr-4">
+                <FaCheckCircle className="text-green-600 text-xl" />
+              </div>
+              <div>
+                <p className="text-sm text-gray-500">Delivered</p>
+                <p className="text-xl font-bold">
+                  {orders.filter(order => order.status === "Delivered").length}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Orders Table */}
           <div className="overflow-x-auto bg-white shadow-md rounded-lg">
             <table className="min-w-full">
               <thead>
                 <tr className="bg-gray-100">
+                  <th className="p-4 text-left text-sm font-semibold text-gray-600">Order ID</th>
                   <th className="p-4 text-left text-sm font-semibold text-gray-600">
                     <div className="flex items-center">
                       <FaUser className="mr-1 text-gray-500" />
-                      Name
+                      Customer
                     </div>
                   </th>
                   <th className="p-4 text-left text-sm font-semibold text-gray-600">
                     <div className="flex items-center">
-                      <FaEnvelope className="mr-1 text-gray-500" />
-                      Email
+                      <FaDollarSign className="mr-1 text-gray-500" />
+                      Subtotal
                     </div>
                   </th>
-                  <th className="p-4 text-center text-sm font-semibold text-gray-600">
-                    <div className="flex items-center justify-center">
-                      <FaUserCog className="mr-1 text-gray-500" />
-                      Role
+                  <th className="p-4 text-left text-sm font-semibold text-gray-600">
+                    <div className="flex items-center">
+                      <FaTruck className="mr-1 text-gray-500" />
+                      Shipping
+                    </div>
+                  </th>
+                  <th className="p-4 text-left text-sm font-semibold text-gray-600">
+                    <div className="flex items-center">
+                      <FaDollarSign className="mr-1 text-gray-500" />
+                      Total
+                    </div>
+                  </th>
+                  <th className="p-4 text-left text-sm font-semibold text-gray-600">
+                    <div className="flex items-center">
+                      <FaBox className="mr-1 text-gray-500" />
+                      Status
                     </div>
                   </th>
                   <th className="p-4 text-left text-sm font-semibold text-gray-600">
@@ -324,75 +337,68 @@ const UserList = () => {
                 </tr>
               </thead>
               <tbody>
-                {filteredUsers.map((user, index) => (
+                {filteredOrders.map((order, index) => (
                   <tr
-                    key={user._id}
+                    key={order._id}
                     className={`${
                       index % 2 === 0 ? "bg-white" : "bg-gray-50"
                     } hover:bg-blue-50 transition-colors duration-200`}
                   >
+                    <td className="p-4 text-gray-800 font-medium">{order._id}</td>
                     <td className="p-4 text-gray-800">
                       <div className="flex items-center">
-                        <div className={`h-8 w-8 rounded-full flex items-center justify-center mr-3 ${getAvatarColor(user._id)}`}>
-                          {getInitials(user.name)}
+                        <div className="bg-gray-200 rounded-full h-8 w-8 flex items-center justify-center mr-2">
+                          <FaUser className="text-gray-500" />
                         </div>
-                        <div>
-                          <p className="font-medium">{user.name}</p>
-                          {user.role === "admin" && (
-                            <span className="flex items-center text-xs text-gray-500">
-                              <FaCrown className="text-yellow-500 mr-1" />
-                              Admin user
-                            </span>
-                          )}
-                        </div>
+                        {order.user?.name || "Unknown"}
                       </div>
                     </td>
-                    <td className="p-4 text-gray-800">
-                      <div className="flex items-center">
-                        <FaEnvelope className="text-gray-400 mr-2" />
-                        {user.email}
-                      </div>
-                    </td>
-                    <td className="p-4 text-center">
-                      <span
-                        className={`inline-flex items-center px-3 py-1 text-xs font-semibold rounded-full ${
-                          user.role === "admin"
+                    <td className="p-4 text-gray-800">${order.subtotal.toFixed(2)}</td>
+                    <td className="p-4 text-gray-800">${order.shipping.toFixed(2)}</td>
+                    <td className="p-4 text-gray-800 font-semibold">${order.total.toFixed(2)}</td>
+                    <td className="p-4">
+                      <select
+                        value={order.status}
+                        onChange={(e) => handleStatusChange(order._id, e.target.value)}
+                        className={`px-6 py-2 text-xs font-semibold rounded-full focus:outline-none flex items-center ${
+                          order.status === "Pending"
+                            ? "bg-yellow-100 text-yellow-800"
+                            : order.status === "Processing"
+                            ? "bg-orange-100 text-orange-800"
+                            : order.status === "Shipped"
+                            ? "bg-blue-100 text-blue-800"
+                            : order.status === "Delivered"
                             ? "bg-green-100 text-green-800"
-                            : "bg-blue-100 text-blue-800"
+                            : "bg-red-100 text-red-800"
                         }`}
+                        disabled={mutation.isLoading}
                       >
-                        {getRoleIcon(user.role)}
-                        <span className="ml-1">{user.role}</span>
-                      </span>
+                        <option value="Pending">Pending</option>
+                        <option value="Processing">Processing</option>
+                        <option value="Shipped">Shipped</option>
+                        <option value="Delivered">Delivered</option>
+                        <option value="Cancelled">Cancelled</option>
+                      </select>
+                      <div className="flex items-center mt-1">
+                        {getStatusIcon(order.status)}
+                        <span className="ml-1 text-xs text-gray-500">
+                          {order.status}
+                        </span>
+                      </div>
                     </td>
                     <td className="p-4 text-gray-600">
                       <div className="flex items-center">
-                        <FaCalendarAlt className="mr-2 text-gray-400" />
-                        {new Date(user.createdAt).toLocaleDateString()}
-                      </div>
-                      <div className="text-xs text-gray-500">
-                        {new Date(user.createdAt).toLocaleTimeString()}
+                        <FaCalendarAlt className="mr-1 text-gray-400" />
+                        {new Date(order.createdAt).toLocaleDateString()}
                       </div>
                     </td>
                     <td className="p-4">
-                      <div className="flex space-x-2">
-                        <button 
-                          onClick={() => router.push(`/users/${user._id}`)}
-                          className="bg-blue-100 text-blue-700 px-3 py-1 rounded hover:bg-blue-200 transition-colors flex items-center"
-                        >
-                          <FaInfoCircle className="mr-1" />
-                          View
-                        </button>
-                        {user.role !== "admin" && (
-                          <button 
-                            onClick={() => router.push(`/users/${user._id}/edit`)}
-                            className="bg-green-100 text-green-700 px-3 py-1 rounded hover:bg-green-200 transition-colors flex items-center"
-                          >
-                            <FaUserCog className="mr-1" />
-                            Edit
-                          </button>
-                        )}
-                      </div>
+                      <button 
+                        onClick={() => router.push(`/orders/${order._id}`)}
+                        className="bg-blue-100 text-blue-700 px-3 py-1 rounded hover:bg-blue-200 transition-colors mr-2"
+                      >
+                        View
+                      </button>
                     </td>
                   </tr>
                 ))}
@@ -507,4 +513,4 @@ const UserList = () => {
   );
 };
 
-export default UserList;
+export default OrderList;

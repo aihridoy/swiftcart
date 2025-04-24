@@ -23,7 +23,6 @@ import {
   FaInfoCircle
 } from "react-icons/fa";
 
-// Skeleton Loader Component
 const SkeletonRow = () => (
   <tr className="animate-pulse">
     <td className="p-4">
@@ -45,6 +44,20 @@ const SkeletonRow = () => (
       <div className="h-8 bg-gray-200 rounded w-1/4"></div>
     </td>
   </tr>
+);
+
+const SkeletonSummaryCards = () => (
+  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 animate-pulse">
+    {Array(3).fill().map((_, index) => (
+      <div key={index} className="bg-white p-4 rounded-lg shadow-md flex items-center">
+        <div className="bg-gray-200 p-3 rounded-full mr-4 w-12 h-12"></div>
+        <div>
+          <div className="h-4 w-20 bg-gray-200 rounded mb-1"></div>
+          <div className="h-6 w-10 bg-gray-200 rounded"></div>
+        </div>
+      </div>
+    ))}
+  </div>
 );
 
 const UserList = () => {
@@ -168,19 +181,44 @@ const UserList = () => {
             <FaUsers className="mr-2 text-blue-600" />
             Users
           </h1>
-        </div>
-        <div className="overflow-x-auto bg-white shadow-md rounded-lg">
-          <div className="p-4 flex items-center justify-center">
-            <FaSpinner className="animate-spin text-blue-600 text-2xl" />
-            <span className="ml-2 text-gray-600">Loading users...</span>
+          <div className="flex items-center space-x-4">
+            <div className="relative">
+              <div className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg w-64 bg-gray-200"></div>
+            </div>
+            <div className="relative">
+              <div className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg w-32 bg-gray-200"></div>
+            </div>
           </div>
+        </div>
+        <SkeletonSummaryCards />
+        <div className="overflow-x-auto bg-white shadow-md rounded-lg">
           <table className="min-w-full">
             <thead>
               <tr className="bg-gray-100">
-                <th className="p-4 text-left text-sm font-semibold text-gray-600">Name</th>
-                <th className="p-4 text-left text-sm font-semibold text-gray-600">Email</th>
-                <th className="p-4 text-center text-sm font-semibold text-gray-600">Role</th>
-                <th className="p-4 text-left text-sm font-semibold text-gray-600">Created At</th>
+                <th className="p-4 text-left text-sm font-semibold text-gray-600">
+                  <div className="flex items-center">
+                    <FaUser className="mr-1 text-gray-500" />
+                    Name
+                  </div>
+                </th>
+                <th className="p-4 text-left text-sm font-semibold text-gray-600">
+                  <div className="flex items-center">
+                    <FaEnvelope className="mr-1 text-gray-500" />
+                    Email
+                  </div>
+                </th>
+                <th className="p-4 text-center text-sm font-semibold text-gray-600">
+                  <div className="flex items-center justify-center">
+                    <FaUserCog className="mr-1 text-gray-500" />
+                    Role
+                  </div>
+                </th>
+                <th className="p-4 text-left text-sm font-semibold text-gray-600">
+                  <div className="flex items-center">
+                    <FaCalendarAlt className="mr-1 text-gray-500" />
+                    Created At
+                  </div>
+                </th>
                 <th className="p-4 text-left text-sm font-semibold text-gray-600">Actions</th>
               </tr>
             </thead>
@@ -377,7 +415,7 @@ const UserList = () => {
                     <td className="p-4">
                       <div className="flex space-x-2">
                         <button 
-                          onClick={() => router.push(`/profile/${user._id}`)}
+                          onClick={() => router.push(`/users/${user._id}`)}
                           className="bg-blue-100 text-blue-700 px-3 py-1 rounded hover:bg-blue-200 transition-colors flex items-center"
                         >
                           <FaInfoCircle className="mr-1" />

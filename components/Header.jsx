@@ -18,7 +18,6 @@ const Header = () => {
   const queryClient = useQueryClient();
   const router = useRouter();
   const [user, setUser] = useState(null);
-  console.log(user?.user?.id)
 
   // Search state
   const [searchTerm, setSearchTerm] = useState("");
