@@ -56,7 +56,7 @@ const OrderHistory = () => {
 
   return (
     <div className="container py-16">
-      <h2 className="text-2xl font-medium mb-6">Your Order History</h2>
+      <h2 className="text-2xl font-medium mb-6">{session?.user?.role === 'admin' ? 'Users Order History' : 'Your Order History' }</h2>
 
       {orders.length === 0 ? (
         <div className="text-center">

@@ -75,7 +75,7 @@ export async function GET(request) {
       // Fetch all orders for admin
       orders = await Order.find({})
         .populate("items.product")
-        .populate("user", "name email") // Populate user details for admin view
+        .populate("user", "name email")
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(limit);

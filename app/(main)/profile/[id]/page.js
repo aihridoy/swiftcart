@@ -4,7 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { FaUser, FaShoppingCart, FaHeart, FaBox } from "react-icons/fa";
 
-export default async function UserProfile() {
+export default async function UserProfile({ params }) {
+  const { id } = params;
   const userSession = await session();
   
   // Redirect to login if no session exists
