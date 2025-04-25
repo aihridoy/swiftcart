@@ -32,7 +32,6 @@ const ProductsPage = () => {
         }
       } catch (error) {
         toast.error(`Error fetching session: ${error.message}`);
-        router.push("/login");
       } finally {
         setIsLoadingSession(false);
       }

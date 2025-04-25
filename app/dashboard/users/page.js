@@ -77,9 +77,6 @@ const UserList = () => {
           position: "top-right",
           autoClose: 3000,
         });
-        setTimeout(() => {
-          router.push("/login");
-        }, 3000);
       } else {
         toast.error(`Error loading users: ${error.message}`, {
           position: "top-right",
