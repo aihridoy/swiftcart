@@ -17,6 +17,10 @@ const ProductsPage = () => {
   const queryClient = useQueryClient();
   const router = useRouter();
 
+  if(user && user?.user?.role !== "admin") {
+    router.push('/');
+  }
+
   // Fetch session
   useEffect(() => {
     const fetchUser = async () => {

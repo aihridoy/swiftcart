@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
@@ -20,6 +20,7 @@ import {
   FaSpinner,
   FaSearch
 } from "react-icons/fa";
+import { session } from "@/actions/auth-utils";
 
 // Skeleton Loader Component
 const SkeletonRow = () => (
@@ -56,7 +57,22 @@ const OrderList = () => {
   const queryClient = useQueryClient();
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
+  const [user, setUser] = useState(null);
   const limit = 10;
+
+  if(user && user?.role !== "admin") {
+      router.push('/');
+    }
+  
+    useEffect(() => {
+      async function fetchUser() {
+        const res = await session();
+        if (res) {
+          setUser(res?.user);
+        }
+      }
+      fetchUser();
+    }, []);
 
   // Fetch orders with React Query
   const { data, error, isLoading } = useQuery({
