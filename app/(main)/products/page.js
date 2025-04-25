@@ -249,8 +249,8 @@ const Products = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p>Loading products...</p>
+      <div className="flex justify-center items-center min-h-[500px]">
+        <div className="animate-spin rounded-full h-20 w-20 border-b-2 border-gray-900"></div>
       </div>
     );
   }

@@ -12,6 +12,33 @@ import { addToCart, getCart } from "@/actions/cart-utils";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
+// Skeleton Loader for Product Cards
+const SkeletonProductCard = () => (
+  <div className="bg-white shadow-md rounded-lg overflow-hidden h-[400px] w-full flex flex-col animate-pulse">
+    {/* Image Placeholder */}
+    <div className="relative w-full h-48">
+      <div className="w-full h-full bg-gray-200" />
+    </div>
+    {/* Product Info Placeholder */}
+    <div className="p-4 flex flex-col flex-grow">
+      <div className="h-6 bg-gray-200 rounded w-3/4 mb-2" />
+      <div className="flex items-center mb-2">
+        <div className="h-5 bg-gray-200 rounded w-16 mr-2" />
+        <div className="h-4 bg-gray-200 rounded w-12" />
+      </div>
+      <div className="flex items-center mb-2">
+        <div className="flex gap-1">
+          {Array.from({ length: 5 }).map((_, index) => (
+            <div key={index} className="w-4 h-4 bg-gray-200 rounded-full" />
+          ))}
+        </div>
+        <div className="h-3 bg-gray-200 rounded w-8 ml-2" />
+      </div>
+      <div className="mt-auto block w-full py-2 bg-gray-200 rounded-lg h-10" />
+    </div>
+  </div>
+);
+
 const NewArrival = () => {
   const queryClient = useQueryClient();
   const { data: session } = useSession();
@@ -251,11 +278,22 @@ const NewArrival = () => {
 
   if (isLoading) {
     return (
-      <div className="container pb-16">
-        <h2 className="text-2xl font-medium text-gray-800 uppercase mb-6">
-          Top New Arrival
-        </h2>
-        <p>Loading new arrivals...</p>
+      <div className="container py-16 bg-white">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-medium text-gray-800 uppercase">
+            Top New Arrival
+          </h2>
+          <Link href="/products">
+            <button className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition">
+              See All Products
+            </button>
+          </Link>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+          {Array.from({ length: 8 }).map((_, index) => (
+            <SkeletonProductCard key={index} />
+          ))}
+        </div>
       </div>
     );
   }

@@ -6,6 +6,16 @@ import { toast } from 'react-toastify';
 import { getProducts } from '@/actions/products';
 import CategoryItem from '@/components/CategoryItem'; 
 
+// Skeleton Loader for Category Items
+const SkeletonCategoryItem = () => (
+  <div className="relative rounded-lg overflow-hidden h-[200px] animate-pulse">
+    <div className="w-full h-full bg-gray-200" />
+    <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+      <div className="w-32 h-6 bg-gray-300 rounded" />
+    </div>
+  </div>
+);
+
 const ShopByCategory = () => {
   const { data, error, isLoading } = useQuery({
     queryKey: ["categoryProducts"],
@@ -25,22 +35,26 @@ const ShopByCategory = () => {
 
   if (isLoading) {
     return (
-      <div className="container py-16">
+      <div className="container py-16 bg-white">
         <h2 className="text-2xl font-medium text-gray-800 uppercase mb-6">
           Shop by Category
         </h2>
-        <p>Loading categories...</p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+          {Array.from({ length: 9 }).map((_, index) => (
+            <SkeletonCategoryItem key={index} />
+          ))}
+        </div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="container py-16">
+      <div className="container py-16 bg-white">
         <h2 className="text-2xl font-medium text-gray-800 uppercase mb-6">
           Shop by Category
         </h2>
-        <p>Failed to load categories. Please try again later.</p>
+        <p className="text-center text-gray-600">Failed to load categories. Please try again later.</p>
       </div>
     );
   }
@@ -52,8 +66,8 @@ const ShopByCategory = () => {
     if (!acc[category]) {
       acc[category] = {
         name: category.split(' ')
-        .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-        .join(' '),
+          .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+          .join(' '),
         slug: category.toLowerCase(),
         image: product.mainImage,
       };

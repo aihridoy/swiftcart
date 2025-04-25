@@ -200,10 +200,24 @@ const Wishlist = () => {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-100 via-blue-50 to-teal-50 py-8 px-4">
-        <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {Array.from({ length: 3 }).map((_, index) => (
-            <SkeletonWishlistItem key={index} />
-          ))}
+        <div className="max-w-6xl mx-auto">
+          {/* Summary Card Placeholder */}
+          <div className="bg-white/90 backdrop-blur-lg rounded-xl shadow-lg p-6 mb-6 flex items-center justify-between animate-pulse">
+            <div className="flex items-center space-x-3">
+              <div className="w-8 h-8 bg-gray-200 rounded-full" />
+              <div>
+                <div className="h-6 bg-gray-200 rounded w-32 mb-2" />
+                <div className="h-4 bg-gray-200 rounded w-16" />
+              </div>
+            </div>
+            <div className="h-10 w-32 bg-gray-200 rounded-lg" />
+          </div>
+          {/* Skeleton Items */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {Array.from({ length: 3 }).map((_, index) => (
+              <SkeletonWishlistItem key={index} />
+            ))}
+          </div>
         </div>
       </div>
     );
