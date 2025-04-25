@@ -96,9 +96,9 @@ const ProductsPage = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-3xl font-bold mb-8">Product List</h1>
+        <h1 className="text-3xl font-bold">Product List</h1>
         <Link
-          href="/add-product"
+          href="/dashboard/add-product"
           className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-md shadow-md transition-colors duration-300"
         >
           Add Product

@@ -67,7 +67,7 @@ const Navbar = async () => {
 
    // Only show "Products" to admin
    if (userSession?.user?.role === "admin") {
-    navLinks.push({ name: "Products", path: "/products-list" });
+    navLinks.push({ name: "Dashboard", path: "/dashboard" });
   }
 
   return (

@@ -5,11 +5,33 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import Image from "next/image";
 import Link from "next/link";
-import { FaTrash } from "react-icons/fa";
+import { 
+  FaTrash, 
+  FaShoppingCart, 
+  FaHeart, 
+  FaArrowLeft, 
+  FaArrowRight, 
+  FaSpinner, 
+  FaShoppingBag 
+} from "react-icons/fa";
 import { getWishlist, updateWishlist } from "@/actions/wishlist";
 import { addToCart, getCart } from "@/actions/cart-utils";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+
+// Skeleton Loader for Wishlist Items
+const SkeletonWishlistItem = () => (
+  <div className="bg-white rounded-xl shadow-md p-4 animate-pulse">
+    <div className="w-full h-48 bg-gray-200 rounded-lg mb-4"></div>
+    <div className="h-6 bg-gray-200 rounded w-3/4 mb-2"></div>
+    <div className="h-4 bg-gray-200 rounded w-1/2 mb-2"></div>
+    <div className="h-4 bg-gray-200 rounded w-1/3 mb-4"></div>
+    <div className="flex justify-between">
+      <div className="h-10 w-32 bg-gray-200 rounded-lg"></div>
+      <div className="h-10 w-10 bg-gray-200 rounded-full"></div>
+    </div>
+  </div>
+);
 
 const Wishlist = () => {
   const queryClient = useQueryClient();
@@ -22,17 +44,12 @@ const Wishlist = () => {
   const { data, error, isLoading } = useQuery({
     queryKey: ["wishlist"],
     queryFn: getWishlist,
-    enabled: !!session, // Only fetch if user is authenticated
+    enabled: !!session,
     onError: (error) => {
       if (error.message.includes("Unauthorized")) {
         toast.error("Please log in to view your wishlist.", {
           position: "top-right",
           autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
         });
         setTimeout(() => {
           router.push("/login");
@@ -41,11 +58,6 @@ const Wishlist = () => {
         toast.error(`Error fetching wishlist: ${error.message}`, {
           position: "top-right",
           autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
         });
       }
     },
@@ -61,11 +73,6 @@ const Wishlist = () => {
         toast.error("Please log in to view your cart.", {
           position: "top-right",
           autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
         });
         setTimeout(() => {
           router.push("/login");
@@ -74,11 +81,6 @@ const Wishlist = () => {
         toast.error(`Error fetching cart: ${error.message}`, {
           position: "top-right",
           autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
         });
       }
     },
@@ -92,11 +94,6 @@ const Wishlist = () => {
       toast.success(data.message, {
         position: "top-right",
         autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
       });
     },
     onError: (error) => {
@@ -104,11 +101,6 @@ const Wishlist = () => {
         toast.error("Please log in to manage your wishlist.", {
           position: "top-right",
           autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
         });
         setTimeout(() => {
           router.push("/login");
@@ -117,11 +109,6 @@ const Wishlist = () => {
         toast.error(`Error: ${error.message}`, {
           position: "top-right",
           autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
         });
       }
     },
@@ -131,15 +118,10 @@ const Wishlist = () => {
   const cartMutation = useMutation({
     mutationFn: ({ productId, quantity }) => addToCart(productId, quantity),
     onSuccess: (data) => {
-      queryClient.invalidateQueries(["cart"]); // Update cart count in Header
+      queryClient.invalidateQueries(["cart"]);
       toast.success("Product added to cart successfully!", {
         position: "top-right",
         autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
       });
     },
     onError: (error) => {
@@ -147,11 +129,6 @@ const Wishlist = () => {
         toast.error("Please log in to add to cart.", {
           position: "top-right",
           autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
         });
         setTimeout(() => {
           router.push("/login");
@@ -160,11 +137,6 @@ const Wishlist = () => {
         toast.error(`Error: ${error.message}`, {
           position: "top-right",
           autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
         });
       }
     },
@@ -184,11 +156,6 @@ const Wishlist = () => {
       toast.error("Please log in to manage your wishlist.", {
         position: "top-right",
         autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
       });
       setTimeout(() => {
         router.push("/login");
@@ -206,11 +173,6 @@ const Wishlist = () => {
       toast.error("Please log in to add to cart.", {
         position: "top-right",
         autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
       });
       setTimeout(() => {
         router.push("/login");
@@ -218,48 +180,50 @@ const Wishlist = () => {
       return;
     }
 
-    // Check stock availability
     if (product.availability !== "In Stock") {
       toast.error(`${product.title} is out of stock.`, {
         position: "top-right",
         autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
       });
       return;
     }
 
     if (isInCart(product._id)) {
-      // If product is already in cart, redirect to cart page
       router.push("/cart");
     } else {
-      // If product is not in cart, add it
       if (cartMutation.isLoading) return;
       cartMutation.mutate({ productId: product._id, quantity: 1 });
     }
   };
 
+  // Loading state
   if (isLoading) {
     return (
-      <div className="container pt-4 pb-16">
-        <h1 className="text-2xl font-semibold text-gray-800 mb-8 text-center uppercase">
-          Your Wishlist
-        </h1>
-        <p className="text-center">Loading wishlist...</p>
+      <div className="min-h-screen bg-gradient-to-br from-gray-100 via-blue-50 to-teal-50 py-8 px-4">
+        <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {Array.from({ length: 3 }).map((_, index) => (
+            <SkeletonWishlistItem key={index} />
+          ))}
+        </div>
       </div>
     );
   }
 
+  // Error state
   if (error) {
     return (
-      <div className="container pt-4 pb-16">
-        <h1 className="text-2xl font-semibold text-gray-800 mb-8 text-center uppercase">
-          Your Wishlist
-        </h1>
-        <p className="text-center">Failed to load wishlist. Please try again later.</p>
+      <div className="min-h-screen bg-gradient-to-br from-gray-100 via-blue-50 to-teal-50 py-8 px-4">
+        <div className="sticky top-0 z-10 bg-white/80 backdrop-blur-md shadow-md p-6 rounded-b-xl mb-6">
+          <div className="flex items-center justify-between max-w-6xl mx-auto">
+            <h1 className="text-2xl font-bold text-gray-800 flex items-center">
+              <FaHeart className="mr-2 text-red-500" />
+              Your Wishlist
+            </h1>
+          </div>
+        </div>
+        <div className="max-w-6xl mx-auto text-center bg-white/90 backdrop-blur-lg rounded-xl shadow-lg p-6">
+          <p className="text-red-600 text-lg">Failed to load wishlist. Please try again later.</p>
+        </div>
       </div>
     );
   }
@@ -281,191 +245,194 @@ const Wishlist = () => {
   };
 
   return (
-    <div className="container gap-6 pt-4 pb-16 min-h-[calc(100vh-200px)]">
-      <h1 className="text-2xl font-semibold text-gray-800 mb-8 text-center uppercase">
-        Your Wishlist
-      </h1>
-      {wishlist.length === 0 ? (
-        <div className="text-center text-gray-600">
-          <p className="mb-4">Your wishlist is empty.</p>
-          <Link
-            href="/products"
-            className="px-6 py-2 text-center text-sm text-white bg-primary border border-primary rounded hover:bg-transparent hover:text-primary transition uppercase font-roboto font-medium"
-          >
-            Browse Products
-          </Link>
-        </div>
-      ) : (
-        <>
-          <div className="mx-auto space-y-4 max-w-6xl">
-            {paginatedWishlist.map((product) => {
-              const productInCart = isInCart(product._id);
-              return (
-                <div
-                  key={product._id}
-                  className="flex items-center justify-between border gap-6 p-4 border-gray-200 rounded"
-                >
-                  <div className="w-28 h-28 flex-shrink-0">
-                    <Link href={`/products/${product._id}`}>
-                      <Image
-                        width={112}
-                        height={112}
-                        src={product.mainImage}
-                        alt={product.title}
-                        className="w-full h-full object-cover rounded"
-                      />
-                    </Link>
-                  </div>
-                  <div className="w-1/3">
-                    <Link href={`/products/${product._id}`}>
-                      <h2 className="text-gray-800 text-xl font-medium uppercase hover:text-primary transition">
-                        {product.title}
-                      </h2>
-                    </Link>
-                    <p className="text-gray-500 text-sm">
-                      Availability:{" "}
-                      <span
-                        className={
-                          product.availability === "In Stock"
-                            ? "text-green-600"
-                            : "text-red-600"
-                        }
-                      >
-                        {product.availability}
-                      </span>
-                    </p>
-                  </div>
-                  <div className="text-primary text-lg font-semibold">
-                    ${product.price.toFixed(2)}
-                  </div>
-                  <button
-                    onClick={(e) => handleCartAction(product, e)}
-                    disabled={cartLoading || product.availability !== "In Stock" || (cartMutation.isLoading && cartMutation.variables?.productId === product._id)}
-                    className={`px-6 py-2 text-center text-sm text-white border rounded transition uppercase font-roboto font-medium ${
-                      cartLoading || product.availability !== "In Stock" || (cartMutation.isLoading && cartMutation.variables?.productId === product._id)
-                        ? "bg-red-400 border-red-400 cursor-not-allowed"
-                        : productInCart
-                        ? "bg-blue-500 border-blue-500 hover:bg-blue-600 hover:border-blue-600"
-                        : "bg-primary border-primary hover:bg-transparent hover:text-primary"
-                    }`}
-                  >
-                    {cartMutation.isLoading && cartMutation.variables?.productId === product._id ? (
-                      <svg
-                        className="animate-spin h-5 w-5 text-white mx-auto"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                      >
-                        <circle
-                          className="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          strokeWidth="4"
-                        ></circle>
-                        <path
-                          className="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                        ></path>
-                      </svg>
-                    ) : productInCart ? (
-                      "View In Cart"
-                    ) : (
-                      "Add to Cart"
-                    )}
-                  </button>
-                  <button
-                    onClick={(e) => handleRemoveFromWishlist(product._id, e)}
-                    disabled={wishlistMutation.isLoading && wishlistMutation.variables?.productId === product._id}
-                    className={`text-gray-600 cursor-pointer hover:text-primary transition border-2 border-red-500 rounded-full p-2 ${
-                      wishlistMutation.isLoading && wishlistMutation.variables?.productId === product._id
-                        ? "opacity-50 cursor-not-allowed"
-                        : ""
-                    }`}
-                  >
-                    {wishlistMutation.isLoading && wishlistMutation.variables?.productId === product._id ? (
-                      <svg
-                        className="animate-spin h-5 w-5 text-gray-600"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                      >
-                        <circle
-                          className="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          strokeWidth="4"
-                        ></circle>
-                        <path
-                          className="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                        ></path>
-                      </svg>
-                    ) : (
-                      <FaTrash className="text-lg" />
-                    )}
-                  </button>
-                </div>
-              );
-            })}
-          </div>
-
-          {/* Pagination Controls */}
-          {totalPages > 1 && (
-            <div className="flex justify-center mt-8">
-              <nav className="flex items-center gap-2">
-                {/* Previous Button */}
-                <button
-                  onClick={() => handlePageChange(currentPage - 1)}
-                  disabled={currentPage === 1}
-                  className={`px-4 py-2 text-sm font-medium rounded ${
-                    currentPage === 1
-                      ? "bg-gray-200 text-gray-500 cursor-not-allowed"
-                      : "bg-primary text-white hover:bg-primary-dark"
-                  }`}
-                >
-                  Previous
-                </button>
-
-                {/* Page Numbers */}
-                {Array.from({ length: totalPages }, (_, index) => index + 1).map(
-                  (page) => (
-                    <button
-                      key={page}
-                      onClick={() => handlePageChange(page)}
-                      className={`px-4 py-2 text-sm font-medium rounded ${
-                        currentPage === page
-                          ? "bg-primary text-white"
-                          : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-                      }`}
-                    >
-                      {page}
-                    </button>
-                  )
-                )}
-
-                {/* Next Button */}
-                <button
-                  onClick={() => handlePageChange(currentPage + 1)}
-                  disabled={currentPage === totalPages}
-                  className={`px-4 py-2 text-sm font-medium rounded ${
-                    currentPage === totalPages
-                      ? "bg-gray-200 text-gray-500 cursor-not-allowed"
-                      : "bg-primary text-white hover:bg-primary-dark"
-                  }`}
-                >
-                  Next
-                </button>
-              </nav>
+    <div className="min-h-screen bg-gradient-to-br from-gray-100 via-blue-50 to-teal-50 py-8 px-4">
+      {/* Main Content */}
+      <div className="max-w-6xl mx-auto">
+        {/* Summary Card */}
+        <div className="bg-white/90 backdrop-blur-lg rounded-xl shadow-lg p-6 mb-6 flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <FaHeart className="text-red-500 text-2xl" />
+            <div>
+              <h2 className="text-lg font-semibold text-gray-800">Wishlist Items</h2>
+              <p className="text-gray-600">{totalItems} {totalItems === 1 ? "item" : "items"}</p>
             </div>
+          </div>
+          {wishlist.length > 0 && (
+            <button
+              onClick={() => {
+                wishlist.forEach((product) => {
+                  if (!isInCart(product._id) && product.availability === "In Stock") {
+                    cartMutation.mutate({ productId: product._id, quantity: 1 });
+                  }
+                });
+              }}
+              disabled={cartMutation.isLoading}
+              className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-semibold text-white transition-all duration-300 shadow-md ${
+                cartMutation.isLoading
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-blue-600 hover:bg-blue-700 hover:shadow-lg"
+              }`}
+            >
+              <FaShoppingCart />
+              <span>Add All to Cart</span>
+            </button>
           )}
-        </>
-      )}
+        </div>
+
+        {/* Wishlist Items */}
+        {wishlist.length === 0 ? (
+          <div className="bg-white/90 backdrop-blur-lg rounded-xl shadow-lg p-8 text-center">
+            <FaHeart className="text-gray-400 text-6xl mx-auto mb-4" />
+            <h2 className="text-xl font-semibold text-gray-800 mb-2">Your Wishlist is Empty</h2>
+            <p className="text-gray-600 mb-6">Start adding your favorite products to your wishlist!</p>
+            <Link
+              href="/products"
+              className="inline-flex items-center space-x-2 px-6 py-3 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-all duration-300 shadow-md hover:shadow-lg"
+            >
+              <FaShoppingBag />
+              <span>Browse Products</span>
+            </Link>
+          </div>
+        ) : (
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {paginatedWishlist.map((product) => {
+                const productInCart = isInCart(product._id);
+                return (
+                  <div
+                    key={product._id}
+                    className="bg-white/90 backdrop-blur-lg rounded-xl shadow-md p-4 hover:shadow-lg transition-all duration-300 group"
+                  >
+                    <Link href={`/products/${product._id}`}>
+                      <div className="relative w-full h-48 mb-4">
+                        <Image
+                          width={300}
+                          height={300}
+                          src={product.mainImage}
+                          alt={product.title}
+                          className="w-full h-full object-cover rounded-lg group-hover:scale-105 transition-transform duration-300"
+                        />
+                        <span
+                          className={`absolute top-2 right-2 px-3 py-1 text-xs font-semibold rounded-full ${
+                            product.availability === "In Stock"
+                              ? "bg-green-100 text-green-800"
+                              : "bg-red-100 text-red-800"
+                          }`}
+                        >
+                          {product.availability}
+                        </span>
+                      </div>
+                    </Link>
+                    <div className="space-y-2">
+                      <Link href={`/products/${product._id}`}>
+                        <h2 className="text-lg font-semibold text-gray-800 hover:text-blue-600 transition-colors">
+                          {product.title}
+                        </h2>
+                      </Link>
+                      <p className="text-blue-600 text-lg font-semibold">
+                        ${product.price.toFixed(2)}
+                      </p>
+                      <div className="flex items-center justify-between">
+                        <button
+                          onClick={(e) => handleCartAction(product, e)}
+                          disabled={
+                            cartLoading ||
+                            product.availability !== "In Stock" ||
+                            (cartMutation.isLoading && cartMutation.variables?.productId === product._id)
+                          }
+                          className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-semibold transition-all duration-300 shadow-md ${
+                            cartLoading ||
+                            product.availability !== "In Stock" ||
+                            (cartMutation.isLoading && cartMutation.variables?.productId === product._id)
+                              ? "bg-gray-400 text-white cursor-not-allowed"
+                              : productInCart
+                              ? "bg-blue-500 text-white hover:bg-blue-600 hover:shadow-lg"
+                              : "bg-blue-600 text-white hover:bg-blue-700 hover:shadow-lg"
+                          }`}
+                        >
+                          {cartMutation.isLoading && cartMutation.variables?.productId === product._id ? (
+                            <FaSpinner className="animate-spin" />
+                          ) : (
+                            <FaShoppingCart />
+                          )}
+                          <span>{productInCart ? "View in Cart" : "Add to Cart"}</span>
+                        </button>
+                        <button
+                          onClick={(e) => handleRemoveFromWishlist(product._id, e)}
+                          disabled={
+                            wishlistMutation.isLoading &&
+                            wishlistMutation.variables?.productId === product._id
+                          }
+                          className={`p-2 rounded-full transition-all duration-300 ${
+                            wishlistMutation.isLoading &&
+                            wishlistMutation.variables?.productId === product._id
+                              ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                              : "bg-red-100 text-red-600 hover:bg-red-200 hover:shadow-md"
+                          }`}
+                        >
+                          {wishlistMutation.isLoading &&
+                          wishlistMutation.variables?.productId === product._id ? (
+                            <FaSpinner className="animate-spin" />
+                          ) : (
+                            <FaTrash />
+                          )}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Pagination Controls */}
+            {totalPages > 1 && (
+              <div className="flex justify-center mt-8">
+                <nav className="flex items-center gap-2">
+                  <button
+                    onClick={() => handlePageChange(currentPage - 1)}
+                    disabled={currentPage === 1}
+                    className={`px-4 py-2 rounded-lg font-semibold flex items-center space-x-2 ${
+                      currentPage === 1
+                        ? "bg-gray-200 text-gray-500 cursor-not-allowed"
+                        : "bg-blue-600 text-white hover:bg-blue-700"
+                    } transition-all duration-300 shadow-md`}
+                  >
+                    <FaArrowLeft />
+                    <span>Previous</span>
+                  </button>
+                  {Array.from({ length: totalPages }, (_, index) => index + 1).map(
+                    (page) => (
+                      <button
+                        key={page}
+                        onClick={() => handlePageChange(page)}
+                        className={`px-4 py-2 rounded-lg font-semibold ${
+                          currentPage === page
+                            ? "bg-blue-600 text-white shadow-lg"
+                            : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                        } transition-all duration-300`}
+                      >
+                        {page}
+                      </button>
+                    )
+                  )}
+                  <button
+                    onClick={() => handlePageChange(currentPage + 1)}
+                    disabled={currentPage === totalPages}
+                    className={`px-4 py-2 rounded-lg font-semibold flex items-center space-x-2 ${
+                      currentPage === totalPages
+                        ? "bg-gray-200 text-gray-500 cursor-not-allowed"
+                        : "bg-blue-600 text-white hover:bg-blue-700"
+                    } transition-all duration-300 shadow-md`}
+                  >
+                    <span>Next</span>
+                    <FaArrowRight />
+                  </button>
+                </nav>
+              </div>
+            )}
+          </>
+        )}
+      </div>
     </div>
   );
 };
