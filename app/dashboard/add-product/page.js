@@ -1,10 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { addProduct } from "@/actions/products";
 import { toast } from "react-toastify";
 import Image from "next/image";
+import { session } from "@/actions/auth-utils";
+import { useRouter } from "next/navigation";
 
 // Helper function to validate URLs
 const isValidImageUrl = (url) => {
@@ -27,6 +29,22 @@ const isValidImageUrl = (url) => {
 
 export default function AddProduct() {
   const queryClient = useQueryClient();
+  const [user, setUser] = useState(null);
+  const router = useRouter();
+
+  if(user && user?.role !== "admin") {
+    router.push('/');
+  }
+
+  useEffect(() => {
+    async function fetchUser() {
+      const res = await session();
+      if (res) {
+        setUser(res?.user);
+      }
+    }
+    fetchUser();
+  }, []);
 
   const [formData, setFormData] = useState({
     title: "",

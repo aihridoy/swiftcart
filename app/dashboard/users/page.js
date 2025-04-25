@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { getUsers } from "@/actions/user-utils";
@@ -22,6 +22,7 @@ import {
   FaExclamationTriangle,
   FaInfoCircle
 } from "react-icons/fa";
+import { session } from "@/actions/auth-utils";
 
 const SkeletonRow = () => (
   <tr className="animate-pulse">
@@ -64,8 +65,23 @@ const UserList = () => {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
+  const [user, setUser] = useState(null);
   const [roleFilter, setRoleFilter] = useState("all");
   const limit = 10;
+
+   if(user && user?.role !== "admin") {
+      router.push('/');
+    }
+  
+    useEffect(() => {
+      async function fetchUser() {
+        const res = await session();
+        if (res) {
+          setUser(res?.user);
+        }
+      }
+      fetchUser();
+    }, []);
 
   // Fetch users with React Query
   const { data, error, isLoading } = useQuery({
@@ -282,7 +298,7 @@ const UserList = () => {
           </div>
           <div>
             <p className="text-sm text-gray-500">Total Users</p>
-            <p className="text-xl font-bold">{pagination.totalUsers}</p>
+            <p className="text-xl font-bold">{users?.length}</p>
           </div>
         </div>
         <div className="bg-white p-4 rounded-lg shadow-md flex items-center">

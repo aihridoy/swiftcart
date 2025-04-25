@@ -1,9 +1,12 @@
 "use client";
 
+import { session } from "@/actions/auth-utils";
 import { getOrders } from "@/actions/order-utils";
 import { getProducts } from "@/actions/products";
 import { getUsers } from "@/actions/user-utils";
 import { useQuery } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import {
   FiUsers,
   FiPackage,
@@ -12,6 +15,22 @@ import {
 } from "react-icons/fi";
 
 export default function DashboardPage() {
+  const [user, setUser] = useState(null);
+  const router = useRouter();
+
+  if(user && user?.role !== "admin") {
+    router.push('/');
+  }
+
+  useEffect(() => {
+    async function fetchUser() {
+      const res = await session();
+      if (res) {
+        setUser(res?.user);
+      }
+    }
+    fetchUser();
+  }, []);
   const {
     data: userData,
   } = useQuery({
