@@ -5,10 +5,33 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import Image from "next/image";
 import Link from "next/link";
-import { FaTrash } from "react-icons/fa";
+import { 
+  FaTrash, 
+  FaShoppingCart, 
+  FaArrowLeft, 
+  FaArrowRight, 
+  FaSpinner, 
+  FaPlus, 
+  FaMinus 
+} from "react-icons/fa";
 import { getCart, removeFromCart, updateCartQuantity } from "@/actions/cart-utils";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+
+// Skeleton Loader for Cart Items
+const SkeletonCartItem = () => (
+  <div className="bg-white rounded-xl shadow-md p-4 animate-pulse">
+    <div className="flex items-center space-x-4">
+      <div className="w-24 h-24 bg-gray-200 rounded-lg"></div>
+      <div className="flex-1 space-y-2">
+        <div className="h-6 bg-gray-200 rounded w-3/4"></div>
+        <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+        <div className="h-4 bg-gray-200 rounded w-1/3"></div>
+      </div>
+      <div className="h-10 w-10 bg-gray-200 rounded-full"></div>
+    </div>
+  </div>
+);
 
 const CartPage = () => {
   const queryClient = useQueryClient();
@@ -29,11 +52,6 @@ const CartPage = () => {
         toast.error(`Error fetching cart: ${error.message}`, {
           position: "top-right",
           autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
         });
       }
     },
@@ -47,11 +65,6 @@ const CartPage = () => {
       toast.success(data.message, {
         position: "top-right",
         autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
       });
     },
     onError: (error) => {
@@ -59,11 +72,6 @@ const CartPage = () => {
         toast.error("Please log in to manage your cart.", {
           position: "top-right",
           autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
         });
         setTimeout(() => {
           router.push("/login");
@@ -72,11 +80,6 @@ const CartPage = () => {
         toast.error(`Error: ${error.message}`, {
           position: "top-right",
           autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
         });
       }
     },
@@ -90,11 +93,6 @@ const CartPage = () => {
       toast.success("Quantity updated successfully", {
         position: "top-right",
         autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
       });
     },
     onError: (error) => {
@@ -102,11 +100,6 @@ const CartPage = () => {
         toast.error("Please log in to manage your cart.", {
           position: "top-right",
           autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
         });
         setTimeout(() => {
           router.push("/login");
@@ -115,11 +108,6 @@ const CartPage = () => {
         toast.error(`Error: ${error.message}`, {
           position: "top-right",
           autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
         });
       }
     },
@@ -132,11 +120,6 @@ const CartPage = () => {
       toast.error("Please log in to manage your cart.", {
         position: "top-right",
         autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
       });
       setTimeout(() => {
         router.push("/login");
@@ -154,11 +137,6 @@ const CartPage = () => {
       toast.error("Please log in to manage your cart.", {
         position: "top-right",
         autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
       });
       setTimeout(() => {
         router.push("/login");
@@ -166,18 +144,13 @@ const CartPage = () => {
       return;
     }
 
-    const maxQuantity = productStock !== undefined ? productStock : 10; // Fallback to 10 if stock isn't available
+    const maxQuantity = productStock !== undefined ? productStock : 10;
     const newQuantity = currentQuantity + 1;
 
     if (newQuantity > maxQuantity) {
       toast.warn(`Cannot add more than ${maxQuantity} items.`, {
         position: "top-right",
         autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
       });
       return;
     }
@@ -193,11 +166,6 @@ const CartPage = () => {
       toast.error("Please log in to manage your cart.", {
         position: "top-right",
         autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
       });
       setTimeout(() => {
         router.push("/login");
@@ -206,7 +174,7 @@ const CartPage = () => {
     }
 
     const newQuantity = currentQuantity > 1 ? currentQuantity - 1 : 1;
-    if (newQuantity === currentQuantity) return; // No change needed if already at minimum
+    if (newQuantity === currentQuantity) return;
     if (updateQuantityMutation.isLoading) return;
     updateQuantityMutation.mutate({ productId, quantity: newQuantity });
   };
@@ -254,18 +222,34 @@ const CartPage = () => {
     return pageNumbers;
   };
 
+  // Loading state - Centered on the screen
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p>Loading cart...</p>
+      <div className=" bg-gradient-to-br from-gray-100 via-blue-50 to-teal-50 flex items-center justify-center py-8 px-4">
+        <div className="space-y-4 w-full max-w-2xl">
+          {Array.from({ length: 3 }).map((_, index) => (
+            <SkeletonCartItem key={index} />
+          ))}
+        </div>
       </div>
     );
   }
 
+  // Error state
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p>Failed to load cart. Please try again later.</p>
+      <div className="min-h-screen bg-gradient-to-br from-gray-100 via-blue-50 to-teal-50 py-8 px-4">
+        <div className="sticky top-0 z-10 bg-white/80 backdrop-blur-md shadow-md p-6 rounded-b-xl mb-6">
+          <div className="flex items-center justify-between max-w-6xl mx-auto">
+            <h1 className="text-2xl font-bold text-gray-800 flex items-center">
+              <FaShoppingCart className="mr-2 text-blue-500" />
+              Your Cart
+            </h1>
+          </div>
+        </div>
+        <div className="max-w-6xl mx-auto text-center bg-white/90 backdrop-blur-lg rounded-xl shadow-lg p-6">
+          <p className="text-red-600 text-lg">Failed to load cart. Please try again later.</p>
+        </div>
       </div>
     );
   }
@@ -290,239 +274,233 @@ const CartPage = () => {
   const paginatedItems = cart.items.slice(startIndex, endIndex);
 
   return (
-    <div className="min-h-screen py-10 bg-white">
-      <div className="mx-auto max-w-7xl px-4">
-        <h1 className="text-2xl font-semibold text-gray-800 mb-8 text-center uppercase">
-          Your Cart
-        </h1>
-        {cart.items.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-full">
-            <p className="text-center text-gray-600 text-lg mb-4">
-              Your cart is empty.
-            </p>
-            <Link
-              href="/products"
-              className="px-6 py-2 text-center text-sm text-white bg-primary border border-primary rounded hover:bg-transparent hover:text-primary transition uppercase font-roboto font-medium"
-            >
-              Shop Now
-            </Link>
-          </div>
-        ) : (
-          <div className="space-y-6">
-            {/* Cart items summary */}
-            <div className="mb-4 text-gray-600">
-              Showing {startIndex + 1}-{endIndex} of {totalItems} items in your cart
+    <div className="min-h-screen bg-gradient-to-br from-gray-100 via-blue-50 to-teal-50 py-8 px-4">
+      {/* Main Content */}
+      <div className="max-w-6xl mx-auto">
+        {/* Cart Summary Card */}
+        <div className="bg-white/90 backdrop-blur-lg rounded-xl shadow-lg p-6 mb-6 flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <FaShoppingCart className="text-blue-500 text-2xl" />
+            <div>
+              <h2 className="text-lg font-semibold text-gray-800">Total Items</h2>
+              <p className="text-gray-600">{totalItems} {totalItems === 1 ? "item" : "items"}</p>
             </div>
+          </div>
+        </div>
 
-            {/* Cart Items */}
-            {paginatedItems.map((item) => (
-              <div
-                key={item.product._id}
-                className="flex items-center bg-white shadow-md rounded-lg p-4"
+        {/* Cart Items or Empty State */}
+        {cart.items.length === 0 ? (
+          <div className="flex items-center justify-center">
+            <div className="bg-white/90 backdrop-blur-lg rounded-xl shadow-lg p-8 text-center max-w-md w-full">
+              <FaShoppingCart className="text-gray-400 text-6xl mx-auto mb-4" />
+              <h2 className="text-xl font-semibold text-gray-800 mb-2">Your Cart is Empty</h2>
+              <p className="text-gray-600 mb-6">Add some products to your cart to get started!</p>
+              <Link
+                href="/products"
+                className="inline-flex items-center space-x-2 px-6 py-3 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-all duration-300 shadow-md hover:shadow-lg"
               >
-                <Link href={`/products/${item.product._id}`}>
-                  <Image
-                    src={item.product.mainImage}
-                    alt={item.product.title}
-                    width={100}
-                    height={100}
-                    className="w-24 h-24 object-cover rounded-lg"
-                  />
-                </Link>
-                <div className="ml-4 flex-grow">
-                  <Link href={`/products/${item.product._id}`}>
-                    <h4 className="font-medium text-base text-gray-800 uppercase mb-2 hover:text-primary transition">
-                      {item.product.title}
-                    </h4>
-                  </Link>
-                  <p className="text-lg text-primary font-semibold">
-                    ${item.price.toFixed(2)}
-                  </p>
-                  <div className="flex items-center mt-2">
-                    <button
-                      onClick={(e) =>
-                        handleDecreaseQuantity(item.product._id, item.quantity, e)
-                      }
-                      disabled={
-                        item.quantity === 1 ||
-                        (updateQuantityMutation.isLoading &&
-                          updateQuantityMutation.variables?.productId === item.product._id)
-                      }
-                      className={`h-8 w-8 text-xl flex items-center justify-center select-none transition ${
-                        item.quantity === 1 ||
-                        (updateQuantityMutation.isLoading &&
-                          updateQuantityMutation.variables?.productId === item.product._id)
-                          ? "text-gray-400 cursor-not-allowed"
-                          : "cursor-pointer hover:bg-gray-100"
-                      }`}
-                    >
-                      -
-                    </button>
-                    <div className="h-8 w-8 text-base flex items-center justify-center">
-                      {updateQuantityMutation.isLoading &&
-                      updateQuantityMutation.variables?.productId === item.product._id ? (
-                        <svg
-                          className="animate-spin h-5 w-5 text-primary"
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                        >
-                          <circle
-                            className="opacity-25"
-                            cx="12"
-                            cy="12"
-                            r="10"
-                            stroke="currentColor"
-                            strokeWidth="4"
-                          ></circle>
-                          <path
-                            className="opacity-75"
-                            fill="currentColor"
-                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                          ></path>
-                        </svg>
-                      ) : (
-                        item.quantity
-                      )}
-                    </div>
-                    <button
-                      onClick={(e) =>
-                        handleIncreaseQuantity(
-                          item.product._id,
-                          item.quantity,
-                          item.product.inStock, // Use item.product.stock if available
-                          e
-                        )
-                      }
-                      disabled={
-                        (item.product.inStock !== undefined &&
-                          item.quantity >= item.product.inStock) ||
-                        (updateQuantityMutation.isLoading &&
-                          updateQuantityMutation.variables?.productId === item.product._id)
-                      }
-                      className={`h-8 w-8 text-xl flex items-center justify-center select-none transition ${
-                        (item.product.inStock !== undefined &&
-                          item.quantity >= item.product.inStock) ||
-                        (updateQuantityMutation.isLoading &&
-                          updateQuantityMutation.variables?.productId === item.product._id)
-                          ? "text-gray-400 cursor-not-allowed"
-                          : "cursor-pointer hover:bg-gray-100"
-                      }`}
-                    >
-                      +
-                    </button>
-                  </div>
-                </div>
-                <button
-                  onClick={(e) => handleRemoveFromCart(item.product._id, e)}
-                  disabled={
-                    removeMutation.isLoading &&
-                    removeMutation.variables === item.product._id
-                  }
-                  className={`text-red-500 hover:text-red-700 transition ${
-                    removeMutation.isLoading &&
-                    removeMutation.variables === item.product._id
-                      ? "opacity-50 cursor-not-allowed"
-                      : ""
-                  }`}
-                >
-                  {removeMutation.isLoading &&
-                  removeMutation.variables === item.product._id ? (
-                    <svg
-                        className="animate-spin h-5 w-5 text-gray-600"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                      >
-                        <circle
-                          className="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          strokeWidth="4"
-                        ></circle>
-                        <path
-                          className="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                        ></path>
-                      </svg>
-                  ) : (
-                    <FaTrash className="text-lg" />
-                  )}
-                </button>
-              </div>
-            ))}
-
-            {/* Pagination Controls */}
-            {totalPages > 1 && (
-              <div className="flex justify-center mt-8">
-                <nav className="flex items-center gap-2">
-                  {/* Previous Button */}
-                  <button
-                    onClick={() => handlePageChange(validCurrentPage - 1)}
-                    disabled={validCurrentPage === 1}
-                    className={`px-4 py-2 text-sm font-medium rounded ${
-                      validCurrentPage === 1
-                        ? "bg-gray-200 text-gray-500 cursor-not-allowed"
-                        : "bg-primary text-white hover:bg-primary-dark"
-                    }`}
-                  >
-                    Previous
-                  </button>
-
-                  {/* Page Numbers with Ellipsis */}
-                  {getPageNumbers(totalPages, validCurrentPage).map((page, index) =>
-                    page === "..." ? (
-                      <span
-                        key={`ellipsis-${index}`}
-                        className="px-4 py-2 text-sm font-medium"
-                      >
-                        {page}
-                      </span>
-                    ) : (
-                      <button
-                        key={`page-${page}`}
-                        onClick={() => handlePageChange(page)}
-                        className={`px-4 py-2 text-sm font-medium rounded ${
-                          validCurrentPage === page
-                            ? "bg-primary text-white"
-                            : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-                        }`}
-                      >
-                        {page}
-                      </button>
-                    )
-                  )}
-
-                  {/* Next Button */}
-                  <button
-                    onClick={() => handlePageChange(validCurrentPage + 1)}
-                    disabled={validCurrentPage === totalPages}
-                    className={`px-4 py-2 text-sm font-medium rounded ${
-                      validCurrentPage === totalPages
-                        ? "bg-gray-200 text-gray-500 cursor-not-allowed"
-                        : "bg-primary text-white hover:bg-primary-dark"
-                    }`}
-                  >
-                    Next
-                  </button>
-                </nav>
-              </div>
-            )}
-
-            {/* Cart Summary - Always visible */}
-            <div className="flex justify-between items-center bg-gray-100 p-4 rounded-lg">
-              <h3 className="text-lg font-semibold text-gray-800">
-                Total: ${total.toFixed(2)}
-              </h3>
-              <Link href={`/cart/${cart._id}`}>
-                <button className="bg-primary text-white px-6 py-2 rounded hover:bg-primary-dark transition uppercase font-medium">
-                  Proceed to Checkout
-                </button>
+                <FaShoppingCart />
+                <span>Shop Now</span>
               </Link>
             </div>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Cart Items */}
+            <div className="lg:col-span-2">
+              {/* Cart Items Summary */}
+              <div className="mb-4 text-gray-600">
+                Showing {startIndex + 1}-{endIndex} of {totalItems} items in your cart
+              </div>
+
+              {/* Cart Items List */}
+              <div className="space-y-4">
+                {paginatedItems.map((item) => (
+                  <div
+                    key={item.product._id}
+                    className="bg-white/90 backdrop-blur-lg rounded-xl shadow-md p-4 hover:shadow-lg transition-all duration-300"
+                  >
+                    <div className="flex items-center space-x-4">
+                      <Link href={`/products/${item.product._id}`}>
+                        <Image
+                          src={item.product.mainImage}
+                          alt={item.product.title}
+                          width={100}
+                          height={100}
+                          className="w-24 h-24 object-cover rounded-lg hover:scale-105 transition-transform duration-300"
+                        />
+                      </Link>
+                      <div className="flex-1">
+                        <Link href={`/products/${item.product._id}`}>
+                          <h4 className="text-lg font-semibold text-gray-800 hover:text-blue-600 transition-colors mb-2">
+                            {item.product.title}
+                          </h4>
+                        </Link>
+                        <p className="text-blue-600 text-lg font-semibold">
+                          ${item.price.toFixed(2)}
+                        </p>
+                        <div className="flex items-center space-x-4 mt-2">
+                          <div className="flex items-center space-x-2 bg-gray-50 rounded-lg p-2 shadow-sm">
+                            <button
+                              onClick={(e) =>
+                                handleDecreaseQuantity(item.product._id, item.quantity, e)
+                              }
+                              disabled={
+                                item.quantity === 1 ||
+                                (updateQuantityMutation.isLoading &&
+                                  updateQuantityMutation.variables?.productId === item.product._id)
+                              }
+                              className={`w-8 h-8 flex items-center justify-center rounded-full transition-all duration-300 ${
+                                item.quantity === 1 ||
+                                (updateQuantityMutation.isLoading &&
+                                  updateQuantityMutation.variables?.productId === item.product._id)
+                                  ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                                  : "bg-blue-100 text-blue-600 hover:bg-blue-200"
+                              }`}
+                            >
+                              <FaMinus />
+                            </button>
+                            <div className="w-12 text-center py-2 bg-white border border-gray-200 rounded-lg">
+                              {updateQuantityMutation.isLoading &&
+                              updateQuantityMutation.variables?.productId === item.product._id ? (
+                                <FaSpinner className="animate-spin mx-auto" />
+                              ) : (
+                                item.quantity
+                              )}
+                            </div>
+                            <button
+                              onClick={(e) =>
+                                handleIncreaseQuantity(
+                                  item.product._id,
+                                  item.quantity,
+                                  item.product.inStock,
+                                  e
+                                )
+                              }
+                              disabled={
+                                (item.product.inStock !== undefined &&
+                                  item.quantity >= item.product.inStock) ||
+                                (updateQuantityMutation.isLoading &&
+                                  updateQuantityMutation.variables?.productId === item.product._id)
+                              }
+                              className={`w-8 h-8 flex items-center justify-center rounded-full transition-all duration-300 ${
+                                (item.product.inStock !== undefined &&
+                                  item.quantity >= item.product.inStock) ||
+                                (updateQuantityMutation.isLoading &&
+                                  updateQuantityMutation.variables?.productId === item.product._id)
+                                  ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                                  : "bg-blue-100 text-blue-600 hover:bg-blue-200"
+                              }`}
+                            >
+                              <FaPlus />
+                            </button>
+                          </div>
+                          <button
+                            onClick={(e) => handleRemoveFromCart(item.product._id, e)}
+                            disabled={
+                              removeMutation.isLoading &&
+                              removeMutation.variables === item.product._id
+                            }
+                            className={`p-2 rounded-full transition-all duration-300 ${
+                              removeMutation.isLoading &&
+                              removeMutation.variables === item.product._id
+                                ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                                : "bg-red-100 text-red-600 hover:bg-red-200 hover:shadow-md"
+                            }`}
+                          >
+                            {removeMutation.isLoading &&
+                            removeMutation.variables === item.product._id ? (
+                              <FaSpinner className="animate-spin" />
+                            ) : (
+                              <FaTrash />
+                            )}
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Pagination Controls */}
+              {totalPages > 1 && (
+                <div className="flex justify-center mt-8">
+                  <nav className="flex items-center gap-2">
+                    <button
+                      onClick={() => handlePageChange(validCurrentPage - 1)}
+                      disabled={validCurrentPage === 1}
+                      className={`px-4 py-2 rounded-lg font-semibold flex items-center space-x-2 ${
+                        validCurrentPage === 1
+                          ? "bg-gray-200 text-gray-500 cursor-not-allowed"
+                          : "bg-blue-600 text-white hover:bg-blue-700"
+                      } transition-all duration-300 shadow-md`}
+                    >
+                      <FaArrowLeft />
+                      <span>Previous</span>
+                    </button>
+                    {getPageNumbers(totalPages, validCurrentPage).map((page, index) =>
+                      page === "..." ? (
+                        <span
+                          key={`ellipsis-${index}`}
+                          className="px-4 py-2 text-sm font-medium"
+                        >
+                          {page}
+                        </span>
+                      ) : (
+                        <button
+                          key={`page-${page}`}
+                          onClick={() => handlePageChange(page)}
+                          className={`px-4 py-2 rounded-lg font-semibold ${
+                            validCurrentPage === page
+                              ? "bg-blue-600 text-white shadow-lg"
+                              : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                          } transition-all duration-300`}
+                        >
+                          {page}
+                        </button>
+                      )
+                    )}
+                    <button
+                      onClick={() => handlePageChange(validCurrentPage + 1)}
+                      disabled={validCurrentPage === totalPages}
+                      className={`px-4 py-2 rounded-lg font-semibold flex items-center space-x-2 ${
+                        validCurrentPage === totalPages
+                          ? "bg-gray-200 text-gray-500 cursor-not-allowed"
+                          : "bg-blue-600 text-white hover:bg-blue-700"
+                      } transition-all duration-300 shadow-md`}
+                    >
+                      <span>Next</span>
+                      <FaArrowRight />
+                    </button>
+                  </nav>
+                </div>
+              )}
+            </div>
+
+            {/* Cart Summary Sidebar */}
+            {cart.items.length > 0 && (
+              <div className="lg:col-span-1 bg-white/90 backdrop-blur-lg rounded-xl shadow-lg p-6 sticky top-32 h-fit">
+                <h2 className="text-xl font-semibold text-gray-800 flex items-center mb-4">
+                  <FaShoppingCart className="mr-2 text-blue-500" />
+                  Cart Summary
+                </h2>
+                <div className="space-y-4">
+                  <div className="flex justify-between text-gray-600">
+                    <span>Total Items:</span>
+                    <span>{totalItems}</span>
+                  </div>
+                  <div className="flex justify-between text-gray-800 font-semibold text-lg">
+                    <span>Total:</span>
+                    <span>${total.toFixed(2)}</span>
+                  </div>
+                  <Link href={`/cart/${cart._id}`}>
+                    <button className="w-full bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-all duration-300 shadow-md hover:shadow-lg">
+                      Proceed to Checkout
+                    </button>
+                  </Link>
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>

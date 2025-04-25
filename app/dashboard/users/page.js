@@ -260,13 +260,13 @@ const UserList = () => {
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-            <FaSearch className="absolute left-3 top-3 text-gray-400" />
+            <FaSearch className="absolute right-3 top-3 text-gray-400" />
           </div>
           <div className="relative">
             <select
               value={roleFilter}
               onChange={(e) => setRoleFilter(e.target.value)}
-              className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none"
+              className="pl-10 pr-8 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none"
             >
               <option value="all">All Roles</option>
               <option value="admin">Admin</option>
@@ -421,7 +421,7 @@ const UserList = () => {
                           <FaInfoCircle className="mr-1" />
                           View
                         </button>
-                        {user.role !== "admin" && (
+                        {/* {user.role !== "admin" && (
                           <button 
                             onClick={() => router.push(`/users/${user._id}/edit`)}
                             className="bg-green-100 text-green-700 px-3 py-1 rounded hover:bg-green-200 transition-colors flex items-center"
@@ -429,7 +429,7 @@ const UserList = () => {
                             <FaUserCog className="mr-1" />
                             Edit
                           </button>
-                        )}
+                        )} */}
                       </div>
                     </td>
                   </tr>
