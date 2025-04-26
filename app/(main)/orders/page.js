@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getOrders } from "@/actions/order-utils";
 import { useSession } from "next-auth/react";
@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 import Link from "next/link";
 import Image from "next/image";
 import { FaShoppingBag, FaArrowLeft, FaArrowRight, FaEye, FaSpinner } from "react-icons/fa";
+import { session } from "@/actions/auth-utils";
 
 // Skeleton Loader for Orders
 const SkeletonOrderItem = () => (
@@ -45,18 +46,28 @@ const SkeletonOrderItem = () => (
 );
 
 const OrderHistory = () => {
-  const { data: session } = useSession();
+  const { data: userSession } = useSession();
   const router = useRouter();
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
+  useEffect(() => {
+      async function fetchUser() {
+        const res = await session();
+        if(!res?.user) {
+          router.push("/");
+        }
+      }
+      fetchUser();
+    }, [router]);
+
   // Fetch orders using React Query
   const { data, error, isLoading } = useQuery({
     queryKey: ["orders"],
     queryFn: getOrders,
-    enabled: !!session,
+    enabled: !!userSession,
     onError: (error) => {
       if (error.message.includes("Unauthorized")) {
         toast.error("Please log in to view your orders.", {
@@ -99,7 +110,7 @@ const OrderHistory = () => {
         <div className="sticky top-0 z-10 bg-white/80 backdrop-blur-md shadow-md p-6 rounded-b-xl mb-6">
           <div className="flex items-center justify-between max-w-6xl mx-auto">
             <h1 className="text-2xl font-bold text-gray-800">
-              {session?.user?.role === "admin" ? "Users Order History" : "Your Order History"}
+              {userSession?.user?.role === "admin" ? "Users Order History" : "Your Order History"}
             </h1>
           </div>
         </div>
@@ -144,12 +155,12 @@ const OrderHistory = () => {
             <div className="bg-white/90 backdrop-blur-lg rounded-xl shadow-lg p-8 text-center max-w-md w-full">
               <FaShoppingBag className="text-gray-400 text-6xl mx-auto mb-4" />
               <h2 className="text-xl font-semibold text-gray-800 mb-2">
-                {session?.user?.role === "admin" ? "No Orders Found" : "You Haven’t Placed Any Orders Yet"}
+                {userSession?.user?.role === "admin" ? "No Orders Found" : "You Haven’t Placed Any Orders Yet"}
               </h2>
               <p className="text-gray-600 mb-6">
-                {session?.user?.role === "admin" ? "No orders have been placed yet." : "Start shopping to place your first order!"}
+                {userSession?.user?.role === "admin" ? "No orders have been placed yet." : "Start shopping to place your first order!"}
               </p>
-              {session?.user?.role !== "admin" && (
+              {userSession?.user?.role !== "admin" && (
                 <Link
                   href="/products"
                   className="inline-flex items-center space-x-2 px-6 py-3 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-all duration-300 shadow-md hover:shadow-lg"

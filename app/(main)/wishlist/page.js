@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import Image from "next/image";
@@ -18,6 +18,7 @@ import { getWishlist, updateWishlist } from "@/actions/wishlist";
 import { addToCart, getCart } from "@/actions/cart-utils";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { session } from "@/actions/auth-utils";
 
 // Skeleton Loader for Wishlist Items
 const SkeletonWishlistItem = () => (
@@ -35,16 +36,26 @@ const SkeletonWishlistItem = () => (
 
 const Wishlist = () => {
   const queryClient = useQueryClient();
-  const { data: session } = useSession();
+  const { data: userSession } = useSession();
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
+
+  useEffect(() => {
+    async function fetchUser() {
+      const res = await session();
+      if(!res?.user) {
+        router.push("/");
+      }
+    }
+    fetchUser();
+  }, [router]);
 
   // Fetch wishlist
   const { data, error, isLoading } = useQuery({
     queryKey: ["wishlist"],
     queryFn: getWishlist,
-    enabled: !!session,
+    enabled: !!userSession,
     onError: (error) => {
       if (error.message.includes("Unauthorized")) {
         toast.error("Please log in to view your wishlist.", {
@@ -67,7 +78,7 @@ const Wishlist = () => {
   const { data: cartData, error: cartError, isLoading: cartLoading } = useQuery({
     queryKey: ["cart"],
     queryFn: getCart,
-    enabled: !!session,
+    enabled: !!userSession,
     onError: (error) => {
       if (error.message.includes("Unauthorized")) {
         toast.error("Please log in to view your cart.", {
@@ -152,7 +163,7 @@ const Wishlist = () => {
   // Handle removing an item from the wishlist
   const handleRemoveFromWishlist = (productId, e) => {
     e.preventDefault();
-    if (!session) {
+    if (!userSession) {
       toast.error("Please log in to manage your wishlist.", {
         position: "top-right",
         autoClose: 3000,
@@ -169,7 +180,7 @@ const Wishlist = () => {
   // Handle adding to cart or viewing cart
   const handleCartAction = (product, e) => {
     e.preventDefault();
-    if (!session) {
+    if (!userSession) {
       toast.error("Please log in to add to cart.", {
         position: "top-right",
         autoClose: 3000,

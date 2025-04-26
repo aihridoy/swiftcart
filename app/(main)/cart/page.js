@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import Image from "next/image";
@@ -17,6 +17,7 @@ import {
 import { getCart, removeFromCart, updateCartQuantity } from "@/actions/cart-utils";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { session } from "@/actions/auth-utils";
 
 // Skeleton Loader for Cart Items
 const SkeletonCartItem = () => (
@@ -35,8 +36,18 @@ const SkeletonCartItem = () => (
 
 const CartPage = () => {
   const queryClient = useQueryClient();
-  const { data: session } = useSession();
+  const { data: userSession } = useSession();
   const router = useRouter();
+
+  useEffect(() => {
+      async function fetchUser() {
+        const res = await session();
+        if(!res?.user) {
+          router.push("/");
+        }
+      }
+      fetchUser();
+    }, [router]);
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
@@ -46,7 +57,7 @@ const CartPage = () => {
   const { data, error, isLoading } = useQuery({
     queryKey: ["cart"],
     queryFn: getCart,
-    enabled: !!session,
+    enabled: !!userSession,
     onError: (error) => {
       if (!error.message.includes("Unauthorized")) {
         toast.error(`Error fetching cart: ${error.message}`, {
@@ -116,7 +127,7 @@ const CartPage = () => {
   // Handle remove from cart
   const handleRemoveFromCart = (productId, e) => {
     e.preventDefault();
-    if (!session) {
+    if (!userSession) {
       toast.error("Please log in to manage your cart.", {
         position: "top-right",
         autoClose: 3000,
@@ -133,7 +144,7 @@ const CartPage = () => {
   // Handle quantity increase
   const handleIncreaseQuantity = (productId, currentQuantity, productStock, e) => {
     e.preventDefault();
-    if (!session) {
+    if (!userSession) {
       toast.error("Please log in to manage your cart.", {
         position: "top-right",
         autoClose: 3000,
@@ -162,7 +173,7 @@ const CartPage = () => {
   // Handle quantity decrease
   const handleDecreaseQuantity = (productId, currentQuantity, e) => {
     e.preventDefault();
-    if (!session) {
+    if (!userSession) {
       toast.error("Please log in to manage your cart.", {
         position: "top-right",
         autoClose: 3000,
