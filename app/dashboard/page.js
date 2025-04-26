@@ -15,22 +15,22 @@ import {
 } from "react-icons/fi";
 
 export default function DashboardPage() {
-  const [user, setUser] = useState(null);
   const router = useRouter();
-
-  if(user && user?.role !== "admin") {
-    router.push('/');
-  }
 
   useEffect(() => {
     async function fetchUser() {
       const res = await session();
       if (res) {
-        setUser(res?.user);
+        if (res?.user?.role !== "admin") {
+          router.push('/');
+        }
+      } else {
+        router.push('/');
       }
     }
     fetchUser();
-  }, []);
+  }, [router]);
+
   const {
     data: userData,
   } = useQuery({

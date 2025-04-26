@@ -57,22 +57,21 @@ const OrderList = () => {
   const queryClient = useQueryClient();
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
-  const [user, setUser] = useState(null);
   const limit = 10;
-
-  if(user && user?.role !== "admin") {
-      router.push('/');
-    }
   
-    useEffect(() => {
-      async function fetchUser() {
-        const res = await session();
-        if (res) {
-          setUser(res?.user);
+  useEffect(() => {
+    async function fetchUser() {
+      const res = await session();
+      if (res) {
+        if (res?.user?.role !== "admin") {
+          router.push('/');
         }
+      } else {
+        router.push('/');
       }
-      fetchUser();
-    }, []);
+    }
+    fetchUser();
+  }, [router]);
 
   // Fetch orders with React Query
   const { data, error, isLoading } = useQuery({

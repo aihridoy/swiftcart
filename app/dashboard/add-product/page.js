@@ -29,22 +29,21 @@ const isValidImageUrl = (url) => {
 
 export default function AddProduct() {
   const queryClient = useQueryClient();
-  const [user, setUser] = useState(null);
   const router = useRouter();
-
-  if(user && user?.role !== "admin") {
-    router.push('/');
-  }
 
   useEffect(() => {
     async function fetchUser() {
       const res = await session();
       if (res) {
-        setUser(res?.user);
+        if (res?.user?.role !== "admin") {
+          router.push('/');
+        }
+      } else {
+        router.push('/');
       }
     }
     fetchUser();
-  }, []);
+  }, [router]);
 
   const [formData, setFormData] = useState({
     title: "",

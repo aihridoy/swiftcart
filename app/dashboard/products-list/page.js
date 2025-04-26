@@ -27,6 +27,9 @@ const ProductsPage = () => {
       try {
         setIsLoadingSession(true);
         const res = await session();
+        if(res?.user?.role !== "admin") {
+          router.push('/');
+        }
 
         if (!res) {
           toast.error("Please log in to view products.");
