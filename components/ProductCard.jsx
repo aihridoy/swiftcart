@@ -48,19 +48,23 @@ const ProductCard = ({
           </Link>
           <button
             onClick={(e) => handleWishlistToggle(product._id, e)}
-            disabled={wishlistLoading || (mutation.isLoading && mutation.variables?.productId === product._id)}
+            disabled={
+              wishlistLoading ||
+              (mutation.isPending && mutation.variables?.productId === product._id)
+            }
             className={`text-white text-lg w-9 h-8 rounded-full flex items-center justify-center transition ${
               isInWishlist
                 ? "bg-red-500 hover:bg-red-600"
                 : "bg-primary hover:bg-gray-800"
             } ${
-              wishlistLoading || (mutation.isLoading && mutation.variables?.productId === product._id)
+              wishlistLoading ||
+              (mutation.isPending && mutation.variables?.productId === product._id)
                 ? "opacity-50 cursor-not-allowed"
                 : ""
             }`}
             title={isInWishlist ? "Remove from Wishlist" : "Add to Wishlist"}
           >
-            {mutation.isLoading && mutation.variables?.productId === product._id ? (
+            {mutation.isPending && mutation.variables?.productId === product._id ? (
               <svg
                 className="animate-spin h-5 w-5 text-white"
                 xmlns="http://www.w3.org/2000/svg"
@@ -121,16 +125,20 @@ const ProductCard = ({
         {/* Add to Cart / View Cart Button */}
         <button
           onClick={(e) => handleCartAction(product._id, e)}
-          disabled={cartLoading || (cartMutation.isLoading && cartMutation.variables?.productId === product._id)}
+          disabled={
+            cartLoading ||
+            (cartMutation.isPending && cartMutation.variables?.productId === product._id)
+          }
           className={`mt-auto block w-full py-2 text-center text-white rounded-lg font-medium uppercase transition ${
-            cartMutation.isLoading && cartMutation.variables?.productId === product._id
+            cartLoading ||
+            (cartMutation.isPending && cartMutation.variables?.productId === product._id)
               ? "bg-red-400 cursor-not-allowed"
               : productInCart
               ? "bg-blue-500 hover:bg-blue-600"
               : "bg-red-500 hover:bg-red-600"
           }`}
         >
-          {cartMutation.isLoading && cartMutation.variables?.productId === product._id ? (
+          {cartMutation.isPending && cartMutation.variables?.productId === product._id ? (
             <svg
               className="animate-spin h-5 w-5 text-white mx-auto"
               xmlns="http://www.w3.org/2000/svg"
