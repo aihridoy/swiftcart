@@ -36,7 +36,7 @@ const SkeletonCartItem = () => (
 
 const CartPage = () => {
   const queryClient = useQueryClient();
-  const { data: userSession } = useSession();
+  const { data: userSession, status } = useSession();
   const router = useRouter();
 
   useEffect(() => {
@@ -127,7 +127,7 @@ const CartPage = () => {
   // Handle remove from cart
   const handleRemoveFromCart = (productId, e) => {
     e.preventDefault();
-    if (!userSession) {
+    if (status !== "authenticated") {
       toast.error("Please log in to manage your cart.", {
         position: "top-right",
         autoClose: 3000,
@@ -144,7 +144,7 @@ const CartPage = () => {
   // Handle quantity increase
   const handleIncreaseQuantity = (productId, currentQuantity, productStock, e) => {
     e.preventDefault();
-    if (!userSession) {
+    if (status !== "authenticated") {
       toast.error("Please log in to manage your cart.", {
         position: "top-right",
         autoClose: 3000,
@@ -363,7 +363,7 @@ const CartPage = () => {
                               }
                               className={`w-8 h-8 flex items-center justify-center rounded-full transition-all duration-300 ${
                                 item.quantity === 1 ||
-                                (updateQuantityMutation.isLoading &&
+                                (updateQuantityMutation.isPending &&
                                   updateQuantityMutation.variables?.productId === item.product._id)
                                   ? "bg-gray-200 text-gray-400 cursor-not-allowed"
                                   : "bg-blue-100 text-blue-600 hover:bg-blue-200"
@@ -397,7 +397,7 @@ const CartPage = () => {
                               className={`w-8 h-8 flex items-center justify-center rounded-full transition-all duration-300 ${
                                 (item.product.inStock !== undefined &&
                                   item.quantity >= item.product.inStock) ||
-                                (updateQuantityMutation.isLoading &&
+                                (updateQuantityMutation.isPending &&
                                   updateQuantityMutation.variables?.productId === item.product._id)
                                   ? "bg-gray-200 text-gray-400 cursor-not-allowed"
                                   : "bg-blue-100 text-blue-600 hover:bg-blue-200"
@@ -419,7 +419,7 @@ const CartPage = () => {
                                 : "bg-red-100 text-red-600 hover:bg-red-200 hover:shadow-md"
                             }`}
                           >
-                            {removeMutation.isLoading &&
+                            {removeMutation.isPending &&
                             removeMutation.variables === item.product._id ? (
                               <FaSpinner className="animate-spin" />
                             ) : (

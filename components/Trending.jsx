@@ -14,11 +14,9 @@ import ProductCard from "./ProductCard";
 // Skeleton Loader for Product Cards
 const SkeletonProductCard = () => (
   <div className="bg-white shadow-md rounded-lg overflow-hidden h-[400px] w-full flex flex-col animate-pulse">
-    {/* Image Placeholder */}
     <div className="relative w-full h-48">
       <div className="w-full h-full bg-gray-200" />
     </div>
-    {/* Product Info Placeholder */}
     <div className="p-4 flex flex-col flex-grow">
       <div className="h-6 bg-gray-200 rounded w-3/4 mb-2" />
       <div className="flex items-center mb-2">
@@ -40,11 +38,11 @@ const SkeletonProductCard = () => (
 
 const Trending = () => {
   const queryClient = useQueryClient();
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const router = useRouter();
 
-  // Fetch trending products
-  const { data, error, isLoading } = useQuery({
+  // Fetch trending products (no dependency on user session)
+  const { data: productsData, error: productsError, isLoading: productsLoading } = useQuery({
     queryKey: ["trendingProducts"],
     queryFn: () => getProducts({ limit: 8, sort: "-popularityScore" }),
     onError: (error) => {
@@ -60,11 +58,11 @@ const Trending = () => {
     },
   });
 
-  // Fetch wishlist
+  // Fetch wishlist (only when authenticated)
   const { data: wishlistData, error: wishlistError, isLoading: wishlistLoading } = useQuery({
     queryKey: ["wishlist"],
     queryFn: getWishlist,
-    enabled: !!session,
+    enabled: status === "authenticated", // Only run if user is authenticated
     onError: (error) => {
       if (error.message.includes("Unauthorized")) {
         toast.error("Please log in to view your wishlist.", {
@@ -93,11 +91,11 @@ const Trending = () => {
     },
   });
 
-  // Fetch cart
+  // Fetch cart (only when authenticated)
   const { data: cartData, error: cartError, isLoading: cartLoading } = useQuery({
     queryKey: ["cart"],
     queryFn: getCart,
-    enabled: !!session,
+    enabled: status === "authenticated", // Only run if user is authenticated
     onError: (error) => {
       if (error.message.includes("Unauthorized")) {
         toast.error("Please log in to view your cart.", {
@@ -173,7 +171,7 @@ const Trending = () => {
   const cartMutation = useMutation({
     mutationFn: ({ productId, quantity }) => addToCart(productId, quantity),
     onSuccess: (data) => {
-      queryClient.invalidateQueries(["cart"]); // Update cart count in Header
+      queryClient.invalidateQueries(["cart"]);
       toast.success("Product added to cart successfully!", {
         position: "top-right",
         autoClose: 3000,
@@ -215,7 +213,7 @@ const Trending = () => {
   // Handle wishlist toggle
   const handleWishlistToggle = (productId, e) => {
     e.preventDefault();
-    if (!session) {
+    if (status !== "authenticated") {
       toast.error("Please log in to manage your wishlist.", {
         position: "top-right",
         autoClose: 3000,
@@ -230,7 +228,7 @@ const Trending = () => {
       }, 3000);
       return;
     }
-    if (wishlistLoading || wishlistMutation.isLoading) return;
+    if (wishlistLoading || wishlistMutation.isPending) return;
 
     const isInWishlist = wishlistData?.wishlist?.some(
       (item) => item._id.toString() === productId
@@ -249,7 +247,7 @@ const Trending = () => {
   // Handle add to cart or view cart
   const handleCartAction = (productId, e) => {
     e.preventDefault();
-    if (!session) {
+    if (status !== "authenticated") {
       toast.error("Please log in to add to cart.", {
         position: "top-right",
         autoClose: 3000,
@@ -266,21 +264,20 @@ const Trending = () => {
     }
 
     if (isInCart(productId)) {
-      // If product is already in cart, redirect to cart page
       router.push("/cart");
     } else {
-      // If product is not in cart, add it
-      if (cartMutation.isLoading) return;
+      if (cartMutation.isPending) return;
       cartMutation.mutate({ productId, quantity: 1 });
     }
   };
 
-  if (isLoading) {
+  // Loading state for session
+  if (status === "loading") {
     return (
       <div className="container py-16 bg-white">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-medium text-gray-800 uppercase">
-          Trending Products
+            Trending Products
           </h2>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
@@ -292,7 +289,26 @@ const Trending = () => {
     );
   }
 
-  if (error) {
+  // Loading state for products
+  if (productsLoading) {
+    return (
+      <div className="container py-16 bg-white">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-medium text-gray-800 uppercase">
+            Trending Products
+          </h2>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+          {Array.from({ length: 8 }).map((_, index) => (
+            <SkeletonProductCard key={index} />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  // Error state for products
+  if (productsError) {
     return (
       <div className="container pb-16">
         <h2 className="text-2xl font-medium text-gray-800 uppercase mb-6">
@@ -303,7 +319,7 @@ const Trending = () => {
     );
   }
 
-  const products = data?.products || [];
+  const products = productsData?.products || [];
 
   return (
     <div className="container pb-16">
@@ -323,7 +339,7 @@ const Trending = () => {
           </Link>
         </div>
       ) : (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           {products.map((product) => (
             <ProductCard
               key={product._id}
@@ -332,9 +348,9 @@ const Trending = () => {
               wishlistLoading={wishlistLoading}
               mutation={wishlistMutation}
               handleWishlistToggle={handleWishlistToggle}
-              cartData={cartData} 
-              cartLoading={cartLoading} 
-              cartMutation={cartMutation} 
+              cartData={cartData}
+              cartLoading={cartLoading}
+              cartMutation={cartMutation}
               handleCartAction={handleCartAction}
               isInCart={isInCart}
             />

@@ -13,7 +13,7 @@ import { FaStar, FaRegStar } from "react-icons/fa";
 
 const Products = () => {
   const queryClient = useQueryClient();
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const router = useRouter();
 
   const [displayCount, setDisplayCount] = useState(20);
@@ -48,7 +48,7 @@ const Products = () => {
   const { data: cartData, error: cartError, isLoading: cartLoading } = useQuery({
     queryKey: ["cart"],
     queryFn: getCart,
-    enabled: !!session,
+    enabled: status === "authenticated",
     onError: (error) => {
       if (error.message.includes("Unauthorized")) {
         toast.error("Please log in to view your cart.", {
@@ -194,7 +194,7 @@ const Products = () => {
   // Handle add to cart or view cart
   const handleCartAction = (productId, e) => {
     e.preventDefault();
-    if (!session) {
+    if (status !== "authenticated") {
       toast.error("Please log in to add to cart.", {
         position: "top-right",
         autoClose: 3000,
@@ -566,7 +566,7 @@ const Products = () => {
                           : "bg-red-500 hover:bg-red-600"
                       }`}
                     >
-                      {cartMutation.isLoading && cartMutation.variables?.productId === product._id ? (
+                      {cartMutation.isPending && cartMutation.variables?.productId === product._id ? (
                         <svg
                           className="animate-spin h-5 w-5 text-white mx-auto"
                           xmlns="http://www.w3.org/2000/svg"

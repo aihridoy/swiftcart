@@ -15,11 +15,9 @@ import { useRouter } from "next/navigation";
 // Skeleton Loader for Product Cards
 const SkeletonProductCard = () => (
   <div className="bg-white shadow-md rounded-lg overflow-hidden h-[400px] w-full flex flex-col animate-pulse">
-    {/* Image Placeholder */}
     <div className="relative w-full h-48">
       <div className="w-full h-full bg-gray-200" />
     </div>
-    {/* Product Info Placeholder */}
     <div className="p-4 flex flex-col flex-grow">
       <div className="h-6 bg-gray-200 rounded w-3/4 mb-2" />
       <div className="flex items-center mb-2">
@@ -41,11 +39,12 @@ const SkeletonProductCard = () => (
 
 const NewArrival = () => {
   const queryClient = useQueryClient();
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
+  console.log(status);
   const router = useRouter();
 
-  // Fetch new arrival products
-  const { data, error, isLoading } = useQuery({
+  // Fetch new arrival products (no dependency on user session)
+  const { data: productsData, error: productsError, isLoading: productsLoading } = useQuery({
     queryKey: ["newArrivalProducts"],
     queryFn: () => getProducts({ limit: 8, sort: "-createdAt" }),
     onError: (error) => {
@@ -61,11 +60,11 @@ const NewArrival = () => {
     },
   });
 
-  // Fetch wishlist
+  // Fetch wishlist (only when authenticated)
   const { data: wishlistData, error: wishlistError, isLoading: wishlistLoading } = useQuery({
     queryKey: ["wishlist"],
     queryFn: getWishlist,
-    enabled: !!session,
+    enabled: status === "authenticated",
     onError: (error) => {
       if (error.message.includes("Unauthorized")) {
         toast.error("Please log in to view your wishlist.", {
@@ -94,11 +93,11 @@ const NewArrival = () => {
     },
   });
 
-  // Fetch cart
+  // Fetch cart (only when authenticated)
   const { data: cartData, error: cartError, isLoading: cartLoading } = useQuery({
     queryKey: ["cart"],
     queryFn: getCart,
-    enabled: !!session,
+    enabled: status === "authenticated",
     onError: (error) => {
       if (error.message.includes("Unauthorized")) {
         toast.error("Please log in to view your cart.", {
@@ -174,7 +173,7 @@ const NewArrival = () => {
   const cartMutation = useMutation({
     mutationFn: ({ productId, quantity }) => addToCart(productId, quantity),
     onSuccess: (data) => {
-      queryClient.invalidateQueries(["cart"]); // Update cart count in Header
+      queryClient.invalidateQueries(["cart"]);
       toast.success("Product added to cart successfully!", {
         position: "top-right",
         autoClose: 3000,
@@ -216,7 +215,7 @@ const NewArrival = () => {
   // Handle wishlist toggle
   const handleWishlistToggle = (productId, e) => {
     e.preventDefault();
-    if (!session) {
+    if (status !== "authenticated") {
       toast.error("Please log in to manage your wishlist.", {
         position: "top-right",
         autoClose: 3000,
@@ -231,7 +230,7 @@ const NewArrival = () => {
       }, 3000);
       return;
     }
-    if (wishlistLoading || mutation.isLoading) return;
+    if (wishlistLoading || mutation.isPending) return;
 
     const isInWishlist = wishlistData?.wishlist?.some(
       (item) => item._id.toString() === productId
@@ -250,7 +249,7 @@ const NewArrival = () => {
   // Handle add to cart or view cart
   const handleCartAction = (productId, e) => {
     e.preventDefault();
-    if (!session) {
+    if (status !== "authenticated") {
       toast.error("Please log in to add to cart.", {
         position: "top-right",
         autoClose: 3000,
@@ -267,16 +266,15 @@ const NewArrival = () => {
     }
 
     if (isInCart(productId)) {
-      // If product is already in cart, redirect to cart page
       router.push("/cart");
     } else {
-      // If product is not in cart, add it
-      if (cartMutation.isLoading) return;
+      if (cartMutation.isPending) return;
       cartMutation.mutate({ productId, quantity: 1 });
     }
   };
 
-  if (isLoading) {
+  // Loading state for products
+  if (productsLoading) {
     return (
       <div className="container py-16 bg-white">
         <div className="flex justify-between items-center mb-6">
@@ -298,7 +296,8 @@ const NewArrival = () => {
     );
   }
 
-  if (error) {
+  // Error state for products
+  if (productsError) {
     return (
       <div className="container pb-16">
         <h2 className="text-2xl font-medium text-gray-800 uppercase mb-6">
@@ -309,7 +308,7 @@ const NewArrival = () => {
     );
   }
 
-  const products = data?.products || [];
+  const products = productsData?.products || [];
 
   return (
     <div className="container py-16 bg-white">
@@ -338,12 +337,9 @@ const NewArrival = () => {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
           {products.map((product) => {
-            // Check if the product is in the wishlist
             const isInWishlist = wishlistData?.wishlist?.some(
               (item) => item._id.toString() === product._id
             );
-
-            // Check if the product is in the cart
             const productInCart = isInCart(product._id);
 
             return (
@@ -351,7 +347,6 @@ const NewArrival = () => {
                 key={product._id}
                 className="bg-white shadow-md rounded-lg overflow-hidden h-[400px] w-full flex flex-col group"
               >
-                {/* Product Image with Hover Effect */}
                 <div className="relative w-full h-48">
                   <Link href={`/products/${product._id}`}>
                     <Image
@@ -372,19 +367,19 @@ const NewArrival = () => {
                     </Link>
                     <button
                       onClick={(e) => handleWishlistToggle(product._id, e)}
-                      disabled={wishlistLoading || (mutation.isLoading && mutation.variables?.productId === product._id)}
+                      disabled={wishlistLoading || (mutation.isPending && mutation.variables?.productId === product._id)}
                       className={`text-white text-lg w-9 h-8 rounded-full flex items-center justify-center transition ${
                         isInWishlist
                           ? "bg-red-500 hover:bg-red-600"
                           : "bg-primary hover:bg-gray-800"
                       } ${
-                        wishlistLoading || (mutation.isLoading && mutation.variables?.productId === product._id)
+                        wishlistLoading || (mutation.isPending && mutation.variables?.productId === product._id)
                           ? "opacity-50 cursor-not-allowed"
                           : ""
                       }`}
                       title={isInWishlist ? "Remove from Wishlist" : "Add to Wishlist"}
                     >
-                      {mutation.isLoading && mutation.variables?.productId === product._id ? (
+                      {mutation.isPending && mutation.variables?.productId === product._id ? (
                         <svg
                           className="animate-spin h-5 w-5 text-white"
                           xmlns="http://www.w3.org/2000/svg"
@@ -414,7 +409,6 @@ const NewArrival = () => {
                   </div>
                 </div>
 
-                {/* Product Info */}
                 <div className="p-4 flex flex-col flex-grow">
                   <Link href={`/products/${product._id}`}>
                     <h4 className="font-medium text-base text-gray-800 uppercase mb-2 hover:text-primary transition line-clamp-2">
@@ -442,19 +436,18 @@ const NewArrival = () => {
                     <div className="text-xs text-gray-500 ml-2">(150)</div>
                   </div>
 
-                  {/* Add to Cart / View Cart Button */}
                   <button
                     onClick={(e) => handleCartAction(product._id, e)}
-                    disabled={cartMutation.isLoading && cartMutation.variables?.productId === product._id}
+                    disabled={cartMutation.isPending && cartMutation.variables?.productId === product._id}
                     className={`mt-auto block w-full py-2 text-center text-white rounded-lg font-medium uppercase transition ${
-                      cartMutation.isLoading && cartMutation.variables?.productId === product._id
+                      cartMutation.isPending && cartMutation.variables?.productId === product._id
                         ? "bg-red-400 cursor-not-allowed"
                         : productInCart
-                        ? "bg-blue-500 hover:bg-blue-600" // Different color for "View Cart"
+                        ? "bg-blue-500 hover:bg-blue-600"
                         : "bg-red-500 hover:bg-red-600"
                     }`}
                   >
-                    {cartMutation.isLoading && cartMutation.variables?.productId === product._id ? (
+                    {cartMutation.isPending && cartMutation.variables?.productId === product._id ? (
                       <svg
                         className="animate-spin h-5 w-5 text-white mx-auto"
                         xmlns="http://www.w3.org/2000/svg"
