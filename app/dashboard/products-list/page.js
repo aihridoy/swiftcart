@@ -101,11 +101,11 @@ const ProductsPage = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="flex justify-between items-center mb-4">
-        <h1 className="text-3xl font-bold">Product List</h1>
+      <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
+        <h1 className="text-2xl sm:text-3xl font-bold">Product List</h1>
         <Link
           href="/dashboard/add-product"
-          className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-md shadow-md transition-colors duration-300"
+          className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-md shadow-md transition-colors duration-300 text-center"
         >
           Add Product
         </Link>
@@ -124,7 +124,7 @@ const ProductsPage = () => {
             return (
               <div
                 key={product._id}
-                className="py-6 flex flex-col md:flex-row items-start gap-6 hover:bg-gray-50 transition-colors duration-200"
+                className="py-6 flex flex-col md:flex-row items-center md:items-start gap-6 hover:bg-gray-50 transition-colors duration-200"
               >
                 <div className="relative h-40 w-40 flex-shrink-0">
                   <Image
@@ -135,48 +135,50 @@ const ProductsPage = () => {
                   />
                 </div>
 
-                <div className="flex-grow">
-                  <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-2">
-                    <div>
+                <div className="flex-grow w-full">
+                  <div className="flex flex-col gap-2">
+                    <div className="text-center md:text-left">
                       <h2 className="text-xl font-semibold">{product.title}</h2>
                       <p className="text-gray-600 text-sm">
                         {product.brand} - {product.category}
                       </p>
                     </div>
 
-                    <div className="flex flex-col items-start md:items-end">
-                      <div className="flex items-center gap-2">
-                        <span className="font-bold text-lg">
-                          ${product.price.toFixed(2)}
-                        </span>
-                        {product.originalPrice &&
-                          product.originalPrice > product.price && (
-                            <span className="text-gray-400 line-through text-sm">
-                              ${product.originalPrice.toFixed(2)}
-                            </span>
-                          )}
-                      </div>
+                    <div className="flex justify-center md:justify-start items-center gap-2 mt-2 md:mt-0">
+                      <span className="font-bold text-lg">
+                        ${product.price.toFixed(2)}
+                      </span>
+                      {product.originalPrice &&
+                        product.originalPrice > product.price && (
+                          <span className="text-gray-400 line-through text-sm">
+                            ${product.originalPrice.toFixed(2)}
+                          </span>
+                        )}
                       <span
-                        className={`text-sm ${product.availability === "In Stock" ? "text-green-500" : "text-red-500"}`}
+                        className={`ml-2 text-sm ${
+                          product.availability === "In Stock"
+                            ? "text-green-500"
+                            : "text-red-500"
+                        }`}
                       >
                         {product.availability}
                       </span>
                     </div>
                   </div>
 
-                  <p className="text-gray-700 mt-2 mb-4">
+                  <p className="text-gray-700 mt-2 mb-4 text-center md:text-left">
                     {product.description}
                   </p>
 
-                  <div className="flex items-center justify-between mt-4">
-                    <div className="text-sm text-gray-500">
+                  <div className="flex flex-col sm:flex-row items-center justify-between mt-4 gap-4">
+                    <div className="text-sm text-gray-500 mb-3 sm:mb-0">
                       SKU: {product.sku}
                     </div>
 
-                    <div className="flex gap-2">
+                    <div className="flex flex-wrap justify-center gap-2 w-full sm:w-auto">
                       <Link
                         href={`/products/${product._id}`}
-                        className="border border-blue-600 text-blue-600 hover:bg-blue-50 font-medium py-2 px-6 rounded-md transition-all duration-300"
+                        className="border border-blue-600 text-blue-600 hover:bg-blue-50 font-medium py-2 px-4 rounded-md transition-all duration-300 text-center"
                       >
                         View Details
                       </Link>
@@ -184,7 +186,7 @@ const ProductsPage = () => {
                         <>
                           <Link
                             href={`/edit-product/${product._id}`}
-                            className="bg-amber-500 hover:bg-amber-600 text-white py-2 px-4 font-medium rounded-md transition-colors duration-300"
+                            className="bg-amber-500 hover:bg-amber-600 text-white py-2 px-4 font-medium rounded-md transition-colors duration-300 text-center"
                           >
                             Edit
                           </Link>
@@ -214,7 +216,7 @@ const ProductsPage = () => {
         <div className="flex justify-center mt-8">
           <button
             onClick={handleShowMore}
-            className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-6 rounded-md transition-colors duration-300"
+            className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-6 rounded-md transition-colors duration-300 w-full sm:w-auto"
           >
             Show More
           </button>

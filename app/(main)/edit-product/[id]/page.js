@@ -7,16 +7,16 @@ import { session } from "@/actions/auth-utils";
 import { toast } from "react-toastify";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { 
-  FaTag, 
-  FaBox, 
-  FaDollarSign, 
-  FaImage, 
-  FaList, 
-  FaInfoCircle, 
-  FaArrowLeft, 
-  FaSave, 
-  FaSpinner 
+import {
+  FaTag,
+  FaBox,
+  FaDollarSign,
+  FaImage,
+  FaList,
+  FaInfoCircle,
+  FaArrowLeft,
+  FaSave,
+  FaSpinner,
 } from "react-icons/fa";
 
 // Helper function to validate URLs
@@ -124,14 +124,23 @@ export default function EditProductPage({ params }) {
         brand: productData.product.brand || "",
         category: productData.product.category || "",
         sku: productData.product.sku || "",
-        price: productData.product.price ? productData.product.price.toString() : "",
+        price: productData.product.price
+          ? productData.product.price.toString()
+          : "",
         originalPrice: productData.product.originalPrice
           ? productData.product.originalPrice.toString()
           : "",
         description: productData.product.description || "",
         quantity: productData.product.quantity || 0,
         mainImage: productData.product.mainImage || "",
-        thumbnails: [...(productData.product.thumbnails || []), "", "", "", "", ""].slice(0, 5),
+        thumbnails: [
+          ...(productData.product.thumbnails || []),
+          "",
+          "",
+          "",
+          "",
+          "",
+        ].slice(0, 5),
       });
     }
   }, [productData]);
@@ -184,7 +193,9 @@ export default function EditProductPage({ params }) {
     e.preventDefault();
     setMessage("");
 
-    const filteredThumbnails = formData.thumbnails.filter((url) => url.trim() !== "");
+    const filteredThumbnails = formData.thumbnails.filter(
+      (url) => url.trim() !== ""
+    );
     const dataToUpdate = {
       ...formData,
       thumbnails: filteredThumbnails,
@@ -218,23 +229,24 @@ export default function EditProductPage({ params }) {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-100 via-blue-50 to-teal-50 py-8 px-4">
       {/* Sticky Header */}
-      <div className="sticky top-0 z-10 bg-white/80 backdrop-blur-md shadow-md p-6 rounded-b-xl mb-6">
-        <div className="flex items-center justify-between max-w-6xl mx-auto">
-          <div className="flex items-center space-x-4">
+      <div className="sticky top-0 z-10 bg-white/80 backdrop-blur-md shadow-md p-3 sm:p-6 rounded-b-xl mb-6">
+        <div className="flex flex-col sm:flex-row items-center justify-between max-w-6xl mx-auto gap-4 sm:gap-0">
+          <div className="flex items-center space-x-2 sm:space-x-4 w-full sm:w-auto">
             <button
               onClick={() => router.back()}
               className="p-2 text-gray-600 hover:text-blue-600 transition-colors"
+              aria-label="Go back"
             >
-              <FaArrowLeft className="text-xl" />
+              <FaArrowLeft className="text-lg sm:text-xl" />
             </button>
-            <h1 className="text-2xl font-bold text-gray-800">
-              Edit Product: {productData.product.title}
+            <h1 className="text-lg sm:text-2xl font-bold text-gray-800 truncate">
+              Edit: {productData.product.title}
             </h1>
           </div>
           <button
             onClick={handleSubmit}
             disabled={mutation.isPending}
-            className={`flex items-center space-x-2 px-6 py-2 rounded-lg font-semibold text-white shadow-md transition-all duration-300 ${
+            className={`flex items-center justify-center space-x-2 px-4 sm:px-6 py-2 rounded-lg font-semibold text-white shadow-md transition-all duration-300 w-full sm:w-auto mt-3 sm:mt-0 ${
               mutation.isPending
                 ? "bg-gray-400 cursor-not-allowed"
                 : "bg-blue-600 hover:bg-blue-700 hover:shadow-lg"
@@ -497,7 +509,8 @@ export default function EditProductPage({ params }) {
                     alt="Main Product Preview"
                     className="w-full h-48 object-cover rounded-lg shadow-md hover:scale-105 transition-transform duration-300"
                   />
-                ) : productData.product.mainImage && isValidImageUrl(productData.product.mainImage) ? (
+                ) : productData.product.mainImage &&
+                  isValidImageUrl(productData.product.mainImage) ? (
                   <div>
                     <p className="text-sm text-gray-500 mb-2">Current Image:</p>
                     <Image
@@ -510,7 +523,8 @@ export default function EditProductPage({ params }) {
                   </div>
                 ) : (
                   <p className="text-red-500 text-sm">
-                    Invalid image URL. Use a valid URL from Unsplash, Google, or Facebook.
+                    Invalid image URL. Use a valid URL from Unsplash, Google, or
+                    Facebook.
                   </p>
                 )}
               </div>
@@ -524,14 +538,18 @@ export default function EditProductPage({ params }) {
             </label>
             <div className="space-y-4">
               {formData.thumbnails.map((thumbnail, index) => {
-                const currentThumbnail = productData.product.thumbnails && productData.product.thumbnails[index];
+                const currentThumbnail =
+                  productData.product.thumbnails &&
+                  productData.product.thumbnails[index];
                 return (
                   <div key={index} className="space-y-2">
                     <div className="relative">
                       <input
                         type="text"
                         value={thumbnail}
-                        onChange={(e) => handleThumbnailChange(index, e.target.value)}
+                        onChange={(e) =>
+                          handleThumbnailChange(index, e.target.value)
+                        }
                         className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all shadow-sm hover:shadow-md"
                         placeholder={`Thumbnail ${index + 1} URL`}
                       />
@@ -550,7 +568,8 @@ export default function EditProductPage({ params }) {
                           <p className="text-red-500 text-sm">Invalid URL</p>
                         )}
                       </div>
-                    ) : currentThumbnail && isValidImageUrl(currentThumbnail) ? (
+                    ) : currentThumbnail &&
+                      isValidImageUrl(currentThumbnail) ? (
                       <div>
                         <Image
                           width={100}

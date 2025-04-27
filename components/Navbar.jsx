@@ -6,6 +6,7 @@ import { session } from "@/actions/auth-utils";
 import SignOut from "./SignOut";
 import ActiveLink from "./ActiveLink";
 import api from "@/lib/axios";
+import MobileMenu from "./MobileMenu";
 
 const DropdownItem = ({ name, slug, image }) => (
   <Link
@@ -62,60 +63,66 @@ const Navbar = async () => {
     { name: "Home", path: "/" },
     { name: "Shop", path: "/products" },
     { name: "About Us", path: "/about-us" },
-    { name: "Contact Us", path: "/contact" }
+    { name: "Contact Us", path: "/contact" },
   ];
 
-   // Only show "Products" to admin
-   if (userSession?.user?.role === "admin") {
+  if (userSession?.user?.role === "admin") {
     navLinks.push({ name: "Dashboard", path: "/dashboard" });
   }
 
   return (
-    <nav className="bg-gray-800">
-      <div className="container flex">
-        <div className="px-8 py-4 bg-primary md:flex items-center cursor-pointer relative group hidden">
-          <span className="text-white">
+    <nav className="bg-gray-800 relative">
+      <div className="container mx-auto flex items-center justify-between py-4 px-6">
+        
+        {/* Left side: Categories for desktop only */}
+        <div className="hidden md:flex items-center relative group">
+          <div className="flex items-center px-4 py-2 bg-primary text-white cursor-pointer">
             <FaBars size={20} />
-          </span>
-          <span className="capitalize ml-2 text-white hidden">
-            All Categories
-          </span>
+            <span className="ml-2 hidden lg:block">Categories</span>
+          </div>
           <div className="absolute w-64 left-0 top-full bg-white shadow-md py-3 divide-y divide-gray-300 divide-dashed hidden group-hover:block transition duration-300 z-10">
             {categories.map((item, index) => (
               <DropdownItem key={index} {...item} />
             ))}
           </div>
         </div>
-        <div className="flex items-center justify-between flex-grow md:pl-12 py-5">
-          <div className="flex items-center space-x-6 capitalize">
-            {navLinks.map((link) => (
-              <ActiveLink key={link.path} href={link.path}>
-                {link.name}
-              </ActiveLink>
-            ))}
-          </div>
+
+        {/* Center Nav Links for desktop */}
+        <div className="hidden md:flex items-center space-x-6">
+          {navLinks.map((link) => (
+            <ActiveLink key={link.path} href={link.path}>
+              {link.name}
+            </ActiveLink>
+          ))}
+        </div>
+
+        {/* Right side */}
+        <div className="flex items-center space-x-4">
           {userSession?.user ? (
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-2">
-                {userSession.user.image ? (
-                  <Image
-                    src={userSession.user.image}
-                    alt={userSession.user.name}
-                    width={32}
-                    height={32}
-                    className="rounded-full"
-                  />
-                ) : (
-                  <span className="text-gray-200">
-                    Welcome, {userSession.user.name}!
-                  </span>
-                )}
-              </div>
+            <div className="flex items-center space-x-2">
+              {userSession.user.image ? (
+                <Image
+                  src={userSession.user.image}
+                  alt={userSession.user.name}
+                  width={32}
+                  height={32}
+                  className="rounded-full"
+                />
+              ) : (
+                <span className="text-gray-200 text-sm">
+                  Welcome, {userSession.user.name}!
+                </span>
+              )}
               <SignOut />
             </div>
           ) : (
-            <ActiveLink href="/login">Login</ActiveLink>
+            <div className="hidden md:block">
+              <ActiveLink href="/login">Login</ActiveLink>
+            </div>
           )}
+          
+          {/* Mobile Hamburger Menu */}
+          <MobileMenu navLinks={navLinks} isLoggedIn={!!userSession?.user} />
         </div>
       </div>
     </nav>

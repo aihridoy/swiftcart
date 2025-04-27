@@ -133,15 +133,15 @@ export default function AddProduct() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-purple-50 to-pink-100 py-12">
-      <div className="max-w-6xl mx-auto px-4">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-purple-50 to-pink-100 py-8 sm:py-12 mb-16 md:mb-0">
+      <div className="max-w-full sm:max-w-6xl mx-auto px-2 sm:px-4">
         <div className="bg-white/90 backdrop-blur-xl rounded-2xl shadow-xl overflow-hidden border border-purple-100">
-          <div className="flex items-center justify-between bg-gradient-to-r from-indigo-600 to-purple-600 p-6">
-            <h1 className="text-3xl font-bold text-white">Add New Product</h1>
-            <div className="flex space-x-1">
+          <div className="flex flex-col sm:flex-row items-center justify-between bg-gradient-to-r from-indigo-600 to-purple-600 p-4 sm:p-6">
+            <h1 className="text-2xl sm:text-3xl font-bold text-white mb-4 sm:mb-0">Add New Product</h1>
+            <div className="flex space-x-2 sm:space-x-1">
               <button 
                 onClick={() => setActiveTab('basic')}
-                className={`px-4 py-2 rounded-lg font-medium transition ${
+                className={`px-3 py-2 sm:px-4 sm:py-2 rounded-lg font-medium transition text-sm sm:text-base ${
                   activeTab === 'basic' 
                     ? 'bg-white text-indigo-700' 
                     : 'bg-indigo-500/20 text-white hover:bg-indigo-500/40'
@@ -151,7 +151,7 @@ export default function AddProduct() {
               </button>
               <button 
                 onClick={() => setActiveTab('media')}
-                className={`px-4 py-2 rounded-lg font-medium transition ${
+                className={`px-3 py-2 sm:px-4 sm:py-2 rounded-lg font-medium transition text-sm sm:text-base ${
                   activeTab === 'media' 
                     ? 'bg-white text-indigo-700' 
                     : 'bg-indigo-500/20 text-white hover:bg-indigo-500/40'
@@ -164,11 +164,11 @@ export default function AddProduct() {
 
           {message && (
             <div
-              className={`mx-6 mt-4 p-4 ${
+              className={`mx-4 sm:mx-6 mt-4 p-3 sm:p-4 ${
                 message.includes("success")
                   ? "bg-green-100 text-green-800 border-l-4 border-green-500"
                   : "bg-red-100 text-red-800 border-l-4 border-red-500"
-              } rounded-md flex items-center`}
+              } rounded-md flex items-center flex-wrap`}
             >
               <svg 
                 className={`w-5 h-5 mr-2 ${message.includes("success") ? "text-green-500" : "text-red-500"}`} 
@@ -181,18 +181,18 @@ export default function AddProduct() {
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
                 )}
               </svg>
-              {message}
+              <span className="text-sm sm:text-base">{message}</span>
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="p-6">
+          <form onSubmit={handleSubmit} className="p-4 sm:p-6">
             {activeTab === 'basic' && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 sm:gap-x-8 gap-y-4 sm:gap-y-6">
                 {/* Left Column */}
-                <div className="space-y-6">
+                <div className="space-y-4 sm:space-y-6">
                   {/* Product Title */}
                   <div className="group">
-                    <label className="block text-sm font-medium text-gray-700 mb-1 group-hover:text-indigo-600 transition-colors">
+                    <label className="block text-sm sm:text-sm font-medium text-gray-700 mb-1 group-hover:text-indigo-600 transition-colors">
                       Product Title
                     </label>
                     <input
@@ -200,7 +200,7 @@ export default function AddProduct() {
                       name="title"
                       value={formData.title}
                       onChange={handleChange}
-                      className="block w-full border border-gray-200 rounded-lg p-3 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all group-hover:border-indigo-300 shadow-sm"
+                      className="block w-full border border-gray-200 rounded-lg p-2 sm:p-3 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all group-hover:border-indigo-300 shadow-sm text-sm sm:text-base"
                       placeholder="Enter product title"
                       required
                     />
@@ -208,7 +208,7 @@ export default function AddProduct() {
 
                   {/* Brand */}
                   <div className="group">
-                    <label className="block text-sm font-medium text-gray-700 mb-1 group-hover:text-indigo-600 transition-colors">
+                    <label className="block text-sm sm:text-sm font-medium text-gray-700 mb-1 group-hover:text-indigo-600 transition-colors">
                       Brand
                     </label>
                     <input
@@ -216,7 +216,7 @@ export default function AddProduct() {
                       name="brand"
                       value={formData.brand}
                       onChange={handleChange}
-                      className="block w-full border border-gray-200 rounded-lg p-3 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all group-hover:border-indigo-300 shadow-sm"
+                      className="block w-full border border-gray-200 rounded-lg p-2 sm:p-3 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all group-hover:border-indigo-300 shadow-sm text-sm sm:text-base"
                       placeholder="Enter brand name"
                       required
                     />
@@ -224,7 +224,7 @@ export default function AddProduct() {
 
                   {/* Category */}
                   <div className="group">
-                    <label className="block text-sm font-medium text-gray-700 mb-1 group-hover:text-indigo-600 transition-colors">
+                    <label className="block text-sm sm:text-sm font-medium text-gray-700 mb-1 group-hover:text-indigo-600 transition-colors">
                       Category
                     </label>
                     <div className="relative">
@@ -232,7 +232,7 @@ export default function AddProduct() {
                         name="category"
                         value={formData.category}
                         onChange={handleChange}
-                        className="block appearance-none w-full border border-gray-200 rounded-lg p-3 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all group-hover:border-indigo-300 shadow-sm pr-10"
+                        className="block appearance-none w-full border border-gray-200 rounded-lg p-2 sm:p-3 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all group-hover:border-indigo-300 shadow-sm pr-10 text-sm sm:text-base"
                       >
                         <option value="">Select a category</option>
                         <option value="Bedroom">Bedroom</option>
@@ -243,7 +243,7 @@ export default function AddProduct() {
                         <option value="Kitchen">Kitchen</option>
                       </select>
                       <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                        <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                        <svg className="fill-current h-4 w-4 sm:h-4 sm:w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
                           <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
                         </svg>
                       </div>
@@ -252,7 +252,7 @@ export default function AddProduct() {
 
                   {/* SKU */}
                   <div className="group">
-                    <label className="block text-sm font-medium text-gray-700 mb-1 group-hover:text-indigo-600 transition-colors">
+                    <label className="block text-sm sm:text-sm font-medium text-gray-700 mb-1 group-hover:text-indigo-600 transition-colors">
                       SKU
                     </label>
                     <input
@@ -260,7 +260,7 @@ export default function AddProduct() {
                       name="sku"
                       value={formData.sku}
                       onChange={handleChange}
-                      className="block w-full border border-gray-200 rounded-lg p-3 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all group-hover:border-indigo-300 shadow-sm"
+                      className="block w-full border border-gray-200 rounded-lg p-2 sm:p-3 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all group-hover:border-indigo-300 shadow-sm text-sm sm:text-base"
                       placeholder="Enter SKU"
                       required
                     />
@@ -268,7 +268,7 @@ export default function AddProduct() {
 
                   {/* Availability Status */}
                   <div className="group">
-                    <label className="block text-sm font-medium text-gray-700 mb-1 group-hover:text-indigo-600 transition-colors">
+                    <label className="block text-sm sm:text-sm font-medium text-gray-700 mb-1 group-hover:text-indigo-600 transition-colors">
                       Availability Status
                     </label>
                     <div className="relative">
@@ -276,13 +276,13 @@ export default function AddProduct() {
                         name="availability"
                         value={formData.availability}
                         onChange={handleChange}
-                        className="block appearance-none w-full border border-gray-200 rounded-lg p-3 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all group-hover:border-indigo-300 shadow-sm pr-10"
+                        className="block appearance-none w-full border border-gray-200 rounded-lg p-2 sm:p-3 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all group-hover:border-indigo-300 shadow-sm pr-10 text-sm sm:text-base"
                       >
                         <option value="In Stock">In Stock</option>
                         <option value="Out of Stock">Out of Stock</option>
                       </select>
                       <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                        <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                        <svg className="fill-current h-4 w-4 sm:h-4 sm:w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
                           <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
                         </svg>
                       </div>
@@ -291,10 +291,10 @@ export default function AddProduct() {
                 </div>
 
                 {/* Right Column */}
-                <div className="space-y-6">
+                <div className="space-y-4 sm:space-y-6">
                   {/* Price Display */}
                   <div className="group">
-                    <label className="block text-sm font-medium text-gray-700 mb-1 group-hover:text-indigo-600 transition-colors">
+                    <label className="block text-sm sm:text-sm font-medium text-gray-700 mb-1 group-hover:text-indigo-600 transition-colors">
                       Price Display ($)
                     </label>
                     <div className="relative">
@@ -304,7 +304,7 @@ export default function AddProduct() {
                         name="price"
                         value={formData.price}
                         onChange={handleChange}
-                        className="block w-full border border-gray-200 rounded-lg pl-8 p-3 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all group-hover:border-indigo-300 shadow-sm"
+                        className="block w-full border border-gray-200 rounded-lg pl-8 p-2 sm:p-3 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all group-hover:border-indigo-300 shadow-sm text-sm sm:text-base"
                         placeholder="0.00"
                         required
                       />
@@ -313,7 +313,7 @@ export default function AddProduct() {
 
                   {/* Original Price Display */}
                   <div className="group">
-                    <label className="block text-sm font-medium text-gray-700 mb-1 group-hover:text-indigo-600 transition-colors">
+                    <label className="block text-sm sm:text-sm font-medium text-gray-700 mb-1 group-hover:text-indigo-600 transition-colors">
                       Original Price Display ($)
                     </label>
                     <div className="relative">
@@ -323,7 +323,7 @@ export default function AddProduct() {
                         name="originalPrice"
                         value={formData.originalPrice}
                         onChange={handleChange}
-                        className="block w-full border border-gray-200 rounded-lg pl-8 p-3 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all group-hover:border-indigo-300 shadow-sm"
+                        className="block w-full border border-gray-200 rounded-lg pl-8 p-2 sm:p-3 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all group-hover:border-indigo-300 shadow-sm text-sm sm:text-base"
                         placeholder="0.00"
                       />
                     </div>
@@ -331,17 +331,17 @@ export default function AddProduct() {
 
                   {/* Quantity Selector */}
                   <div className="group">
-                    <label className="block text-sm font-medium text-gray-700 mb-1 group-hover:text-indigo-600 transition-colors">
+                    <label className="block text-sm sm:text-sm font-medium text-gray-700 mb-1 group-hover:text-indigo-600 transition-colors">
                       Quantity
                     </label>
                     <div className="flex items-center space-x-3">
                       <button
                         type="button"
                         onClick={decreaseQuantity}
-                        className="bg-indigo-100 text-indigo-700 w-10 h-10 flex items-center justify-center rounded-full hover:bg-indigo-200 transition-all shadow-sm"
+                        className="bg-indigo-100 text-indigo-700 w-12 h-12 sm:w-10 sm:h-10 flex items-center justify-center rounded-full hover:bg-indigo-200 transition-all shadow-sm"
                       >
                         <svg
-                          className="w-5 h-5"
+                          className="w-6 h-6 sm:w-5 sm:h-5"
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -359,15 +359,15 @@ export default function AddProduct() {
                         type="text"
                         value={formData.quantity}
                         readOnly
-                        className="w-16 text-center border border-gray-200 rounded-lg p-3 bg-white shadow-sm"
+                        className="w-16 text-center border border-gray-200 rounded-lg p-2 sm:p-3 bg-white shadow-sm text-sm sm:text-base"
                       />
                       <button
                         type="button"
                         onClick={increaseQuantity}
-                        className="bg-indigo-100 text-indigo-700 w-10 h-10 flex items-center justify-center rounded-full hover:bg-indigo-200 transition-all shadow-sm"
+                        className="bg-indigo-100 text-indigo-700 w-12 h-12 sm:w-10 sm:h-10 flex items-center justify-center rounded-full hover:bg-indigo-200 transition-all shadow-sm"
                       >
                         <svg
-                          className="w-5 h-5"
+                          className="w-6 h-6 sm:w-5 sm:h-5"
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -386,15 +386,15 @@ export default function AddProduct() {
 
                   {/* Product Description */}
                   <div className="group">
-                    <label className="block text-sm font-medium text-gray-700 mb-1 group-hover:text-indigo-600 transition-colors">
+                    <label className="block text-sm sm:text-sm font-medium text-gray-700 mb-1 group-hover:text-indigo-600 transition-colors">
                       Product Description
                     </label>
                     <textarea
                       name="description"
                       value={formData.description}
                       onChange={handleChange}
-                      className="block w-full border border-gray-200 rounded-lg p-3 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all group-hover:border-indigo-300 shadow-sm"
-                      rows="4"
+                      className="block w-full border border-gray-200 rounded-lg p-2 sm:p-3 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all group-hover:border-indigo-300 shadow-sm text-sm sm:text-base"
+                      rows="6 sm:rows-4"
                       placeholder="Enter product description"
                       required
                     />
@@ -404,10 +404,10 @@ export default function AddProduct() {
             )}
 
             {activeTab === 'media' && (
-              <div className="space-y-8">
+              <div className="space-y-6 sm:space-y-8">
                 {/* Main Product Image */}
                 <div className="group">
-                  <label className="block text-sm font-medium text-gray-700 mb-2 group-hover:text-indigo-600 transition-colors">
+                  <label className="block text-sm sm:text-sm font-medium text-gray-700 mb-2 group-hover:text-indigo-600 transition-colors">
                     Main Product Image URL
                   </label>
                   <input
@@ -415,7 +415,7 @@ export default function AddProduct() {
                     name="mainImage"
                     value={formData.mainImage}
                     onChange={handleChange}
-                    className="block w-full border border-gray-200 rounded-lg p-3 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all group-hover:border-indigo-300 shadow-sm"
+                    className="block w-full border border-gray-200 rounded-lg p-2 sm:p-3 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all group-hover:border-indigo-300 shadow-sm text-sm sm:text-base"
                     placeholder="Enter main image URL (e.g., https://images.unsplash.com/...)"
                     required
                   />
@@ -428,19 +428,19 @@ export default function AddProduct() {
                             height={500}
                             src={formData.mainImage}
                             alt="Main Product Preview"
-                            className="w-full h-64 object-cover transition-transform hover:scale-105 duration-300"
+                            className="w-full h-48 sm:h-64 object-cover transition-transform hover:scale-105 duration-300"
                           />
-                          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-indigo-900/70 p-3 text-white text-sm font-medium">
+                          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-indigo-900/70 p-3 text-white text-sm sm:text-sm font-medium">
                             Main Product Image
                           </div>
                         </div>
                       ) : (
-                        <div className="bg-red-50 border-l-4 border-red-500 p-4 mt-2 rounded-md">
-                          <div className="flex items-center">
+                        <div className="bg-red-50 border-l-4 border-red-500 p-3 sm:p-4 mt-2 rounded-md">
+                          <div className="flex items-center flex-wrap">
                             <svg className="h-5 w-5 text-red-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                              <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
                             </svg>
-                            <p className="text-red-700 text-sm">
+                            <p className="text-red-700 text-sm sm:text-sm">
                               Invalid image URL. Please use a valid URL from Unsplash, Google, or Facebook.
                             </p>
                           </div>
@@ -452,12 +452,12 @@ export default function AddProduct() {
 
                 {/* Thumbnail Gallery */}
                 <div className="group">
-                  <label className="block text-sm font-medium text-gray-700 mb-2 group-hover:text-indigo-600 transition-colors">
+                  <label className="block text-sm sm:text-sm font-medium text-gray-700 mb-2 group-hover:text-indigo-600 transition-colors">
                     Thumbnail Images
                   </label>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {formData.thumbnails.map((thumbnail, index) => (
-                      <div key={index} className="flex space-x-3 items-start">
+                      <div key={index} className="flex space-x-2 sm:space-x-3 items-start">
                         <div className="flex-grow">
                           <div className="relative">
                             <input
@@ -466,11 +466,11 @@ export default function AddProduct() {
                               onChange={(e) =>
                                 handleThumbnailChange(index, e.target.value)
                               }
-                              className="block w-full border border-gray-200 rounded-lg p-3 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all group-hover:border-indigo-300 shadow-sm"
+                              className="block w-full border border-gray-200 rounded-lg p-2 sm:p-3 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all group-hover:border-indigo-300 shadow-sm text-sm sm:text-base"
                               placeholder={`Thumbnail ${index + 1} URL`}
                             />
                             <div className="absolute inset-y-0 right-2 flex items-center">
-                              <span className="bg-indigo-100 text-indigo-800 text-xs font-medium px-2 py-1 rounded">
+                              <span className="bg-indigo-100 text-indigo-800 text-xs sm:text-xs font-medium px-2 py-1 rounded">
                                 #{index + 1}
                               </span>
                             </div>
@@ -479,7 +479,7 @@ export default function AddProduct() {
                         {thumbnail && (
                           <div className="flex-shrink-0">
                             {isValidImageUrl(thumbnail) ? (
-                              <div className="relative w-16 h-16 overflow-hidden rounded-lg shadow-md border border-indigo-200 hover:border-indigo-400 transition-all">
+                              <div className="relative w-14 h-14 sm:w-16 sm:h-16 overflow-hidden rounded-lg shadow-md border border-indigo-200 hover:border-indigo-400 transition-all">
                                 <Image
                                   width={100}
                                   height={100}
@@ -489,7 +489,7 @@ export default function AddProduct() {
                                 />
                               </div>
                             ) : (
-                              <div className="flex items-center justify-center w-16 h-16 bg-red-50 rounded-lg border border-red-200">
+                              <div className="flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 bg-red-50 rounded-lg border border-red-200">
                                 <svg className="h-5 w-5 text-red-500" fill="currentColor" viewBox="0 0 20 20">
                                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
                                 </svg>
@@ -504,8 +504,8 @@ export default function AddProduct() {
               </div>
             )}
 
-            <div className="mt-10 pt-6 border-t border-gray-200 flex justify-between items-center">
-              <div className="flex items-center text-sm text-gray-500">
+            <div className="mt-8 sm:mt-10 pt-4 sm:pt-6 border-t border-gray-200 flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-0">
+              <div className="flex items-center text-sm sm:text-sm text-gray-500">
                 <svg className="w-5 h-5 mr-2 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
@@ -517,20 +517,20 @@ export default function AddProduct() {
               </div>
               <button
                 type="submit"
-                className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-medium px-8 py-3 rounded-lg shadow-md hover:shadow-lg transition-all hover:from-indigo-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-medium px-6 py-2 sm:px-8 sm:py-3 rounded-lg shadow-md hover:shadow-lg transition-all hover:from-indigo-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 w-full sm:w-auto"
                 disabled={mutation.isLoading}
               >
                 {mutation.isPending ? (
-                  <span className="flex items-center">
-                    <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <span className="flex items-center justify-center">
+                    <svg className="animate-spin -ml-1 mr-2 h-5 w-5 sm:h-4 sm:w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
                     Adding Product...
                   </span>
                 ) : (
-                  <span className="flex items-center">
-                    <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <span className="flex items-center justify-center">
+                    <svg className="w-5 h-5 mr-2 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                     </svg>
                     Add Product

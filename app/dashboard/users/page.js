@@ -26,29 +26,29 @@ import { session } from "@/actions/auth-utils";
 
 const SkeletonRow = () => (
   <tr className="animate-pulse">
-    <td className="p-4">
+    <td className="p-2 md:p-4">
       <div className="flex items-center">
-        <div className="h-8 w-8 bg-gray-200 rounded-full mr-3"></div>
+        <div className="h-8 w-8 bg-gray-200 rounded-full mr-2 md:mr-3"></div>
         <div className="h-4 bg-gray-200 rounded w-3/4"></div>
       </div>
     </td>
-    <td className="p-4">
+    <td className="hidden md:table-cell p-2 md:p-4">
       <div className="h-4 bg-gray-200 rounded w-1/2"></div>
     </td>
-    <td className="p-4">
+    <td className="p-2 md:p-4">
       <div className="h-4 bg-gray-200 rounded w-1/4 mx-auto"></div>
     </td>
-    <td className="p-4">
+    <td className="hidden md:table-cell p-2 md:p-4">
       <div className="h-4 bg-gray-200 rounded w-1/3"></div>
     </td>
-    <td className="p-4">
-      <div className="h-8 bg-gray-200 rounded w-1/4"></div>
+    <td className="p-2 md:p-4">
+      <div className="h-8 bg-gray-200 rounded w-full md:w-1/4"></div>
     </td>
   </tr>
 );
 
 const SkeletonSummaryCards = () => (
-  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 animate-pulse">
+  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-6 animate-pulse">
     {Array(3).fill().map((_, index) => (
       <div key={index} className="bg-white p-4 rounded-lg shadow-md flex items-center">
         <div className="bg-gray-200 p-3 rounded-full mr-4 w-12 h-12"></div>
@@ -187,18 +187,18 @@ const UserList = () => {
 
   if (isLoading) {
     return (
-      <div className="container mx-auto py-16">
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-3xl font-bold flex items-center">
+      <div className="container mx-auto px-4 py-8 md:py-16">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+          <h1 className="text-2xl md:text-3xl font-bold flex items-center">
             <FaUsers className="mr-2 text-blue-600" />
             Users
           </h1>
-          <div className="flex items-center space-x-4">
-            <div className="relative">
-              <div className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg w-64 bg-gray-200"></div>
+          <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 w-full sm:w-auto">
+            <div className="relative w-full sm:w-auto">
+              <div className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg w-full sm:w-64 bg-gray-200"></div>
             </div>
-            <div className="relative">
-              <div className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg w-32 bg-gray-200"></div>
+            <div className="relative w-full sm:w-auto">
+              <div className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg w-full sm:w-32 bg-gray-200"></div>
             </div>
           </div>
         </div>
@@ -207,31 +207,31 @@ const UserList = () => {
           <table className="min-w-full">
             <thead>
               <tr className="bg-gray-100">
-                <th className="p-4 text-left text-sm font-semibold text-gray-600">
+                <th className="p-2 md:p-4 text-left text-sm font-semibold text-gray-600">
                   <div className="flex items-center">
                     <FaUser className="mr-1 text-gray-500" />
                     Name
                   </div>
                 </th>
-                <th className="p-4 text-left text-sm font-semibold text-gray-600">
+                <th className="hidden md:table-cell p-2 md:p-4 text-left text-sm font-semibold text-gray-600">
                   <div className="flex items-center">
                     <FaEnvelope className="mr-1 text-gray-500" />
                     Email
                   </div>
                 </th>
-                <th className="p-4 text-center text-sm font-semibold text-gray-600">
+                <th className="p-2 md:p-4 text-center text-sm font-semibold text-gray-600">
                   <div className="flex items-center justify-center">
                     <FaUserCog className="mr-1 text-gray-500" />
                     Role
                   </div>
                 </th>
-                <th className="p-4 text-left text-sm font-semibold text-gray-600">
+                <th className="hidden md:table-cell p-2 md:p-4 text-left text-sm font-semibold text-gray-600">
                   <div className="flex items-center">
                     <FaCalendarAlt className="mr-1 text-gray-500" />
-                    Created At
+                    Created
                   </div>
                 </th>
-                <th className="p-4 text-left text-sm font-semibold text-gray-600">Actions</th>
+                <th className="p-2 md:p-4 text-left text-sm font-semibold text-gray-600">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -247,7 +247,7 @@ const UserList = () => {
 
   if (error) {
     return (
-      <div className="container mx-auto py-16 flex justify-center">
+      <div className="container mx-auto px-4 py-8 md:py-16 flex justify-center">
         <div className="bg-red-50 p-6 rounded-lg shadow-md flex items-center">
           <FaExclamationTriangle className="text-red-600 text-xl mr-2" />
           <p className="text-red-600">Failed to load users. Please try again later.</p>
@@ -257,28 +257,28 @@ const UserList = () => {
   }
 
   return (
-    <div className="container mx-auto py-16">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold flex items-center">
+    <div className="container mx-auto px-4 py-8 md:py-16">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+        <h1 className="text-2xl md:text-3xl font-bold flex items-center">
           <FaUsers className="mr-2 text-blue-600" />
           Users
         </h1>
-        <div className="flex items-center space-x-4">
-          <div className="relative">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 w-full sm:w-auto">
+          <div className="relative w-full sm:w-auto">
             <input
               type="text"
               placeholder="Search users..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
             />
-            <FaSearch className="absolute right-3 top-3 text-gray-400" />
+            <FaSearch className="absolute left-3 top-3 text-gray-400" />
           </div>
-          <div className="relative">
+          <div className="relative w-full sm:w-auto">
             <select
               value={roleFilter}
               onChange={(e) => setRoleFilter(e.target.value)}
-              className="pl-10 pr-8 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none"
+              className="pl-10 pr-8 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none w-full"
             >
               <option value="all">All Roles</option>
               <option value="admin">Admin</option>
@@ -290,7 +290,7 @@ const UserList = () => {
       </div>
       
       {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-6">
         <div className="bg-white p-4 rounded-lg shadow-md flex items-center">
           <div className="bg-blue-100 p-3 rounded-full mr-4">
             <FaUsers className="text-blue-600 text-xl" />
@@ -321,13 +321,13 @@ const UserList = () => {
       </div>
       
       {users.length === 0 ? (
-        <div className="bg-white p-6 rounded-lg shadow-md flex flex-col items-center justify-center py-12">
-          <FaUsers className="text-gray-400 text-5xl mb-4" />
+        <div className="bg-white p-6 rounded-lg shadow-md flex flex-col items-center justify-center py-8 md:py-12">
+          <FaUsers className="text-gray-400 text-4xl md:text-5xl mb-4" />
           <p className="text-gray-600 text-lg">No users found.</p>
         </div>
       ) : filteredUsers.length === 0 ? (
-        <div className="bg-white p-6 rounded-lg shadow-md flex flex-col items-center justify-center py-12">
-          <FaSearch className="text-gray-400 text-5xl mb-4" />
+        <div className="bg-white p-6 rounded-lg shadow-md flex flex-col items-center justify-center py-8 md:py-12">
+          <FaSearch className="text-gray-400 text-4xl md:text-5xl mb-4" />
           <p className="text-gray-600 text-lg">No users match your search criteria.</p>
           <button 
             onClick={() => {
@@ -346,31 +346,31 @@ const UserList = () => {
             <table className="min-w-full">
               <thead>
                 <tr className="bg-gray-100">
-                  <th className="p-4 text-left text-sm font-semibold text-gray-600">
+                  <th className="p-2 md:p-4 text-left text-sm font-semibold text-gray-600">
                     <div className="flex items-center">
                       <FaUser className="mr-1 text-gray-500" />
                       Name
                     </div>
                   </th>
-                  <th className="p-4 text-left text-sm font-semibold text-gray-600">
+                  <th className="hidden md:table-cell p-2 md:p-4 text-left text-sm font-semibold text-gray-600">
                     <div className="flex items-center">
                       <FaEnvelope className="mr-1 text-gray-500" />
                       Email
                     </div>
                   </th>
-                  <th className="p-4 text-center text-sm font-semibold text-gray-600">
+                  <th className="p-2 md:p-4 text-center text-sm font-semibold text-gray-600">
                     <div className="flex items-center justify-center">
                       <FaUserCog className="mr-1 text-gray-500" />
                       Role
                     </div>
                   </th>
-                  <th className="p-4 text-left text-sm font-semibold text-gray-600">
+                  <th className="hidden md:table-cell p-2 md:p-4 text-left text-sm font-semibold text-gray-600">
                     <div className="flex items-center">
                       <FaCalendarAlt className="mr-1 text-gray-500" />
-                      Created At
+                      Created
                     </div>
                   </th>
-                  <th className="p-4 text-left text-sm font-semibold text-gray-600">Actions</th>
+                  <th className="p-2 md:p-4 text-left text-sm font-semibold text-gray-600">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -381,31 +381,36 @@ const UserList = () => {
                       index % 2 === 0 ? "bg-white" : "bg-gray-50"
                     } hover:bg-blue-50 transition-colors duration-200`}
                   >
-                    <td className="p-4 text-gray-800">
+                    <td className="p-2 md:p-4 text-gray-800">
                       <div className="flex items-center">
-                        <div className={`h-8 w-8 rounded-full flex items-center justify-center mr-3 ${getAvatarColor(user._id)}`}>
+                        <div className={`h-8 w-8 rounded-full flex items-center justify-center mr-2 md:mr-3 ${getAvatarColor(user._id)}`}>
                           {getInitials(user.name)}
                         </div>
                         <div>
-                          <p className="font-medium">{user.name}</p>
+                          <p className="font-medium text-sm md:text-base">{user.name}</p>
                           {user.role === "admin" && (
-                            <span className="flex items-center text-xs text-gray-500">
+                            <span className="hidden sm:flex items-center text-xs text-gray-500">
                               <FaCrown className="text-yellow-500 mr-1" />
                               Admin user
                             </span>
                           )}
+                          {/* Mobile-only email display */}
+                          <p className="text-xs text-gray-500 md:hidden flex items-center mt-1">
+                            <FaEnvelope className="mr-1" />
+                            {user.email}
+                          </p>
                         </div>
                       </div>
                     </td>
-                    <td className="p-4 text-gray-800">
+                    <td className="hidden md:table-cell p-2 md:p-4 text-gray-800">
                       <div className="flex items-center">
                         <FaEnvelope className="text-gray-400 mr-2" />
                         {user.email}
                       </div>
                     </td>
-                    <td className="p-4 text-center">
+                    <td className="p-2 md:p-4 text-center">
                       <span
-                        className={`inline-flex items-center px-3 py-1 text-xs font-semibold rounded-full ${
+                        className={`inline-flex items-center px-2 md:px-3 py-1 text-xs font-semibold rounded-full ${
                           user.role === "admin"
                             ? "bg-green-100 text-green-800"
                             : "bg-blue-100 text-blue-800"
@@ -414,8 +419,13 @@ const UserList = () => {
                         {getRoleIcon(user.role)}
                         <span className="ml-1">{user.role}</span>
                       </span>
+                      {/* Mobile-only created date */}
+                      <p className="text-xs text-gray-500 md:hidden mt-1 flex items-center justify-center">
+                        <FaCalendarAlt className="mr-1" />
+                        {new Date(user.createdAt).toLocaleDateString()}
+                      </p>
                     </td>
-                    <td className="p-4 text-gray-600">
+                    <td className="hidden md:table-cell p-2 md:p-4 text-gray-600">
                       <div className="flex items-center">
                         <FaCalendarAlt className="mr-2 text-gray-400" />
                         {new Date(user.createdAt).toLocaleDateString()}
@@ -424,24 +434,15 @@ const UserList = () => {
                         {new Date(user.createdAt).toLocaleTimeString()}
                       </div>
                     </td>
-                    <td className="p-4">
+                    <td className="p-2 md:p-4">
                       <div className="flex space-x-2">
                         <button 
                           onClick={() => router.push(`/users/${user._id}`)}
-                          className="bg-blue-100 text-blue-700 px-3 py-1 rounded hover:bg-blue-200 transition-colors flex items-center"
+                          className="bg-blue-100 text-blue-700 px-2 md:px-3 py-1 rounded hover:bg-blue-200 transition-colors flex items-center text-xs md:text-sm"
                         >
                           <FaInfoCircle className="mr-1" />
                           View
                         </button>
-                        {/* {user.role !== "admin" && (
-                          <button 
-                            onClick={() => router.push(`/users/${user._id}/edit`)}
-                            className="bg-green-100 text-green-700 px-3 py-1 rounded hover:bg-green-200 transition-colors flex items-center"
-                          >
-                            <FaUserCog className="mr-1" />
-                            Edit
-                          </button>
-                        )} */}
                       </div>
                     </td>
                   </tr>
@@ -452,16 +453,17 @@ const UserList = () => {
 
           {/* Pagination Controls */}
           {pagination.totalPages > 1 && (
-            <div className="mt-6 flex justify-center items-center space-x-2">
+            <div className="mt-6 flex justify-center items-center flex-wrap gap-2">
               {/* First Page Button */}
               <button
                 onClick={() => handlePageChange(1)}
                 disabled={currentPage === 1}
-                className={`px-3 py-2 rounded-lg text-sm font-medium ${
+                className={`px-2 md:px-3 py-2 rounded-lg text-sm font-medium ${
                   currentPage === 1
                     ? "bg-gray-200 text-gray-500 cursor-not-allowed"
                     : "bg-white border border-gray-300 text-gray-700 hover:bg-gray-100"
                 } transition-colors duration-200 flex items-center`}
+                aria-label="First page"
               >
                 <FaAngleDoubleLeft className="text-xs" />
               </button>
@@ -470,70 +472,79 @@ const UserList = () => {
               <button
                 onClick={() => handlePageChange(currentPage - 1)}
                 disabled={currentPage === 1}
-                className={`px-3 py-2 rounded-lg text-sm font-medium ${
+                className={`px-2 md:px-3 py-2 rounded-lg text-sm font-medium ${
                   currentPage === 1
                     ? "bg-gray-200 text-gray-500 cursor-not-allowed"
                     : "bg-white border border-gray-300 text-gray-700 hover:bg-gray-100"
                 } transition-colors duration-200 flex items-center`}
+                aria-label="Previous page"
               >
                 <FaAngleLeft />
-                <span className="ml-1">Prev</span>
+                <span className="ml-1 hidden sm:inline">Prev</span>
               </button>
 
-              {/* Page Numbers */}
-              {startPage > 1 && (
-                <>
-                  <button
-                    onClick={() => handlePageChange(1)}
-                    className="px-4 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 border border-gray-300"
-                  >
-                    1
-                  </button>
-                  {startPage > 2 && (
-                    <span className="px-4 py-2 text-sm text-gray-500">...</span>
-                  )}
-                </>
-              )}
+              {/* Page Numbers - Only show on larger screens */}
+              <div className="hidden sm:flex items-center">
+                {startPage > 1 && (
+                  <>
+                    <button
+                      onClick={() => handlePageChange(1)}
+                      className="px-4 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 border border-gray-300"
+                    >
+                      1
+                    </button>
+                    {startPage > 2 && (
+                      <span className="px-2 py-2 text-sm text-gray-500">...</span>
+                    )}
+                  </>
+                )}
 
-              {pageNumbers.map((page) => (
-                <button
-                  key={page}
-                  onClick={() => handlePageChange(page)}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium ${
-                    currentPage === page
-                      ? "bg-blue-600 text-white border border-blue-600"
-                      : "text-gray-700 hover:bg-gray-100 border border-gray-300"
-                  } transition-colors duration-200`}
-                >
-                  {page}
-                </button>
-              ))}
-
-              {endPage < pagination.totalPages && (
-                <>
-                  {endPage < pagination.totalPages - 1 && (
-                    <span className="px-4 py-2 text-sm text-gray-500">...</span>
-                  )}
+                {pageNumbers.map((page) => (
                   <button
-                    onClick={() => handlePageChange(pagination.totalPages)}
-                    className="px-4 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 border border-gray-300"
+                    key={page}
+                    onClick={() => handlePageChange(page)}
+                    className={`px-4 py-2 rounded-lg text-sm font-medium ${
+                      currentPage === page
+                        ? "bg-blue-600 text-white border border-blue-600"
+                        : "text-gray-700 hover:bg-gray-100 border border-gray-300"
+                    } transition-colors duration-200`}
                   >
-                    {pagination.totalPages}
+                    {page}
                   </button>
-                </>
-              )}
+                ))}
+
+                {endPage < pagination.totalPages && (
+                  <>
+                    {endPage < pagination.totalPages - 1 && (
+                      <span className="px-2 py-2 text-sm text-gray-500">...</span>
+                    )}
+                    <button
+                      onClick={() => handlePageChange(pagination.totalPages)}
+                      className="px-4 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 border border-gray-300"
+                    >
+                      {pagination.totalPages}
+                    </button>
+                  </>
+                )}
+              </div>
+
+              {/* Mobile page indicator */}
+              <span className="sm:hidden px-4 py-2 text-sm text-gray-700">
+                {currentPage} / {pagination.totalPages}
+              </span>
 
               {/* Next Button */}
               <button
                 onClick={() => handlePageChange(currentPage + 1)}
                 disabled={currentPage === pagination.totalPages}
-                className={`px-3 py-2 rounded-lg text-sm font-medium ${
+                className={`px-2 md:px-3 py-2 rounded-lg text-sm font-medium ${
                   currentPage === pagination.totalPages
                     ? "bg-gray-200 text-gray-500 cursor-not-allowed"
                     : "bg-white border border-gray-300 text-gray-700 hover:bg-gray-100"
                 } transition-colors duration-200 flex items-center`}
+                aria-label="Next page"
               >
-                <span className="mr-1">Next</span>
+                <span className="mr-1 hidden sm:inline">Next</span>
                 <FaAngleRight />
               </button>
 
@@ -541,11 +552,12 @@ const UserList = () => {
               <button
                 onClick={() => handlePageChange(pagination.totalPages)}
                 disabled={currentPage === pagination.totalPages}
-                className={`px-3 py-2 rounded-lg text-sm font-medium ${
+                className={`px-2 md:px-3 py-2 rounded-lg text-sm font-medium ${
                   currentPage === pagination.totalPages
                     ? "bg-gray-200 text-gray-500 cursor-not-allowed"
                     : "bg-white border border-gray-300 text-gray-700 hover:bg-gray-100"
                 } transition-colors duration-200 flex items-center`}
+                aria-label="Last page"
               >
                 <FaAngleDoubleRight className="text-xs" />
               </button>

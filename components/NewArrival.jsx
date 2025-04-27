@@ -40,7 +40,6 @@ const SkeletonProductCard = () => (
 const NewArrival = () => {
   const queryClient = useQueryClient();
   const { data: session, status } = useSession();
-  console.log(status);
   const router = useRouter();
 
   // Fetch new arrival products (no dependency on user session)
