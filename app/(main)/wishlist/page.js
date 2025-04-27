@@ -36,7 +36,7 @@ const SkeletonWishlistItem = () => (
 
 const Wishlist = () => {
   const queryClient = useQueryClient();
-  const { data: userSession } = useSession();
+  const { data: userSession, status } = useSession();
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
@@ -163,7 +163,7 @@ const Wishlist = () => {
   // Handle removing an item from the wishlist
   const handleRemoveFromWishlist = (productId, e) => {
     e.preventDefault();
-    if (!userSession) {
+    if (status !== "authenticated") {
       toast.error("Please log in to manage your wishlist.", {
         position: "top-right",
         autoClose: 3000,
@@ -180,7 +180,7 @@ const Wishlist = () => {
   // Handle adding to cart or viewing cart
   const handleCartAction = (product, e) => {
     e.preventDefault();
-    if (!userSession) {
+    if (status !== "authenticated") {
       toast.error("Please log in to add to cart.", {
         position: "top-right",
         autoClose: 3000,
@@ -395,7 +395,7 @@ const Wishlist = () => {
                               : "bg-red-100 text-red-600 hover:bg-red-200 hover:shadow-md"
                           }`}
                         >
-                          {wishlistMutation.isLoading &&
+                          {wishlistMutation.isPending &&
                           wishlistMutation.variables?.productId === product._id ? (
                             <FaSpinner className="animate-spin" />
                           ) : (
