@@ -179,8 +179,8 @@ const OrderHistory = () => {
                   key={order._id}
                   className="bg-white/90 backdrop-blur-lg rounded-xl shadow-md p-4 hover:shadow-lg transition-all duration-300"
                 >
-                  <div className="flex justify-between items-center mb-4">
-                    <div>
+                  <div className="md:flex flex:row justify-between items-center mb-4">
+                    <div className="mb-2 md:mb-0">
                       <p className="text-gray-800 font-medium">
                         Order ID: {order._id}
                       </p>

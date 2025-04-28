@@ -221,14 +221,14 @@ const Header = () => {
           {/* Search Bar */}
           <div className="w-full sm:max-w-xl relative">
             <form onSubmit={handleSearchSubmit} className="flex">
-              <span className="absolute left-3 sm:left-4 top-2 sm:top-3 text-base sm:text-lg text-gray-400">
+              <span className="absolute left-3 sm:left-4 top-3 sm:top-3 lg:top-4 text-base sm:text-lg text-gray-400">
                 <FaSearch />
               </span>
               <input
                 type="text"
                 name="search"
                 id="search"
-                className="w-full border border-primary border-r-0 pl-10 sm:pl-12 py-2 sm:py-3 pr-3 rounded-l-md focus:outline-none text-sm sm:text-base"
+                className="w-full border border-primary border-r-0 pl-12 md:pl-10 py-2 sm:py-3 pr-3 rounded-l-md focus:outline-none text-sm sm:text-base"
                 placeholder="Search Product"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}

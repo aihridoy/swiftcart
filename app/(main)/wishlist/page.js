@@ -5,14 +5,14 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import Image from "next/image";
 import Link from "next/link";
-import { 
-  FaTrash, 
-  FaShoppingCart, 
-  FaHeart, 
-  FaArrowLeft, 
-  FaArrowRight, 
-  FaSpinner, 
-  FaShoppingBag 
+import {
+  FaTrash,
+  FaShoppingCart,
+  FaHeart,
+  FaArrowLeft,
+  FaArrowRight,
+  FaSpinner,
+  FaShoppingBag,
 } from "react-icons/fa";
 import { getWishlist, updateWishlist } from "@/actions/wishlist";
 import { addToCart, getCart } from "@/actions/cart-utils";
@@ -44,7 +44,7 @@ const Wishlist = () => {
   useEffect(() => {
     async function fetchUser() {
       const res = await session();
-      if(!res?.user) {
+      if (!res?.user) {
         router.push("/");
       }
     }
@@ -75,7 +75,11 @@ const Wishlist = () => {
   });
 
   // Fetch cart
-  const { data: cartData, error: cartError, isLoading: cartLoading } = useQuery({
+  const {
+    data: cartData,
+    error: cartError,
+    isLoading: cartLoading,
+  } = useQuery({
     queryKey: ["cart"],
     queryFn: getCart,
     enabled: !!userSession,
@@ -155,9 +159,11 @@ const Wishlist = () => {
 
   // Check if a product is in the cart
   const isInCart = (productId) => {
-    return cartData?.cart?.items?.some(
-      (item) => item.product._id.toString() === productId
-    ) || false;
+    return (
+      cartData?.cart?.items?.some(
+        (item) => item.product._id.toString() === productId
+      ) || false
+    );
   };
 
   // Handle removing an item from the wishlist
@@ -247,7 +253,9 @@ const Wishlist = () => {
           </div>
         </div>
         <div className="max-w-6xl mx-auto text-center bg-white/90 backdrop-blur-lg rounded-xl shadow-lg p-6">
-          <p className="text-red-600 text-lg">Failed to load wishlist. Please try again later.</p>
+          <p className="text-red-600 text-lg">
+            Failed to load wishlist. Please try again later.
+          </p>
         </div>
       </div>
     );
@@ -273,26 +281,38 @@ const Wishlist = () => {
     <div className="min-h-screen bg-gradient-to-br from-gray-100 via-blue-50 to-teal-50 py-8 px-4">
       {/* Main Content */}
       <div className="max-w-6xl mx-auto">
-        {/* Summary Card */}
-        <div className="bg-white/90 backdrop-blur-lg rounded-xl shadow-lg p-6 mb-6 flex items-center justify-between">
+        <div className="bg-white/90 backdrop-blur-lg rounded-xl shadow-lg p-4 sm:p-6 mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sm:gap-0">
+          {/* Left Section (Icon + Text) */}
           <div className="flex items-center space-x-3">
             <FaHeart className="text-red-500 text-2xl" />
             <div>
-              <h2 className="text-lg font-semibold text-gray-800">Wishlist Items</h2>
-              <p className="text-gray-600">{totalItems} {totalItems === 1 ? "item" : "items"}</p>
+              <h2 className="text-lg font-semibold text-gray-800">
+                Wishlist Items
+              </h2>
+              <p className="text-gray-600">
+                {totalItems} {totalItems === 1 ? "item" : "items"}
+              </p>
             </div>
           </div>
+
+          {/* Right Section (Button) */}
           {wishlist.length > 0 && (
             <button
               onClick={() => {
                 wishlist.forEach((product) => {
-                  if (!isInCart(product._id) && product.availability === "In Stock") {
-                    cartMutation.mutate({ productId: product._id, quantity: 1 });
+                  if (
+                    !isInCart(product._id) &&
+                    product.availability === "In Stock"
+                  ) {
+                    cartMutation.mutate({
+                      productId: product._id,
+                      quantity: 1,
+                    });
                   }
                 });
               }}
               disabled={cartMutation.isLoading}
-              className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-semibold text-white transition-all duration-300 shadow-md ${
+              className={`flex items-center justify-center space-x-2 px-4 py-2 rounded-lg font-semibold text-white transition-all duration-300 shadow-md w-full sm:w-auto ${
                 cartMutation.isLoading
                   ? "bg-gray-400 cursor-not-allowed"
                   : "bg-blue-600 hover:bg-blue-700 hover:shadow-lg"
@@ -308,8 +328,12 @@ const Wishlist = () => {
         {wishlist.length === 0 ? (
           <div className="bg-white/90 backdrop-blur-lg rounded-xl shadow-lg p-8 text-center">
             <FaHeart className="text-gray-400 text-6xl mx-auto mb-4" />
-            <h2 className="text-xl font-semibold text-gray-800 mb-2">Your Wishlist is Empty</h2>
-            <p className="text-gray-600 mb-6">Start adding your favorite products to your wishlist!</p>
+            <h2 className="text-xl font-semibold text-gray-800 mb-2">
+              Your Wishlist is Empty
+            </h2>
+            <p className="text-gray-600 mb-6">
+              Start adding your favorite products to your wishlist!
+            </p>
             <Link
               href="/products"
               className="inline-flex items-center space-x-2 px-6 py-3 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-all duration-300 shadow-md hover:shadow-lg"
@@ -363,40 +387,50 @@ const Wishlist = () => {
                           disabled={
                             cartLoading ||
                             product.availability !== "In Stock" ||
-                            (cartMutation.isLoading && cartMutation.variables?.productId === product._id)
+                            (cartMutation.isLoading &&
+                              cartMutation.variables?.productId === product._id)
                           }
                           className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-semibold transition-all duration-300 shadow-md ${
                             cartLoading ||
                             product.availability !== "In Stock" ||
-                            (cartMutation.isLoading && cartMutation.variables?.productId === product._id)
+                            (cartMutation.isLoading &&
+                              cartMutation.variables?.productId === product._id)
                               ? "bg-gray-400 text-white cursor-not-allowed"
                               : productInCart
-                              ? "bg-blue-500 text-white hover:bg-blue-600 hover:shadow-lg"
-                              : "bg-blue-600 text-white hover:bg-blue-700 hover:shadow-lg"
+                                ? "bg-blue-500 text-white hover:bg-blue-600 hover:shadow-lg"
+                                : "bg-blue-600 text-white hover:bg-blue-700 hover:shadow-lg"
                           }`}
                         >
-                          {cartMutation.isLoading && cartMutation.variables?.productId === product._id ? (
+                          {cartMutation.isLoading &&
+                          cartMutation.variables?.productId === product._id ? (
                             <FaSpinner className="animate-spin" />
                           ) : (
                             <FaShoppingCart />
                           )}
-                          <span>{productInCart ? "View in Cart" : "Add to Cart"}</span>
+                          <span>
+                            {productInCart ? "View in Cart" : "Add to Cart"}
+                          </span>
                         </button>
                         <button
-                          onClick={(e) => handleRemoveFromWishlist(product._id, e)}
+                          onClick={(e) =>
+                            handleRemoveFromWishlist(product._id, e)
+                          }
                           disabled={
                             wishlistMutation.isLoading &&
-                            wishlistMutation.variables?.productId === product._id
+                            wishlistMutation.variables?.productId ===
+                              product._id
                           }
                           className={`p-2 rounded-full transition-all duration-300 ${
                             wishlistMutation.isLoading &&
-                            wishlistMutation.variables?.productId === product._id
+                            wishlistMutation.variables?.productId ===
+                              product._id
                               ? "bg-gray-200 text-gray-400 cursor-not-allowed"
                               : "bg-red-100 text-red-600 hover:bg-red-200 hover:shadow-md"
                           }`}
                         >
                           {wishlistMutation.isPending &&
-                          wishlistMutation.variables?.productId === product._id ? (
+                          wishlistMutation.variables?.productId ===
+                            product._id ? (
                             <FaSpinner className="animate-spin" />
                           ) : (
                             <FaTrash />
@@ -425,21 +459,22 @@ const Wishlist = () => {
                     <FaArrowLeft />
                     <span>Previous</span>
                   </button>
-                  {Array.from({ length: totalPages }, (_, index) => index + 1).map(
-                    (page) => (
-                      <button
-                        key={page}
-                        onClick={() => handlePageChange(page)}
-                        className={`px-4 py-2 rounded-lg font-semibold ${
-                          currentPage === page
-                            ? "bg-blue-600 text-white shadow-lg"
-                            : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                        } transition-all duration-300`}
-                      >
-                        {page}
-                      </button>
-                    )
-                  )}
+                  {Array.from(
+                    { length: totalPages },
+                    (_, index) => index + 1
+                  ).map((page) => (
+                    <button
+                      key={page}
+                      onClick={() => handlePageChange(page)}
+                      className={`px-4 py-2 rounded-lg font-semibold ${
+                        currentPage === page
+                          ? "bg-blue-600 text-white shadow-lg"
+                          : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                      } transition-all duration-300`}
+                    >
+                      {page}
+                    </button>
+                  ))}
                   <button
                     onClick={() => handlePageChange(currentPage + 1)}
                     disabled={currentPage === totalPages}
