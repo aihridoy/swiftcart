@@ -44,7 +44,7 @@ const Trending = () => {
   // Fetch trending products (no dependency on user session)
   const { data: productsData, error: productsError, isLoading: productsLoading } = useQuery({
     queryKey: ["trendingProducts"],
-    queryFn: () => getProducts({ limit: 8, sort: "-popularityScore" }),
+    queryFn: () => getProducts({ limit: 12, sort: "-popularityScore" }),
     onError: (error) => {
       toast.error(`Error fetching trending products: ${error.message}`, {
         position: "top-right",

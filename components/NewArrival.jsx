@@ -44,7 +44,7 @@ const NewArrival = () => {
   // Fetch new arrival products (no dependency on user session)
   const { data: productsData, error: productsError, isLoading: productsLoading } = useQuery({
     queryKey: ["newArrivalProducts"],
-    queryFn: () => getProducts({ limit: 8, sort: "-createdAt" }),
+    queryFn: () => getProducts({ limit: 12, sort: "-createdAt" }),
     onError: (error) => {
       toast.error(`Error fetching new arrivals: ${error.message}`, {
         position: "top-right",
