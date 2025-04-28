@@ -192,7 +192,7 @@ const SearchPage = () => {
   return (
     <div className="container py-16 bg-white">
       <h1 className="text-2xl font-medium text-gray-800 mb-6">
-        Search Results for "{query}"
+        Search Results for &quot;{query}&quot;
       </h1>
       {products.length === 0 ? (
         <div className="flex flex-col items-center justify-center h-full">
