@@ -1,15 +1,15 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import Link from "next/link";
 import { getProducts } from "@/actions/products";
 import { getWishlist, updateWishlist } from "@/actions/wishlist";
 import { addToCart, getCart } from "@/actions/cart-utils";
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import ProductCard from "./ProductCard";
+import { session } from "@/actions/auth-utils";
 
 // Skeleton Loader for Product Cards
 const SkeletonProductCard = () => (
@@ -38,8 +38,18 @@ const SkeletonProductCard = () => (
 
 const Trending = () => {
   const queryClient = useQueryClient();
-  const { data: session, status } = useSession();
   const router = useRouter();
+  const [user, setUser] = useState(null);
+  
+    useEffect(() => {
+      async function fetchUser() {
+        const res = await session();
+        if(res) {
+          setUser(res.user);
+        }
+      }
+      fetchUser();
+    }, [])
 
   // Fetch trending products (no dependency on user session)
   const { data: productsData, error: productsError, isLoading: productsLoading } = useQuery({
@@ -62,7 +72,7 @@ const Trending = () => {
   const { data: wishlistData, error: wishlistError, isLoading: wishlistLoading } = useQuery({
     queryKey: ["wishlist"],
     queryFn: getWishlist,
-    enabled: status === "authenticated", // Only run if user is authenticated
+    enabled: !!user,
     onError: (error) => {
       if (error.message.includes("Unauthorized")) {
         toast.error("Please log in to view your wishlist.", {
@@ -95,7 +105,7 @@ const Trending = () => {
   const { data: cartData, error: cartError, isLoading: cartLoading } = useQuery({
     queryKey: ["cart"],
     queryFn: getCart,
-    enabled: status === "authenticated", // Only run if user is authenticated
+    enabled: !!user,
     onError: (error) => {
       if (error.message.includes("Unauthorized")) {
         toast.error("Please log in to view your cart.", {
@@ -213,7 +223,7 @@ const Trending = () => {
   // Handle wishlist toggle
   const handleWishlistToggle = (productId, e) => {
     e.preventDefault();
-    if (status !== "authenticated") {
+    if (!user) {
       toast.error("Please log in to manage your wishlist.", {
         position: "top-right",
         autoClose: 3000,
@@ -247,7 +257,7 @@ const Trending = () => {
   // Handle add to cart or view cart
   const handleCartAction = (productId, e) => {
     e.preventDefault();
-    if (status !== "authenticated") {
+    if (!user) {
       toast.error("Please log in to add to cart.", {
         position: "top-right",
         autoClose: 3000,
@@ -270,24 +280,6 @@ const Trending = () => {
       cartMutation.mutate({ productId, quantity: 1 });
     }
   };
-
-  // Loading state for session
-  if (status === "loading") {
-    return (
-      <div className="container py-16 bg-white">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-medium text-gray-800 uppercase">
-            Trending Products
-          </h2>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-          {Array.from({ length: 8 }).map((_, index) => (
-            <SkeletonProductCard key={index} />
-          ))}
-        </div>
-      </div>
-    );
-  }
 
   // Loading state for products
   if (productsLoading) {

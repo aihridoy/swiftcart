@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import Image from "next/image";
@@ -9,12 +9,22 @@ import { FaEye, FaHeart, FaRegHeart, FaStar, FaRegStar } from "react-icons/fa";
 import { getReviewsByProductId } from "@/actions/review-utils";
 import { updateWishlist } from "@/actions/wishlist";
 import { addToCart } from "@/actions/cart-utils";
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { session } from "@/actions/auth-utils";
 
 const ProductCard = ({ product, wishlistData, cartData, queryClient }) => {
-  const { status } = useSession();
   const router = useRouter();
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    async function fetchUser() {
+      const res = await session();
+      if(res) {
+        setUser(res.user);
+      }
+    }
+    fetchUser();
+  }, [])
 
   // Fetch reviews for this product
   const { data: reviewsData, error: reviewsError, isLoading: reviewsLoading } = useQuery({
@@ -88,7 +98,7 @@ const ProductCard = ({ product, wishlistData, cartData, queryClient }) => {
   // Handle wishlist toggle
   const handleWishlistToggle = (e) => {
     e.preventDefault();
-    if (status !== "authenticated") {
+    if (!user) {
       toast.error("Please log in to manage your wishlist.", {
         position: "top-right",
         autoClose: 3000,
@@ -113,7 +123,7 @@ const ProductCard = ({ product, wishlistData, cartData, queryClient }) => {
   // Handle add to cart or view cart
   const handleCartAction = (e) => {
     e.preventDefault();
-    if (status !== "authenticated") {
+    if (!user) {
       toast.error("Please log in to add to cart.", {
         position: "top-right",
         autoClose: 3000,
