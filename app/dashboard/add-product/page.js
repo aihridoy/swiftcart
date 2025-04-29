@@ -38,8 +38,6 @@ export default function AddProduct() {
         if (res?.user?.role !== "admin") {
           router.push('/');
         }
-      } else {
-        router.push('/');
       }
     }
     fetchUser();
