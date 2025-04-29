@@ -227,7 +227,7 @@ const ProductDetails = ({ params }) => {
       return;
     }
 
-    if (wishlistLoading || wishlistMutation.isLoading) return;
+    if (wishlistLoading || wishlistMutation.isPending) return;
     const action = isInWishlist ? "remove" : "add";
     wishlistMutation.mutate({ productId: id, action });
   };
@@ -261,10 +261,10 @@ const ProductDetails = ({ params }) => {
     }
 
     if (isInCart) {
-      if (updateCartQuantityMutation.isLoading) return;
+      if (updateCartQuantityMutation.isPending) return;
       updateCartQuantityMutation.mutate({ productId: id, quantity });
     } else {
-      if (cartMutation.isLoading) return;
+      if (cartMutation.isPending) return;
       cartMutation.mutate({ productId: id, quantity });
     }
   };
@@ -486,12 +486,12 @@ const ProductDetails = ({ params }) => {
               onClick={handleCartAction}
               disabled={
                 cartLoading ||
-                cartMutation.isLoading ||
-                updateCartQuantityMutation.isLoading ||
+                cartMutation.isPending ||
+                updateCartQuantityMutation.isPending ||
                 product.availability !== "In Stock"
               }
               className={`border px-8 py-2 font-medium rounded uppercase flex items-center gap-2 transition ${
-                cartMutation.isLoading ||
+                cartMutation.isPending ||
                 updateCartQuantityMutation.isLoading ||
                 cartLoading ||
                 product.availability !== "In Stock"
@@ -501,7 +501,7 @@ const ProductDetails = ({ params }) => {
                   : "bg-primary text-white hover:bg-transparent hover:text-primary border-primary"
               }`}
             >
-              {(cartMutation.isLoading || updateCartQuantityMutation.isLoading) ? (
+              {(cartMutation.isPending || updateCartQuantityMutation.isPending) ? (
                 <svg
                   className="animate-spin h-5 w-5 text-white mx-auto"
                   xmlns="http://www.w3.org/2000/svg"
@@ -524,14 +524,14 @@ const ProductDetails = ({ params }) => {
             </button>
             <button
               onClick={handleWishlistToggle}
-              disabled={wishlistLoading || wishlistMutation.isLoading}
+              disabled={wishlistLoading || wishlistMutation.isPending}
               className={`border px-8 py-2 font-medium rounded uppercase flex items-center gap-2 transition ${
                 isInWishlist
                   ? "border-red-500 text-red-500 hover:bg-red-50"
                   : "border-gray-300 text-gray-600 hover:text-red-500 hover:border-red-500"
-              } ${wishlistLoading || wishlistMutation.isLoading ? "opacity-50 cursor-not-allowed" : ""}`}
+              } ${wishlistLoading || wishlistMutation.isPending ? "opacity-50 cursor-not-allowed" : ""}`}
             >
-              {wishlistMutation.isLoading ? (
+              {wishlistMutation.isPending ? (
                 <svg
                   className="animate-spin h-5 w-5 text-red-500"
                   xmlns="http://www.w3.org/2000/svg"
