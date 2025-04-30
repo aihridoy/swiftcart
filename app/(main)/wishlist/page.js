@@ -184,7 +184,7 @@ const Wishlist = () => {
       }, 3000);
       return;
     }
-    if (wishlistMutation.isLoading) return;
+    if (wishlistMutation.isPending) return;
     wishlistMutation.mutate({ productId, action: "remove" });
   };
 
@@ -213,7 +213,7 @@ const Wishlist = () => {
     if (isInCart(product._id)) {
       router.push("/cart");
     } else {
-      if (cartMutation.isLoading) return;
+      if (cartMutation.isPending) return;
       cartMutation.mutate({ productId: product._id, quantity: 1 });
     }
   };
@@ -316,9 +316,9 @@ const Wishlist = () => {
                   }
                 });
               }}
-              disabled={cartMutation.isLoading}
+              disabled={cartMutation.isPending}
               className={`flex items-center justify-center space-x-2 px-4 py-2 rounded-lg font-semibold text-white transition-all duration-300 shadow-md w-full sm:w-auto ${
-                cartMutation.isLoading
+                cartMutation.isPending
                   ? "bg-gray-400 cursor-not-allowed"
                   : "bg-blue-600 hover:bg-blue-700 hover:shadow-lg"
               }`}
@@ -392,13 +392,13 @@ const Wishlist = () => {
                           disabled={
                             cartLoading ||
                             product.availability !== "In Stock" ||
-                            (cartMutation.isLoading &&
+                            (cartMutation.isPending &&
                               cartMutation.variables?.productId === product._id)
                           }
                           className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-semibold transition-all duration-300 shadow-md ${
                             cartLoading ||
                             product.availability !== "In Stock" ||
-                            (cartMutation.isLoading &&
+                            (cartMutation.isPending &&
                               cartMutation.variables?.productId === product._id)
                               ? "bg-gray-400 text-white cursor-not-allowed"
                               : productInCart
@@ -406,7 +406,7 @@ const Wishlist = () => {
                                 : "bg-blue-600 text-white hover:bg-blue-700 hover:shadow-lg"
                           }`}
                         >
-                          {cartMutation.isLoading &&
+                          {cartMutation.isPending &&
                           cartMutation.variables?.productId === product._id ? (
                             <FaSpinner className="animate-spin" />
                           ) : (
@@ -421,12 +421,12 @@ const Wishlist = () => {
                             handleRemoveFromWishlist(product._id, e)
                           }
                           disabled={
-                            wishlistMutation.isLoading &&
+                            wishlistMutation.isPending &&
                             wishlistMutation.variables?.productId ===
                               product._id
                           }
                           className={`p-2 rounded-full transition-all duration-300 ${
-                            wishlistMutation.isLoading &&
+                            wishlistMutation.isPending &&
                             wishlistMutation.variables?.productId ===
                               product._id
                               ? "bg-gray-200 text-gray-400 cursor-not-allowed"
