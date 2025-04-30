@@ -37,11 +37,16 @@ const SkeletonCartItem = () => (
 const CartPage = () => {
   const queryClient = useQueryClient();
   const { data: userSession, status } = useSession();
+  const [user, setUser] = useState(null);
+  
   const router = useRouter();
 
   useEffect(() => {
       async function fetchUser() {
         const res = await session();
+        if(res) {
+          setUser(res.user);
+        }
         if(!res?.user) {
           router.push("/");
         }
@@ -127,7 +132,7 @@ const CartPage = () => {
   // Handle remove from cart
   const handleRemoveFromCart = (productId, e) => {
     e.preventDefault();
-    if (status !== "authenticated") {
+    if (!user) {
       toast.error("Please log in to manage your cart.", {
         position: "top-right",
         autoClose: 3000,
@@ -144,7 +149,7 @@ const CartPage = () => {
   // Handle quantity increase
   const handleIncreaseQuantity = (productId, currentQuantity, productStock, e) => {
     e.preventDefault();
-    if (status !== "authenticated") {
+    if (!user) {
       toast.error("Please log in to manage your cart.", {
         position: "top-right",
         autoClose: 3000,
@@ -173,7 +178,7 @@ const CartPage = () => {
   // Handle quantity decrease
   const handleDecreaseQuantity = (productId, currentQuantity, e) => {
     e.preventDefault();
-    if (!userSession) {
+    if (!user) {
       toast.error("Please log in to manage your cart.", {
         position: "top-right",
         autoClose: 3000,

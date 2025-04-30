@@ -19,6 +19,7 @@ import { addToCart, getCart } from "@/actions/cart-utils";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { session } from "@/actions/auth-utils";
+import { set } from "mongoose";
 
 // Skeleton Loader for Wishlist Items
 const SkeletonWishlistItem = () => (
@@ -37,6 +38,7 @@ const SkeletonWishlistItem = () => (
 const Wishlist = () => {
   const queryClient = useQueryClient();
   const { data: userSession, status } = useSession();
+  const [user, setUser] = useState(null);
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
@@ -44,6 +46,9 @@ const Wishlist = () => {
   useEffect(() => {
     async function fetchUser() {
       const res = await session();
+      if(res) {
+        setUser(res.user);
+      }
       if (!res?.user) {
         router.push("/");
       }
@@ -169,7 +174,7 @@ const Wishlist = () => {
   // Handle removing an item from the wishlist
   const handleRemoveFromWishlist = (productId, e) => {
     e.preventDefault();
-    if (status !== "authenticated") {
+    if (!user) {
       toast.error("Please log in to manage your wishlist.", {
         position: "top-right",
         autoClose: 3000,
@@ -186,7 +191,7 @@ const Wishlist = () => {
   // Handle adding to cart or viewing cart
   const handleCartAction = (product, e) => {
     e.preventDefault();
-    if (status !== "authenticated") {
+    if (!user) {
       toast.error("Please log in to add to cart.", {
         position: "top-right",
         autoClose: 3000,

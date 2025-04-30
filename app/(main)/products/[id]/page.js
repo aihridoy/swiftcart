@@ -12,15 +12,27 @@ import { addReview, getReviewsByProductId } from "@/actions/review-utils";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { FaStar, FaRegStar } from "react-icons/fa";
+import { session } from "@/actions/auth-utils";
 
 const ProductDetails = ({ params }) => {
   const { id } = params;
   const [quantity, setQuantity] = useState(1);
   const [reviewText, setReviewText] = useState("");
   const [rating, setRating] = useState(0);
+  const [user, setUser] = useState(null);
   const queryClient = useQueryClient();
-  const { data: session } = useSession();
+  const { data: userSession } = useSession();
   const router = useRouter();
+
+  useEffect(() => {
+        async function fetchUser() {
+          const res = await session();
+          if(res) {
+            setUser(res.user);
+          }
+        }
+        fetchUser();
+      }, []);
 
   // Fetch product details
   const { data: productData, error: productError, isLoading: productLoading } = useQuery({
@@ -51,7 +63,7 @@ const ProductDetails = ({ params }) => {
   const { data: wishlistData, error: wishlistError, isLoading: wishlistLoading } = useQuery({
     queryKey: ["wishlist"],
     queryFn: getWishlist,
-    enabled: !!session,
+    enabled: !!userSession,
     onError: (error) => {
       if (error.message.includes("Unauthorized")) {
         toast.error("Please log in to view your wishlist.", {
@@ -72,7 +84,7 @@ const ProductDetails = ({ params }) => {
   const { data: cartData, error: cartError, isLoading: cartLoading } = useQuery({
     queryKey: ["cart"],
     queryFn: getCart,
-    enabled: !!session,
+    enabled: !!userSession,
     onError: (error) => {
       if (error.message.includes("Unauthorized")) {
         toast.error("Please log in to view your cart.", {
@@ -218,7 +230,7 @@ const ProductDetails = ({ params }) => {
 
   // Handle wishlist toggle
   const handleWishlistToggle = () => {
-    if (!session) {
+    if (!user) {
       toast.error("Please log in to manage your wishlist.", {
         position: "top-right",
         autoClose: 3000,
@@ -234,7 +246,7 @@ const ProductDetails = ({ params }) => {
 
   // Handle add to cart or update cart
   const handleCartAction = () => {
-    if (!session) {
+    if (!user) {
       toast.error("Please log in to add to cart.", {
         position: "top-right",
         autoClose: 3000,
@@ -272,7 +284,7 @@ const ProductDetails = ({ params }) => {
   // Handle review submission
   const handleReviewSubmit = (e) => {
     e.preventDefault();
-    if (!session) {
+    if (!user) {
       toast.error("Please log in to submit a review.", {
         position: "top-right",
         autoClose: 3000,
@@ -313,7 +325,7 @@ const ProductDetails = ({ params }) => {
   // Handle quantity increase
   const handleIncreaseQuantity = (e) => {
     e.preventDefault();
-    if (!session) {
+    if (!user) {
       toast.error("Please log in to manage your cart.", {
         position: "top-right",
         autoClose: 3000,
@@ -338,7 +350,7 @@ const ProductDetails = ({ params }) => {
   // Handle quantity decrease
   const handleDecreaseQuantity = (e) => {
     e.preventDefault();
-    if (!session) {
+    if (!user) {
       toast.error("Please log in to manage your cart.", {
         position: "top-right",
         autoClose: 3000,
