@@ -9,10 +9,11 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import ProductCard from "@/components/ProductCard";
 import { getWishlist, updateWishlist } from "@/actions/wishlist";
+import { session } from "@/actions/auth-utils";
 
 const Products = () => {
   const queryClient = useQueryClient();
-  const { data: session, status } = useSession();
+  const { data: userSession, status } = useSession();
   const router = useRouter();
 
   const [displayCount, setDisplayCount] = useState(20);
@@ -25,6 +26,17 @@ const Products = () => {
   });
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [showFilters, setShowFilters] = useState(false);
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+          async function fetchUser() {
+            const res = await session();
+            if(res) {
+              setUser(res.user);
+            }
+          }
+          fetchUser();
+        }, []);
 
   // Fetch products
   const { data, error, isLoading } = useQuery({
@@ -235,7 +247,7 @@ const Products = () => {
   // Handle add to cart or view cart
   const handleCartAction = (productId, e) => {
     e.preventDefault();
-    if (status !== "authenticated") {
+    if (!user) {
       toast.error("Please log in to add to cart.", {
         position: "top-right",
         autoClose: 3000,
@@ -255,7 +267,7 @@ const Products = () => {
   // Handle wishlist toggle
     const handleWishlistToggle = (productId, e) => {
       e.preventDefault();
-      if (status !== "authenticated") {
+      if (!user) {
         toast.error("Please log in to manage your wishlist.", {
           position: "top-right",
           autoClose: 3000,
