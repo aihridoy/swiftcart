@@ -1,36 +1,34 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 🏡 SwiftCart: Home & Decor Hub
 
-## Getting Started
+![SwiftCart Banner](/public/homepage.png)
 
-First, run the development server:
+SwiftCart is a modern e-commerce platform designed for home and decor enthusiasts. Discover a curated selection of stylish furniture, decor essentials, and more, all in one place. With a seamless user experience, SwiftCart offers features like product filtering, wishlist management, cart functionality, and secure authentication, making shopping for your dream home effortless.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+**[Visit SwiftCart Live](https://swiftcart-five.vercel.app/)**
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## 🌟 Features
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+- **Product Catalog**: Browse a wide range of home and decor products with detailed descriptions.
+- **Advanced Filtering & Sorting**: Filter products by category, price, rating, and availability; sort by price, name, or rating.
+- **Wishlist Management**: Add or remove products to your wishlist with a single click.
+- **Cart Functionality**: Add products to your cart and manage your shopping seamlessly.
+- **User Authentication**: Secure login and registration using NextAuth.js.
+- **Responsive Design**: Fully responsive UI for a great experience on desktop and mobile devices.
+- **Dynamic Reviews**: View product ratings and reviews fetched dynamically from the backend.
+- **Search Functionality**: Search for products with ease using the integrated search bar.
+- **Pagination**: Load more products with a "Show More" button or paginated category views.
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## 🛠️ Tech Stack
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- **Framework**: [Next.js](https://nextjs.org/) (React Framework for SSR and SEO)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/) for modern, responsive design
+- **State Management**: React Hooks and Context API
+- **Data Fetching**: [TanStack Query](https://tanstack.com/query) for efficient server-state management
+- **Authentication**: [NextAuth.js](https://next-auth.js.org/) for secure user authentication
+- **Notifications**: [React Toastify](https://fkhadra.github.io/react-toastify/) for user feedback
+- **Deployment**: Hosted on [Vercel](https://vercel.com/)
+- **Fonts**: Custom Google Font (Inter) via [`next/font`](https://nextjs.org/docs/basic-features/font-optimization)
