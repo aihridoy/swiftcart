@@ -3,12 +3,12 @@
 import React, { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { FaSearch, FaHeart, FaShoppingBag, FaUser, FaBox, FaBars, FaTimes } from "react-icons/fa"; 
+import { FaSearch, FaHeart, FaShoppingBag, FaUser, FaBox, FaBars, FaTimes } from "react-icons/fa";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { getWishlist } from "@/actions/wishlist";
 import { getCart } from "@/actions/cart-utils";
-import { getOrders } from "@/actions/order-utils"; 
+import { getOrders } from "@/actions/order-utils";
 import { searchProducts } from "@/actions/products";
 import { useRouter } from "next/navigation";
 import { session } from "@/actions/auth-utils";
@@ -18,6 +18,7 @@ const Header = () => {
   const router = useRouter();
   const [user, setUser] = useState(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
 
   // Search state
   const [searchTerm, setSearchTerm] = useState("");
@@ -53,6 +54,15 @@ const Header = () => {
     }, 500);
     debouncedSetSearchTerm(searchTerm);
   }, [searchTerm, debounce]);
+
+  // Scroll effect
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50); // Trigger animation after 50px scroll
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   // Fetch search results
   const { data: searchResults, isLoading: searchLoading } = useQuery({
@@ -194,7 +204,11 @@ const Header = () => {
   };
 
   return (
-    <header className="py-4 shadow-sm bg-white">
+    <header
+      className={`sticky top-0 z-50 bg-white transition-all duration-300 ${
+        isScrolled ? "py-2 shadow-lg" : "py-4 shadow-sm"
+      }`}
+    >
       <div className="container">
         {/* Mobile Layout */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
@@ -206,13 +220,15 @@ const Header = () => {
                 alt="Logo"
                 width={128}
                 height={40}
-                className="w-32 h-auto sm:w-44"
+                className={`w-32 h-auto transition-all duration-300 ${
+                  isScrolled ? "w-28" : "w-32"
+                }`}
               />
             </Link>
             <button
               className="sm:hidden text-2xl text-gray-700 focus:outline-none"
               onClick={toggleMenu}
-              aria-label={isMenuOpen ? "Close Menu" : "Open Menu"}
+              aria-label={isScrolled ? "Close Menu" : "Open Menu"}
             >
               {isMenuOpen ? <FaTimes /> : <FaBars />}
             </button>
@@ -221,14 +237,16 @@ const Header = () => {
           {/* Search Bar */}
           <div className="w-full sm:max-w-xl relative">
             <form onSubmit={handleSearchSubmit} className="flex">
-              <span className="absolute left-3 sm:left-4 top-3 sm:top-3 lg:top-4 text-base sm:text-lg text-gray-400">
+              <span className="absolute left-3 sm:left-4 top-2 sm:top-2.5 text-base sm:text-lg text-gray-400">
                 <FaSearch />
               </span>
               <input
                 type="text"
                 name="search"
                 id="search"
-                className="w-full border border-primary border-r-0 pl-12 md:pl-10 py-2 sm:py-3 pr-3 rounded-l-md focus:outline-none text-sm sm:text-base"
+                className={`w-full border border-primary border-r-0 pl-12 md:pl-10 py-1.5 sm:py-2 pr-3 rounded-l-md focus:outline-none text-sm sm:text-base transition-all duration-300 ${
+                  isScrolled ? "py-1 text-sm" : "py-1.5 sm:py-2 text-sm sm:text-base"
+                }`}
                 placeholder="Search Product"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
@@ -237,7 +255,9 @@ const Header = () => {
               />
               <button
                 type="submit"
-                className="bg-primary border border-primary text-white px-4 sm:px-8 py-2 sm:py-3 rounded-r-md hover:bg-transparent hover:text-primary transition text-sm sm:text-base"
+                className={`bg-primary border border-primary text-white px-4 sm:px-6 py-1.5 sm:py-2 rounded-r-md hover:bg-transparent hover:text-primary transition text-sm sm:text-base ${
+                  isScrolled ? "px-3 sm:px-5 py-1" : "px-4 sm:px-6 py-1.5 sm:py-2"
+                }`}
               >
                 Search
               </button>
