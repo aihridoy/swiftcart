@@ -83,7 +83,11 @@ export const getCartItemById = async (cartId) => {
         "Cache-Control": "no-cache, no-store, must-revalidate",
         Pragma: "no-cache",
         Expires: "0",
+        "X-Timestamp": Date.now()
       },
+       params: {
+        _t: Date.now()
+      }
     });
     return result.data;
   } catch (error) {

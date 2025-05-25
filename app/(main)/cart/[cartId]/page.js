@@ -12,7 +12,7 @@ import { sendEmail } from "@/actions/contact";
 
 const Checkout = () => {
   const { cartId } = useParams();
-  const { data: session } = useSession();
+  const { data: session, status: sessionStatus } = useSession();
   const router = useRouter();
 
   // Form state
@@ -28,12 +28,19 @@ const Checkout = () => {
     agreement: false,
   });
 
-  // Fetch cart data
-  const { data, error, isLoading } = useQuery({
-    queryKey: ["checkout", cartId],
+  // Fetch cart data with improved caching strategy
+  const { data, error, isLoading, refetch } = useQuery({
+    queryKey: ["checkout", cartId, session?.user?.id], // Include user ID for better cache isolation
     queryFn: () => getCartItemById(cartId),
-    enabled: !!cartId && !!session,
+    enabled: !!cartId && sessionStatus === "authenticated", // Wait for session to be fully loaded
+    staleTime: 0, // Always refetch
+    cacheTime: 0, // Don't cache
+    refetchOnMount: true,
+    refetchOnWindowFocus: false,
+    retry: 3,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
     onError: (error) => {
+      console.error("Query error:", error);
       if (error.message.includes("Unauthorized")) {
         toast.error("Please log in to access checkout.", {
           position: "top-right",
@@ -50,6 +57,13 @@ const Checkout = () => {
       }
     },
   });
+
+  // Force refetch when component mounts or cartId changes
+  useEffect(() => {
+    if (cartId && sessionStatus === "authenticated") {
+      refetch();
+    }
+  }, [cartId, sessionStatus, refetch]);
 
   // Mutation to create an order and send email
   const orderMutation = useMutation({
@@ -188,18 +202,41 @@ const Checkout = () => {
     }
   }, [session]);
 
+  // Show loading while session is loading
+  if (sessionStatus === "loading") {
+    return (
+      <div className="flex justify-center items-center min-h-[500px]">
+        <div className="animate-spin rounded-full h-20 w-20 border-b-2 border-gray-900"></div>
+        <p className="ml-4">Loading session...</p>
+      </div>
+    );
+  }
+
+  // Redirect to login if not authenticated
+  if (sessionStatus === "unauthenticated") {
+    router.push("/login");
+    return null;
+  }
+
   if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-[500px]">
         <div className="animate-spin rounded-full h-20 w-20 border-b-2 border-gray-900"></div>
+        <p className="ml-4">Loading checkout data...</p>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="container py-16 flex justify-center">
-        <p>Failed to load checkout. Please try again later.</p>
+      <div className="container py-16 flex flex-col justify-center items-center">
+        <p className="mb-4">Failed to load checkout. Please try again later.</p>
+        <button 
+          onClick={() => refetch()}
+          className="px-4 py-2 bg-primary text-white rounded hover:bg-primary/80"
+        >
+          Retry
+        </button>
       </div>
     );
   }
