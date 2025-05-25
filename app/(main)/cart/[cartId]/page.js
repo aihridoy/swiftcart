@@ -138,6 +138,10 @@ const Checkout = () => {
         position: "top-right",
         autoClose: 3000,
       });
+      // Redirect to an order confirmation page or homepage
+      setTimeout(() => {
+        router.push("/");
+      }, 3000);
     },
     onError: (error) => {
       toast.error(`Error placing order or sending email: ${error?.message}`, {
