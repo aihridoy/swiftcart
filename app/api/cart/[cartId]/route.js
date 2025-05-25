@@ -3,6 +3,8 @@ import { session } from "@/actions/auth-utils";
 import { dbConnect } from "@/service/mongo";
 import { Cart } from "@/models/cart-model";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(request, { params }) {
   try {
     const userSession = await session();
@@ -29,8 +31,17 @@ export async function GET(request, { params }) {
       return NextResponse.json({ error: "Unauthorized to access this cart" }, { status: 403 });
     }
 
-    // Return the entire cart object
-    return NextResponse.json({ cart }, { status: 200 });
+    // Create response with cache-busting headers
+    const response = NextResponse.json({ cart }, { status: 200 });
+    
+    // Set cache-busting headers
+    response.headers.set('Cache-Control', 'no-cache, no-store, must-revalidate');
+    response.headers.set('Pragma', 'no-cache');
+    response.headers.set('Expires', '0');
+    response.headers.set('Last-Modified', new Date().toUTCString());
+    response.headers.set('ETag', `"${Date.now()}"`);
+
+    return response;
   } catch (error) {
     console.error("Error fetching cart:", error);
     return NextResponse.json({ error: "Failed to fetch cart" }, { status: 500 });
