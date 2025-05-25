@@ -30,11 +30,11 @@ const Checkout = () => {
 
   // Fetch cart data with improved caching strategy
   const { data, error, isLoading, refetch } = useQuery({
-    queryKey: ["checkout", cartId, session?.user?.id], // Include user ID for better cache isolation
+    queryKey: ["checkout", cartId, session?.user?.id], 
     queryFn: () => getCartItemById(cartId),
-    enabled: !!cartId && sessionStatus === "authenticated", // Wait for session to be fully loaded
-    staleTime: 0, // Always refetch
-    cacheTime: 0, // Don't cache
+    enabled: !!cartId && sessionStatus === "authenticated",
+    staleTime: 0, 
+    cacheTime: 0,
     refetchOnMount: true,
     refetchOnWindowFocus: false,
     retry: 3,
@@ -46,9 +46,9 @@ const Checkout = () => {
           position: "top-right",
           autoClose: 3000,
         });
-        setTimeout(() => {
-          router.push("/login");
-        }, 3000);
+        // setTimeout(() => {
+        //   router.push("/login");
+        // }, 3000);
       } else {
         toast.error(`Error loading checkout: ${error.message}`, {
           position: "top-right",
@@ -138,10 +138,6 @@ const Checkout = () => {
         position: "top-right",
         autoClose: 3000,
       });
-      // Redirect to an order confirmation page or homepage
-      setTimeout(() => {
-        router.push("/");
-      }, 3000);
     },
     onError: (error) => {
       toast.error(`Error placing order or sending email: ${error?.message}`, {
@@ -210,12 +206,6 @@ const Checkout = () => {
         <p className="ml-4">Loading session...</p>
       </div>
     );
-  }
-
-  // Redirect to login if not authenticated
-  if (sessionStatus === "unauthenticated") {
-    router.push("/login");
-    return null;
   }
 
   if (isLoading) {
