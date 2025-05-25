@@ -38,7 +38,6 @@ const CartPage = () => {
   const queryClient = useQueryClient();
   const { data: userSession, status } = useSession();
   const [user, setUser] = useState(null);
-  const [isNavigating, setIsNavigating] = useState(false);
   
   const router = useRouter();
 
@@ -129,36 +128,6 @@ const CartPage = () => {
       }
     },
   });
-
-  // Handle navigation to checkout with loading state
-  const handleCheckoutNavigation = (e) => {
-    e.preventDefault();
-    if (!user) {
-      toast.error("Please log in to proceed to checkout.", {
-        position: "top-right",
-        autoClose: 3000,
-      });
-      setTimeout(() => {
-        router.push("/login");
-      }, 3000);
-      return;
-    }
-    
-    if (!cart?._id) {
-      toast.error("Cart not found. Please refresh the page.", {
-        position: "top-right",
-        autoClose: 3000,
-      });
-      return;
-    }
-
-    setIsNavigating(true);
-    
-    // Add a small delay to show the loading state, then navigate
-    setTimeout(() => {
-      router.push(`/cart/${cart._id}`);
-    }, 300);
-  };
 
   // Handle remove from cart
   const handleRemoveFromCart = (productId, e) => {
@@ -267,6 +236,11 @@ const CartPage = () => {
     }
 
     return pageNumbers;
+  };
+
+  const handleProceed = (chartId) => {
+    router.push(`/cart/${chartId}`);
+    router.refresh();
   };
 
   // Loading state - Centered on the screen
@@ -540,24 +514,11 @@ const CartPage = () => {
                     <span>Total:</span>
                     <span>${total.toFixed(2)}</span>
                   </div>
-                  <button 
-                    onClick={handleCheckoutNavigation}
-                    disabled={isNavigating}
-                    className={`w-full px-6 py-3 rounded-lg font-semibold transition-all duration-300 shadow-md hover:shadow-lg flex items-center justify-center space-x-2 ${
-                      isNavigating 
-                        ? 'bg-gray-400 cursor-not-allowed' 
-                        : 'bg-blue-600 hover:bg-blue-700 text-white'
-                    }`}
-                  >
-                    {isNavigating ? (
-                      <>
-                        <FaSpinner className="animate-spin" />
-                        <span>Loading...</span>
-                      </>
-                    ) : (
-                      <span>Proceed to Checkout</span>
-                    )}
-                  </button>
+                  {/* <Link href={`/cart/${cart._id}`}> */}
+                    <button onClick={() => handleProceed(cart._id)} className="w-full bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-all duration-300 shadow-md hover:shadow-lg">
+                      Proceed to Checkout
+                    </button>
+                  {/* </Link> */}
                 </div>
               </div>
             )}
