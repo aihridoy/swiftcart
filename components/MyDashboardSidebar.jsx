@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { FiPlus, FiPackage, FiUsers, FiShoppingCart, FiLogOut, FiHome } from "react-icons/fi";
+import { FiPlus, FiPackage, FiUsers, FiShoppingCart, FiLogOut, FiHome, FiUser } from "react-icons/fi";
 
 export default function MyDashboardSidebar() {
   const pathname = usePathname();
@@ -28,28 +28,28 @@ export default function MyDashboardSidebar() {
             href="/user-dashboard/wishlist" 
             icon={<FiPlus className="h-6 w-6" />} 
             text="Wishlist" 
-            isActive={pathname === "/dashboard/add-product"}
+            isActive={pathname === "/user-dashboard/wishlist"}
             showText={false}
           />
           <NavItem 
             href="/user-dashboard/cart" 
-            icon={<FiPackage className="h-6 w-6" />} 
+            icon={<FiShoppingCart className="h-6 w-6" />} 
             text="Cart" 
-            isActive={pathname === "/dashboard/products-list"}
+            isActive={pathname === "/user-dashboard/cart"}
             showText={false}
           />
           <NavItem 
             href="/user-dashboard/orders" 
-            icon={<FiShoppingCart className="h-6 w-6" />} 
+            icon={<FiPackage className="h-6 w-6" />} 
             text="Orders" 
-            isActive={pathname === "/dashboard/users"}
+            isActive={pathname === "/user-dashboard/orders"}
             showText={false}
           />
           <NavItem 
             href="/user-dashboard/profile" 
-            icon={<FiShoppingCart className="h-6 w-6" />} 
+            icon={<FiUser className="h-6 w-6" />} 
             text="Profile" 
-            isActive={pathname === "/dashboard/orders"}
+            isActive={pathname === "/user-dashboard/profile"}
             showText={false}
           />
           <NavItem 
