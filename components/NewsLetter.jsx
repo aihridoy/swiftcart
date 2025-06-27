@@ -54,9 +54,7 @@ const NewsLetter = () => {
 
     // Simulate API call
     setTimeout(() => {
-      setSuccess(
-        "🎉 Welcome aboard! Check your inbox for a special welcome offer."
-      );
+      setSuccess("🎉 Welcome aboard! You will get our regular welcome offers.");
       setEmail("");
       setIsSubmitting(false);
 
@@ -67,7 +65,7 @@ const NewsLetter = () => {
 
   const handleInputChange = (e) => {
     setEmail(e.target.value);
-    if (error) setError(""); // Clear error when user starts typing
+    if (error) setError("");
   };
 
   return (
@@ -166,14 +164,14 @@ const NewsLetter = () => {
                   type="submit"
                   disabled={isSubmitting}
                   className={`absolute right-2 top-2 bottom-2 px-6 sm:px-8
-  bg-red-500 hover:bg-red-600
-  text-white font-semibold rounded-xl
-  transition-all duration-300 transform hover:scale-105
-  focus:outline-none focus:ring-4 focus:ring-primary/50
-  disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none
-  shadow-lg ${isSubmitting ? "animate-pulse" : ""}`}
-                  aria-label="Subscribe to newsletter"
-                >
+                            bg-red-500 hover:bg-red-600
+                            text-white font-semibold rounded-xl
+                            transition-all duration-300 transform hover:scale-105
+                            focus:outline-none focus:ring-4 focus:ring-primary/50
+                            disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none
+                            shadow-lg ${isSubmitting ? "animate-pulse" : ""}`}
+                            aria-label="Subscribe to newsletter"
+                    >
                   {isSubmitting ? (
                     <div className="flex items-center gap-2">
                       <svg
