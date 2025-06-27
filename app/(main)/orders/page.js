@@ -63,7 +63,7 @@ const OrderHistory = () => {
       fetchUser();
     }, [router]);
 
-  // Fetch orders using React Query
+  // Fetch orders
   const { data, error, isLoading } = useQuery({
     queryKey: ["orders"],
     queryFn: getOrders,
