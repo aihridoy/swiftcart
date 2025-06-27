@@ -14,7 +14,7 @@ export default function MyDashboardSidebar() {
       <div className="hidden md:block p-6 border-b border-indigo-200/40">
         <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2 text-indigo-700">
           <FiShoppingCart className="h-6 w-6" />
-          <span>SwiftCart Admin</span>
+          <span>SwiftCart User</span>
         </h1>
       </div>
 

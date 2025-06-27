@@ -71,7 +71,7 @@ const OrderList = () => {
     fetchUser();
   }, [router]);
 
-  // Fetch orders with React Query
+  // Fetch orders 
   const { data, error, isLoading } = useQuery({
     queryKey: ["orders", currentPage],
     queryFn: () => getOrders({ page: currentPage, limit }),

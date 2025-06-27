@@ -6,13 +6,22 @@ import { getProducts } from "@/actions/products";
 import { getUsers } from "@/actions/user-utils";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { toast } from "react-toastify";
+import { FiUsers, FiPackage, FiShoppingCart, FiDollarSign } from "react-icons/fi";
+import { Bar, Pie } from "react-chartjs-2";
 import {
-  FiUsers,
-  FiPackage,
-  FiShoppingCart,
-  FiDollarSign,
-} from "react-icons/fi";
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  ArcElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
+
+ChartJS.register(CategoryScale, LinearScale, BarElement, ArcElement, Title, Tooltip, Legend);
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -29,9 +38,7 @@ export default function DashboardPage() {
     fetchUser();
   }, [router]);
 
-  const {
-    data: userData,
-  } = useQuery({
+  const { data: userData } = useQuery({
     queryKey: ["users"],
     queryFn: getUsers,
     onError: (error) => {
@@ -93,19 +100,19 @@ export default function DashboardPage() {
   const dashboardStats = [
     {
       title: "Total Users",
-      value: userData?.users?.length,
+      value: userData?.users?.length || 0,
       icon: <FiUsers className="h-6 w-6" />,
       color: "bg-blue-100 text-blue-600",
     },
     {
       title: "Total Products",
-      value: productData?.products?.length,
+      value: productData?.products?.length || 0,
       icon: <FiPackage className="h-6 w-6" />,
       color: "bg-green-100 text-green-600",
     },
     {
       title: "Orders",
-      value: orderData?.orders?.length,
+      value: orderData?.orders?.length || 0,
       icon: <FiShoppingCart className="h-6 w-6" />,
       color: "bg-purple-100 text-purple-600",
     },
@@ -117,16 +124,62 @@ export default function DashboardPage() {
     },
   ];
 
+  // Chart Data
+  const barChartData = {
+    labels: ["Users", "Products", "Orders"],
+    datasets: [
+      {
+        label: "Count",
+        data: [
+          userData?.users?.length || 0,
+          productData?.products?.length || 0,
+          orderData?.orders?.length || 0,
+        ],
+        backgroundColor: "rgba(75, 192, 192, 0.6)",
+        borderColor: "rgba(75, 192, 192, 1)",
+        borderWidth: 1,
+      },
+    ],
+  };
+
+  const pieChartData = {
+    labels: ["Users", "Products", "Orders"],
+    datasets: [
+      {
+        data: [
+          userData?.users?.length || 0,
+          productData?.products?.length || 0,
+          orderData?.orders?.length || 0,
+        ],
+        backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56"],
+        hoverOffset: 4,
+      },
+    ],
+  };
+
+  // Chart Options
+  const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { position: "top" },
+      title: { display: true, text: "Overview" },
+    },
+    scales: {
+      y: { beginAtZero: true, title: { display: true, text: "Count" } },
+    },
+  };
+
   return (
     <div className="p-6 max-w-7xl mx-auto mb-20">
       {/* Dashboard Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-800 mb-2">
+        <h1 className="text-4xl font-bold text-gray-900 mb-2">
           Admin Dashboard
         </h1>
         <p className="text-gray-600">
-          Welcome to the SwiftCart Admin Dashboard. Select a menu item to get
-          started.
+          Welcome to the SwiftCart Admin Dashboard. Monitor and manage your store
+          effectively.
         </p>
       </div>
 
@@ -135,24 +188,32 @@ export default function DashboardPage() {
         {dashboardStats.map((stat, index) => (
           <div
             key={index}
-            className="bg-white rounded-lg shadow-md p-6 flex items-center space-x-4"
+            className="bg-white rounded-lg shadow-md p-6 flex items-center space-x-4 hover:shadow-lg transition-shadow duration-300"
           >
             <div className={`${stat.color} p-3 rounded-full`}>{stat.icon}</div>
             <div>
-              <h3 className="text-gray-500 text-sm font-medium">
-                {stat.title}
-              </h3>
-              <p className="text-2xl font-bold text-gray-800">{stat.value}</p>
+              <h3 className="text-gray-500 text-sm font-medium">{stat.title}</h3>
+              <p className="text-3xl font-bold text-gray-900">{stat.value}</p>
             </div>
           </div>
         ))}
       </div>
 
+      {/* Charts Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <div className="bg-white p-6 rounded-lg shadow-md h-80">
+          <h2 className="text-xl font-semibold mb-4 text-gray-800">Activity Overview</h2>
+          <Bar data={barChartData} options={chartOptions} />
+        </div>
+        <div className="bg-white p-6 rounded-lg shadow-md h-80">
+          <h2 className="text-xl font-semibold mb-4 text-gray-800">Proportion Overview</h2>
+          <Pie data={pieChartData} options={{ ...chartOptions, scales: {} }} />
+        </div>
+      </div>
+
       {/* Quick Access Panel */}
       <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-        <h2 className="text-xl font-semibold text-gray-800 mb-4">
-          Quick Actions
-        </h2>
+        <h2 className="text-xl font-semibold text-gray-800 mb-4">Quick Actions</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <QuickActionButton
             href="/dashboard/add-product"
@@ -177,10 +238,8 @@ export default function DashboardPage() {
 
       {/* Recent Activity */}
       <div className="bg-white rounded-lg shadow-md p-6">
-        <h2 className="text-xl font-semibold text-gray-800 mb-4">
-          Recent Activity
-        </h2>
-        <div className="space-y-4">
+        <h2 className="text-xl font-semibold text-gray-800 mb-4">Recent Activity</h2>
+        <div className="space-y-4 max-h-64 overflow-y-auto">
           <ActivityItem
             title="New Order #1234"
             description="Customer purchased 3 items"
@@ -195,6 +254,11 @@ export default function DashboardPage() {
             title="New User Registration"
             description="john.doe@example.com registered an account"
             time="5 hours ago"
+          />
+          <ActivityItem
+            title="Order Shipped #1235"
+            description="Order shipped to customer"
+            time="1 hour ago"
           />
         </div>
       </div>
