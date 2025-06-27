@@ -1,6 +1,7 @@
 import Ads from "@/components/Ads";
 import Banner from "@/components/Banner";
 import CopyRight from "@/components/CopyRight";
+import FeaturedProduct from "@/components/FeaturedProduct";
 import Features from "@/components/Features";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
@@ -18,6 +19,7 @@ export default function Home() {
       <Features />
       <ShopByCategory />
       <NewArrival />
+      <FeaturedProduct />
       <Ads />
       <Trending />
       <Footer />
