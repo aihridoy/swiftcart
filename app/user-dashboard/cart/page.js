@@ -1,15 +1,20 @@
-"use client";  
+"use client";
 
-import { session } from '@/actions/auth-utils';
-import { getCart, removeFromCart, updateCartQuantity } from '@/actions/cart-utils';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
-import { BsCart3, BsTrash3, BsPlus, BsDash } from 'react-icons/bs';
-import { IoChevronBack, IoChevronForward } from 'react-icons/io5';
-import { AiOutlineShoppingCart } from 'react-icons/ai';
+import { session } from "@/actions/auth-utils";
+import {
+  getCart,
+  removeFromCart,
+  updateCartQuantity,
+} from "@/actions/cart-utils";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import { BsCart3, BsTrash3, BsPlus, BsDash } from "react-icons/bs";
+import { IoChevronBack, IoChevronForward } from "react-icons/io5";
+import { AiOutlineShoppingCart } from "react-icons/ai";
+import Image from "next/image";
 
 const UserCart = () => {
   const queryClient = useQueryClient();
@@ -20,10 +25,10 @@ const UserCart = () => {
   useEffect(() => {
     async function fetchUser() {
       const res = await session();
-      if(res) {
+      if (res) {
         setUser(res.user);
       }
-      if(!res?.user) {
+      if (!res?.user) {
         router.push("/");
       }
     }
@@ -79,7 +84,8 @@ const UserCart = () => {
 
   // Mutation to update quantity in cart
   const updateQuantityMutation = useMutation({
-    mutationFn: ({ productId, quantity }) => updateCartQuantity(productId, quantity),
+    mutationFn: ({ productId, quantity }) =>
+      updateCartQuantity(productId, quantity),
     onSuccess: (data) => {
       queryClient.invalidateQueries(["cart"]);
       toast.success("Quantity updated successfully", {
@@ -123,7 +129,12 @@ const UserCart = () => {
   };
 
   // Handle quantity increase
-  const handleIncreaseQuantity = (productId, currentQuantity, productStock, e) => {
+  const handleIncreaseQuantity = (
+    productId,
+    currentQuantity,
+    productStock,
+    e
+  ) => {
     e.preventDefault();
     if (!user) {
       toast.error("Please log in to manage your cart.", {
@@ -229,7 +240,10 @@ const UserCart = () => {
           </div>
           <div className="bg-white rounded-lg shadow-sm">
             {[...Array(5)].map((_, index) => (
-              <div key={index} className="flex items-center p-4 border-b border-gray-100 animate-pulse">
+              <div
+                key={index}
+                className="flex items-center p-4 border-b border-gray-100 animate-pulse"
+              >
                 <div className="w-16 h-16 bg-gray-200 rounded-lg mr-4"></div>
                 <div className="flex-1">
                   <div className="h-4 bg-gray-200 rounded w-1/3 mb-2"></div>
@@ -266,11 +280,14 @@ const UserCart = () => {
 
   const cart = data?.cart || {};
   const items = cart.items || [];
-  
+
   // Calculate totals
-  const subtotal = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  const subtotal = items.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0
+  );
   const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
-  
+
   // Pagination logic
   const totalPages = Math.ceil(items.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -289,14 +306,16 @@ const UserCart = () => {
                 Shopping Cart
               </h1>
               <p className="text-gray-600 mt-1">
-                {totalItems} {totalItems === 1 ? 'item' : 'items'} in your cart
+                {totalItems} {totalItems === 1 ? "item" : "items"} in your cart
               </p>
             </div>
-            
+
             {items.length > 0 && (
               <div className="text-right">
                 <p className="text-sm text-gray-600">Subtotal</p>
-                <p className="text-2xl font-bold text-gray-900">${subtotal.toFixed(2)}</p>
+                <p className="text-2xl font-bold text-gray-900">
+                  ${subtotal.toFixed(2)}
+                </p>
               </div>
             )}
           </div>
@@ -306,10 +325,14 @@ const UserCart = () => {
         {items.length === 0 ? (
           <div className="bg-white rounded-lg shadow-sm p-8 md:p-12 text-center">
             <AiOutlineShoppingCart className="w-16 h-16 mx-auto text-gray-300 mb-4" />
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">Your cart is empty</h3>
-            <p className="text-gray-600 mb-6">Add some products to get started!</p>
+            <h3 className="text-xl font-semibold text-gray-900 mb-2">
+              Your cart is empty
+            </h3>
+            <p className="text-gray-600 mb-6">
+              Add some products to get started!
+            </p>
             <button
-              onClick={() => router.push('/products')}
+              onClick={() => router.push("/products")}
               className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors"
             >
               Browse Products
@@ -330,42 +353,47 @@ const UserCart = () => {
 
               {/* Cart Items */}
               {paginatedItems.map((item, index) => (
-                <div key={item._id} className={`flex flex-col md:flex-row md:items-center p-4 ${index !== paginatedItems.length - 1 ? 'border-b border-gray-100' : ''}`}>
+                <div
+                  key={item._id}
+                  className={`flex flex-col md:flex-row md:items-center p-4 ${index !== paginatedItems.length - 1 ? "border-b border-gray-100" : ""}`}
+                >
                   {/* Product Info */}
                   <div className="flex items-center flex-1 mb-4 md:mb-0">
                     <div className="w-16 h-16 bg-gray-100 rounded-lg mr-4 overflow-hidden flex-shrink-0">
                       {item.product?.mainImage ? (
-                        <img
-                          src={item.product.mainImage}
-                          alt={item.product.title}
-                          className="w-full h-full object-cover"
-                          onError={(e) => {
-                            e.target.src = '/api/placeholder/64/64';
-                          }}
-                        />
+                        <div className="relative h-16 w-16 flex-shrink-0">
+                          <Image
+                            src={item.product.mainImage}
+                            alt={item.product.title}
+                            fill
+                            className="object-cover"
+                          />
+                        </div>
                       ) : (
                         <div className="w-full h-full flex items-center justify-center text-gray-400">
                           <BsCart3 className="w-6 h-6" />
                         </div>
                       )}
                     </div>
-                    
+
                     <div className="flex-1 min-w-0">
                       <h3 className="font-semibold text-gray-900 truncate">
-                        {item.product?.title || 'Product Name'}
+                        {item.product?.title || "Product Name"}
                       </h3>
                       <p className="text-sm text-gray-500">
-                        {item.product?.brand || 'Brand'}
+                        {item.product?.brand || "Brand"}
                       </p>
                       <p className="text-xs text-gray-400">
-                        SKU: {item.product?.sku || 'N/A'}
+                        SKU: {item.product?.sku || "N/A"}
                       </p>
                       {item.product?.availability && (
-                        <span className={`inline-block px-2 py-1 text-xs rounded-full mt-1 ${
-                          item.product.availability === 'In Stock' 
-                            ? 'bg-green-100 text-green-800' 
-                            : 'bg-red-100 text-red-800'
-                        }`}>
+                        <span
+                          className={`inline-block px-2 py-1 text-xs rounded-full mt-1 ${
+                            item.product.availability === "In Stock"
+                              ? "bg-green-100 text-green-800"
+                              : "bg-red-100 text-red-800"
+                          }`}
+                        >
                           {item.product.availability}
                         </span>
                       )}
@@ -378,8 +406,17 @@ const UserCart = () => {
                       {/* Quantity Controls */}
                       <div className="flex items-center border border-gray-300 rounded-lg">
                         <button
-                          onClick={(e) => handleDecreaseQuantity(item.product._id, item.quantity, e)}
-                          disabled={item.quantity <= 1 || updateQuantityMutation.isLoading}
+                          onClick={(e) =>
+                            handleDecreaseQuantity(
+                              item.product._id,
+                              item.quantity,
+                              e
+                            )
+                          }
+                          disabled={
+                            item.quantity <= 1 ||
+                            updateQuantityMutation.isLoading
+                          }
                           className="p-2 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                         >
                           <BsDash className="w-3 h-3" />
@@ -388,18 +425,29 @@ const UserCart = () => {
                           {item.quantity}
                         </span>
                         <button
-                          onClick={(e) => handleIncreaseQuantity(item.product._id, item.quantity, item.product?.quantity, e)}
+                          onClick={(e) =>
+                            handleIncreaseQuantity(
+                              item.product._id,
+                              item.quantity,
+                              item.product?.quantity,
+                              e
+                            )
+                          }
                           disabled={updateQuantityMutation.isLoading}
                           className="p-2 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                         >
                           <BsPlus className="w-3 h-3" />
                         </button>
                       </div>
-                      
+
                       {/* Price and Total */}
                       <div className="text-right">
-                        <p className="text-sm font-medium">${(item.price * item.quantity).toFixed(2)}</p>
-                        <p className="text-xs text-gray-500">${item.price.toFixed(2)} each</p>
+                        <p className="text-sm font-medium">
+                          ${(item.price * item.quantity).toFixed(2)}
+                        </p>
+                        <p className="text-xs text-gray-500">
+                          ${item.price.toFixed(2)} each
+                        </p>
                       </div>
                     </div>
 
@@ -420,8 +468,17 @@ const UserCart = () => {
                     <div className="w-24 flex justify-center">
                       <div className="flex items-center border border-gray-300 rounded-lg">
                         <button
-                          onClick={(e) => handleDecreaseQuantity(item.product._id, item.quantity, e)}
-                          disabled={item.quantity <= 1 || updateQuantityMutation.isLoading}
+                          onClick={(e) =>
+                            handleDecreaseQuantity(
+                              item.product._id,
+                              item.quantity,
+                              e
+                            )
+                          }
+                          disabled={
+                            item.quantity <= 1 ||
+                            updateQuantityMutation.isLoading
+                          }
                           className="p-1 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                         >
                           <BsDash className="w-3 h-3" />
@@ -430,7 +487,14 @@ const UserCart = () => {
                           {item.quantity}
                         </span>
                         <button
-                          onClick={(e) => handleIncreaseQuantity(item.product._id, item.quantity, item.product?.quantity, e)}
+                          onClick={(e) =>
+                            handleIncreaseQuantity(
+                              item.product._id,
+                              item.quantity,
+                              item.product?.quantity,
+                              e
+                            )
+                          }
                           disabled={updateQuantityMutation.isLoading}
                           className="p-1 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                         >
@@ -441,18 +505,24 @@ const UserCart = () => {
 
                     {/* Price */}
                     <div className="w-24 text-right">
-                      <span className="font-medium">${item.price.toFixed(2)}</span>
+                      <span className="font-medium">
+                        ${item.price.toFixed(2)}
+                      </span>
                     </div>
 
                     {/* Total */}
                     <div className="w-24 text-right">
-                      <span className="font-semibold">${(item.price * item.quantity).toFixed(2)}</span>
+                      <span className="font-semibold">
+                        ${(item.price * item.quantity).toFixed(2)}
+                      </span>
                     </div>
 
                     {/* Remove Button */}
                     <div className="w-12 flex justify-center">
                       <button
-                        onClick={(e) => handleRemoveFromCart(item.product._id, e)}
+                        onClick={(e) =>
+                          handleRemoveFromCart(item.product._id, e)
+                        }
                         disabled={removeMutation.isLoading}
                         className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50"
                         title="Remove from cart"
@@ -478,22 +548,26 @@ const UserCart = () => {
                   </button>
 
                   <div className="flex gap-1">
-                    {getPageNumbers(totalPages, currentPage).map((page, index) => (
-                      <button
-                        key={index}
-                        onClick={() => typeof page === 'number' && handlePageChange(page)}
-                        disabled={page === '...'}
-                        className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                          page === currentPage
-                            ? 'bg-blue-600 text-white'
-                            : page === '...'
-                            ? 'cursor-default'
-                            : 'border border-gray-300 hover:bg-gray-50'
-                        }`}
-                      >
-                        {page}
-                      </button>
-                    ))}
+                    {getPageNumbers(totalPages, currentPage).map(
+                      (page, index) => (
+                        <button
+                          key={index}
+                          onClick={() =>
+                            typeof page === "number" && handlePageChange(page)
+                          }
+                          disabled={page === "..."}
+                          className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                            page === currentPage
+                              ? "bg-blue-600 text-white"
+                              : page === "..."
+                                ? "cursor-default"
+                                : "border border-gray-300 hover:bg-gray-50"
+                          }`}
+                        >
+                          {page}
+                        </button>
+                      )
+                    )}
                   </div>
 
                   <button
@@ -512,16 +586,20 @@ const UserCart = () => {
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
                   <p className="text-lg font-semibold text-gray-900">
-                    Total: <span className="text-blue-600">${subtotal.toFixed(2)}</span>
+                    Total:{" "}
+                    <span className="text-blue-600">
+                      ${subtotal.toFixed(2)}
+                    </span>
                   </p>
                   <p className="text-sm text-gray-600">
-                    {totalItems} {totalItems === 1 ? 'item' : 'items'} • Taxes calculated at checkout
+                    {totalItems} {totalItems === 1 ? "item" : "items"} • Taxes
+                    calculated at checkout
                   </p>
                 </div>
-                
+
                 <div className="flex gap-3">
                   <button
-                    onClick={() => router.push('/products')}
+                    onClick={() => router.push("/products")}
                     className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium transition-colors"
                   >
                     Continue Shopping
