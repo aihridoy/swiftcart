@@ -7,6 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { FaUser, FaShoppingCart, FaHeart, FaBox } from "react-icons/fa";
 import { getUserById } from "@/actions/user-utils";
+import { useSession } from "next-auth/react";
 
 const SkeletonProfile = () => (
   <div className="w-full p-6 animate-pulse">
@@ -65,16 +66,16 @@ const SkeletonProfile = () => (
   </div>
 );
 
-export default function UserProfile({ params }) {
-  const id = params?.id;
+export default function UserProfile() {
+  const { data: userSession, status } = useSession();
   const router = useRouter();
 
   const { data, error, isLoading } = useQuery({
-    queryKey: ["user", id],
-    queryFn: () => getUserById(id),
+    queryKey: ["user", userSession?.user?.id],
+    queryFn: () => getUserById(userSession?.user?.id),
     refetchOnWindowFocus: false,
     retry: false,
-    enabled: !!id,
+    enabled: !!userSession?.user?.id,
   });
 
   useEffect(() => {
@@ -162,7 +163,7 @@ export default function UserProfile({ params }) {
           
           <h2 className="text-2xl font-semibold text-gray-800 mb-4">Your Shopping</h2>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
-            <Link href="/wishlist" className="group">
+            <Link href="/user-dashboard/wishlist" className="group">
               <div className="bg-white border border-gray-200 hover:border-blue-500 hover:shadow-md rounded-lg p-6 flex flex-col items-center justify-center transition-all duration-200 h-48">
                 <div className="p-3 bg-pink-50 rounded-full mb-4 group-hover:bg-pink-100 transition-colors duration-200">
                   <FaHeart size={30} className="text-pink-500" />
@@ -172,7 +173,7 @@ export default function UserProfile({ params }) {
               </div>
             </Link>
             
-            <Link href="/cart" className="group">
+            <Link href="/user-dashboard/cart" className="group">
               <div className="bg-white border border-gray-200 hover:border-blue-500 hover:shadow-md rounded-lg p-6 flex flex-col items-center justify-center transition-all duration-200 h-48">
                 <div className="p-3 bg-blue-50 rounded-full mb-4 group-hover:bg-blue-100 transition-colors duration-200">
                   <FaShoppingCart size={30} className="text-blue-500" />
@@ -182,7 +183,7 @@ export default function UserProfile({ params }) {
               </div>
             </Link>
             
-            <Link href="/orders" className="group">
+            <Link href="/user-dashboard/orders" className="group">
               <div className="bg-white border border-gray-200 hover:border-blue-500 hover:shadow-md rounded-lg p-6 flex flex-col items-center justify-center transition-all duration-200 h-48">
                 <div className="p-3 bg-green-50 rounded-full mb-4 group-hover:bg-green-100 transition-colors duration-200">
                   <FaBox size={30} className="text-green-500" />
@@ -191,16 +192,6 @@ export default function UserProfile({ params }) {
                 <p className="text-md text-gray-500 text-center">Track your orders</p>
               </div>
             </Link>
-            
-            {/* <Link href="/settings" className="group">
-              <div className="bg-white border border-gray-200 hover:border-blue-500 hover:shadow-md rounded-lg p-6 flex flex-col items-center justify-center transition-all duration-200 h-48">
-                <div className="p-3 bg-purple-50 rounded-full mb-4 group-hover:bg-purple-100 transition-colors duration-200">
-                  <FaUser size={30} className="text-purple-500" />
-                </div>
-                <h3 className="font-medium text-xl text-gray-800 group-hover:text-blue-600">Account Settings</h3>
-                <p className="text-md text-gray-500 text-center">Manage your profile</p>
-              </div>
-            </Link> */}
           </div>
         </div>
         

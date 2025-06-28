@@ -63,7 +63,7 @@ const OrderHistory = () => {
       fetchUser();
     }, [router]);
 
-  // Fetch orders
+  // Fetch orders using React Query
   const { data, error, isLoading } = useQuery({
     queryKey: ["orders"],
     queryFn: getOrders,
@@ -201,7 +201,7 @@ const OrderHistory = () => {
                       </p>
                     </div>
                     <Link
-                      href={`/orders/${order._id}`}
+                      href={`/user-dashboard/orders/${order._id}`}
                       className="flex items-center space-x-2 px-4 py-2 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-all duration-300 shadow-md hover:shadow-lg"
                     >
                       <FaEye />

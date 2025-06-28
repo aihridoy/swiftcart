@@ -70,6 +70,10 @@ const Navbar = async () => {
     navLinks.push({ name: "Dashboard", path: "/dashboard" });
   }
 
+  if (userSession?.user && userSession?.user?.role !== "admin") {
+    navLinks.push({ name: "My Dashboard", path: "/user-dashboard" });
+  }
+
   return (
     <nav className="bg-gray-800 relative">
       <div className="container mx-auto flex items-center justify-between py-4 px-6">

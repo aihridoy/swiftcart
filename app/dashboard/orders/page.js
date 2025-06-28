@@ -71,7 +71,7 @@ const OrderList = () => {
     fetchUser();
   }, [router]);
 
-  // Fetch orders with React Query
+  // Fetch orders 
   const { data, error, isLoading } = useQuery({
     queryKey: ["orders", currentPage],
     queryFn: () => getOrders({ page: currentPage, limit }),
@@ -316,7 +316,7 @@ const OrderList = () => {
                     <th className="p-2 md:p-4 text-left text-xs md:text-sm font-semibold text-gray-600">
                       <div className="flex items-center">
                         <FaUser className="mr-1 text-gray-500" />
-                        <span className="hidden xs:inline">Customer</span>
+                        <span className="xs:inline">Customer</span>
                       </div>
                     </th>
                     <th className="hidden md:table-cell p-2 md:p-4 text-left text-xs md:text-sm font-semibold text-gray-600">
@@ -334,13 +334,13 @@ const OrderList = () => {
                     <th className="p-2 md:p-4 text-left text-xs md:text-sm font-semibold text-gray-600">
                       <div className="flex items-center">
                         <FaDollarSign className="mr-1 text-gray-500" />
-                        <span className="hidden xs:inline">Total</span>
+                        <span className="xs:inline">Total</span>
                       </div>
                     </th>
                     <th className="p-2 md:p-4 text-left text-xs md:text-sm font-semibold text-gray-600">
                       <div className="flex items-center">
                         <FaBox className="mr-1 text-gray-500" />
-                        <span className="hidden xs:inline">Status</span>
+                        <span className="xs:inline">Status</span>
                       </div>
                     </th>
                     <th className="hidden md:table-cell p-2 md:p-4 text-left text-xs md:text-sm font-semibold text-gray-600">
