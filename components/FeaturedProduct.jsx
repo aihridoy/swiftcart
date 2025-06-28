@@ -8,7 +8,7 @@ import Image from "next/image";
 import { getProducts } from "@/actions/products";
 import { useRouter } from "next/navigation";
 import { session } from "@/actions/auth-utils";
-import { getWishlist, toggleWishlist } from "@/actions/wishlist";
+import { getWishlist, updateWishlist } from "@/actions/wishlist";
 import { addToCart, getCart } from "@/actions/cart-utils";
 
 const FeaturedSkeleton = () => (
@@ -149,7 +149,7 @@ const FeaturedProduct = () => {
 
   // Wishlist mutation
   const wishlistMutation = useMutation({
-    mutationFn: (productId) => toggleWishlist(productId),
+    mutationFn: ({ productId, action }) => updateWishlist(productId, action),
     onSuccess: () => {
       queryClient.invalidateQueries(["wishlist"]);
       toast.success(
