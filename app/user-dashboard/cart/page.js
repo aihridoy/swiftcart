@@ -295,7 +295,7 @@ const UserCart = () => {
   const paginatedItems = items.slice(startIndex, endIndex);
 
   return (
-    <div className="p-4 md:p-6 lg:p-8">
+    <div className="p-4 md:p-6 lg:p-8 mb-16 sm:mb-0 border">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="mb-6 md:mb-8">

@@ -135,7 +135,7 @@ const OrderHistory = () => {
   const paginatedOrders = orders.slice(startIndex, endIndex);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-100 via-blue-50 to-teal-50 py-8 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-gray-100 via-blue-50 to-teal-50 py-8 px-4 mb-12 sm:mb-0">
       {/* Main Content */}
       <div className="max-w-6xl mx-auto">
         {/* Orders Summary */}
