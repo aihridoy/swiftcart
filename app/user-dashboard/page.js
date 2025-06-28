@@ -303,7 +303,7 @@ const UserDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 mb-12 sm:mb-0">
       <div className="p-6 max-w-7xl mx-auto">
         {/* Enhanced Dashboard Header */}
         <div className="mb-10">

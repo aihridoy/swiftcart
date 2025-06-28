@@ -224,7 +224,7 @@ const OrderList = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 md:py-16">
+    <div className="container mx-auto px-4 py-8 md:py-16 mb-12 sm:mb-0">
       <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-6">
         <h1 className="text-2xl md:text-3xl font-bold flex items-center mb-4 md:mb-0">
           <FaShoppingCart className="mr-2 text-blue-600" />

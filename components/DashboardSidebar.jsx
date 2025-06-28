@@ -8,7 +8,7 @@ export default function DashboardSidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="fixed md:static bottom-0 left-0 w-full md:w-72 bg-gradient-to-b from-blue-50 to-indigo-100 shadow-xl h-16 md:h-full flex md:flex-col justify-between md:justify-start">
+    <aside className="fixed md:static bottom-0 left-0 w-full md:w-72 bg-gradient-to-b from-blue-50 to-indigo-100 shadow-xl h-16 md:h-full flex md:flex-col justify-between md:justify-start z-50">
       
       {/* Header/Logo Area */}
       <div className="hidden md:block p-6 border-b border-indigo-200/40">

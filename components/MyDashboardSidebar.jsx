@@ -2,13 +2,14 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { FiPlus, FiPackage, FiUsers, FiShoppingCart, FiLogOut, FiHome, FiUser } from "react-icons/fi";
+import { FiPackage, FiShoppingCart, FiLogOut, FiHome, FiUser } from "react-icons/fi";
+import { FaRegHeart } from 'react-icons/fa';
 
 export default function MyDashboardSidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="fixed md:static bottom-0 left-0 w-full md:w-72 bg-gradient-to-b from-blue-50 to-indigo-100 shadow-xl h-16 md:h-full flex md:flex-col justify-between md:justify-start">
+    <aside className="fixed md:static bottom-0 left-0 w-full md:w-72 bg-gradient-to-b from-blue-50 to-indigo-100 shadow-xl h-16 md:h-full flex md:flex-col justify-between md:justify-start z-50">
       
       {/* Header/Logo Area */}
       <div className="hidden md:block p-6 border-b border-indigo-200/40">
@@ -26,7 +27,7 @@ export default function MyDashboardSidebar() {
         <ul className="flex md:flex-col justify-around md:space-y-1 w-full">
           <NavItem 
             href="/user-dashboard/wishlist" 
-            icon={<FiPlus className="h-6 w-6" />} 
+            icon={<FaRegHeart className="h-6 w-6" />} 
             text="Wishlist" 
             isActive={pathname === "/user-dashboard/wishlist"}
             showText={false}
