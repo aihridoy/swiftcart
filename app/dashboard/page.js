@@ -23,6 +23,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import Link from "next/link";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, ArcElement, LineElement, PointElement, Title, Tooltip, Legend);
 
@@ -393,7 +394,7 @@ export default function DashboardPage() {
 // Enhanced Quick Action Button Component
 function QuickActionButton({ href, icon, text, description, color }) {
   return (
-    <a
+    <Link
       href={href}
       className={`${color} text-white rounded-2xl p-6 flex flex-col items-start justify-between h-32 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-[1.02] group`}
     >
@@ -411,7 +412,7 @@ function QuickActionButton({ href, icon, text, description, color }) {
         <h3 className="font-semibold text-lg mb-1">{text}</h3>
         <p className="text-white/80 text-sm">{description}</p>
       </div>
-    </a>
+    </Link>
   );
 }
 
