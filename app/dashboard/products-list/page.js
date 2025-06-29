@@ -78,7 +78,7 @@ const ProductsPage = () => {
     isLoading,
   } = useQuery({
     queryKey: ["products"],
-    queryFn: getProducts,
+    queryFn: () => getProducts({ sort: "-createdAt" }),
     enabled: !!user && !isLoadingSession,
     onError: (error) =>
       toast.error(`Error fetching products: ${error.message}`),
