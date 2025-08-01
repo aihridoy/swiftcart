@@ -83,7 +83,7 @@ const UserList = () => {
   // Fetch users with React Query
   const { data, error, isLoading } = useQuery({
     queryKey: ["users", currentPage],
-    queryFn: () => getUsers({ page: currentPage, limit }),
+    queryFn: () => getUsers({ page: currentPage, limit, search: searchTerm, role: roleFilter }),
     onError: (error) => {
       if (error.message.includes("Unauthorized")) {
         toast.error("Please log in to view users.", {
@@ -295,7 +295,7 @@ const UserList = () => {
           </div>
           <div>
             <p className="text-sm text-gray-500">Total Users</p>
-            <p className="text-xl font-bold">{users?.length}</p>
+            <p className="text-xl font-bold">{data?.users?.length}</p>
           </div>
         </div>
         <div className="bg-white p-4 rounded-lg shadow-md flex items-center">
