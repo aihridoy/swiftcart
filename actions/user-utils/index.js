@@ -1,13 +1,14 @@
 import api from "@/lib/axios";
 
 //get all users
-export const getUsers = async () => {
+export const getUsers = async ({ page = 1, limit = 10, search = "", role = "all" }) => {
   try {
     const response = await api.get("/users", {
+      params: { page, limit, search, role }, // Pass query parameters
       headers: {
-        'Cache-Control': 'no-cache, no-store, must-revalidate',
-        'Pragma': 'no-cache',
-        'Expires': '0'
+        "Cache-Control": "no-cache, no-store, must-revalidate",
+        Pragma: "no-cache",
+        Expires: "0",
       },
     });
     return response.data;
@@ -15,7 +16,7 @@ export const getUsers = async () => {
     console.error("Error fetching users:", error);
     throw error;
   }
-}
+};
 
 //get user by id
 export const getUserById = async (id) => {
