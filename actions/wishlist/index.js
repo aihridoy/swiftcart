@@ -32,6 +32,6 @@ export const updateWishlist = async (productId, action) => {
     );
     return response.data;
   } catch (error) {
-    throw new Error(error || "Failed to update wishlist");
+    throw new Error(error.response?.data?.error || error.message || "Failed to update wishlist");
   }
 };

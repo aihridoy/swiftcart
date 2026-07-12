@@ -199,7 +199,7 @@ const RelatedProducts = ({ relatedProducts, relatedError, relatedLoading }) => {
       }, 3000);
       return;
     }
-    if (wishlistLoading || wishlistMutation.isLoading) return;
+    if (wishlistLoading || wishlistMutation.isPending) return;
 
     const action = isInWishlist(productId) ? "remove" : "add";
     wishlistMutation.mutate({ productId, action });
@@ -227,7 +227,7 @@ const RelatedProducts = ({ relatedProducts, relatedError, relatedLoading }) => {
     if (isInCart(productId)) {
       router.push("/cart");
     } else {
-      if (cartMutation.isLoading) return;
+      if (cartMutation.isPending) return;
       cartMutation.mutate({ productId, quantity: 1 });
     }
   };
@@ -236,7 +236,8 @@ const RelatedProducts = ({ relatedProducts, relatedError, relatedLoading }) => {
   const products = relatedProducts?.products || [];
   const totalItems = products.length;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
+  const validCurrentPage = Math.min(Math.max(1, currentPage), totalPages || 1);
+  const startIndex = (validCurrentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const paginatedProducts = products.slice(startIndex, endIndex);
 
@@ -296,19 +297,19 @@ const RelatedProducts = ({ relatedProducts, relatedError, relatedLoading }) => {
                       </Link>
                       <button
                         onClick={(e) => handleWishlistToggle(product._id, e)}
-                        disabled={wishlistLoading || (wishlistMutation.isLoading && wishlistMutation.variables?.productId === product._id)}
+                        disabled={wishlistLoading || (wishlistMutation.isPending && wishlistMutation.variables?.productId === product._id)}
                         className={`text-white text-lg w-9 h-8 rounded-full flex items-center justify-center transition ${
                           isInWishlist(product._id)
                             ? "bg-red-500 hover:bg-red-600"
                             : "bg-primary hover:bg-gray-800"
                         } ${
-                          wishlistLoading || (wishlistMutation.isLoading && wishlistMutation.variables?.productId === product._id)
+                          wishlistLoading || (wishlistMutation.isPending && wishlistMutation.variables?.productId === product._id)
                             ? "opacity-50 cursor-not-allowed"
                             : ""
                         }`}
                         title={isInWishlist(product._id) ? "Remove from Wishlist" : "Add to Wishlist"}
                       >
-                        {wishlistMutation.isLoading && wishlistMutation.variables?.productId === product._id ? (
+                        {wishlistMutation.isPending && wishlistMutation.variables?.productId === product._id ? (
                           <svg
                             className="animate-spin h-5 w-5 text-white"
                             xmlns="http://www.w3.org/2000/svg"
@@ -375,16 +376,16 @@ const RelatedProducts = ({ relatedProducts, relatedError, relatedLoading }) => {
                     {/* Add to Cart Button */}
                     <button
                       onClick={(e) => handleCartAction(product._id, e)}
-                      disabled={cartLoading || (cartMutation.isLoading && cartMutation.variables?.productId === product._id)}
+                      disabled={cartLoading || (cartMutation.isPending && cartMutation.variables?.productId === product._id)}
                       className={`mt-auto block w-full py-2 text-center text-white rounded-lg font-medium uppercase transition ${
-                        cartMutation.isLoading && cartMutation.variables?.productId === product._id
+                        cartMutation.isPending && cartMutation.variables?.productId === product._id
                           ? "bg-red-400 cursor-not-allowed"
                           : productInCart
                           ? "bg-blue-500 hover:bg-blue-600"
                           : "bg-red-500 hover:bg-red-600"
                       }`}
                     >
-                      {cartMutation.isLoading && cartMutation.variables?.productId === product._id ? (
+                      {cartMutation.isPending && cartMutation.variables?.productId === product._id ? (
                         <svg
                           className="animate-spin h-5 w-5 text-white mx-auto"
                           xmlns="http://www.w3.org/2000/svg"
@@ -423,10 +424,10 @@ const RelatedProducts = ({ relatedProducts, relatedError, relatedLoading }) => {
               <nav className="flex items-center gap-2">
                 {/* Previous Button */}
                 <button
-                  onClick={() => handlePageChange(currentPage - 1)}
-                  disabled={currentPage === 1}
+                  onClick={() => handlePageChange(validCurrentPage - 1)}
+                  disabled={validCurrentPage === 1}
                   className={`px-4 py-2 text-sm font-medium rounded ${
-                    currentPage === 1
+                    validCurrentPage === 1
                       ? "bg-gray-200 text-gray-500 cursor-not-allowed"
                       : "bg-primary text-white hover:bg-primary-dark"
                   }`}
@@ -440,10 +441,12 @@ const RelatedProducts = ({ relatedProducts, relatedError, relatedLoading }) => {
                     key={page}
                     onClick={() => handlePageChange(page)}
                     className={`px-4 py-2 text-sm font-medium rounded ${
-                      currentPage === page
+                      validCurrentPage === page
                         ? "bg-primary text-white"
                         : "bg-gray-200 text-gray-700 hover:bg-gray-300"
                     }`}
+                    aria-label={`Page ${page}`}
+                    aria-current={validCurrentPage === page ? "page" : undefined}
                   >
                     {page}
                   </button>
@@ -451,10 +454,10 @@ const RelatedProducts = ({ relatedProducts, relatedError, relatedLoading }) => {
 
                 {/* Next Button */}
                 <button
-                  onClick={() => handlePageChange(currentPage + 1)}
-                  disabled={currentPage === totalPages}
+                  onClick={() => handlePageChange(validCurrentPage + 1)}
+                  disabled={validCurrentPage === totalPages}
                   className={`px-4 py-2 text-sm font-medium rounded ${
-                    currentPage === totalPages
+                    validCurrentPage === totalPages
                       ? "bg-gray-200 text-gray-500 cursor-not-allowed"
                       : "bg-primary text-white hover:bg-primary-dark"
                   }`}

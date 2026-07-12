@@ -3,6 +3,7 @@ import { session } from "@/actions/auth-utils";
 import { dbConnect } from "@/service/mongo";
 import { Order } from "@/models/order-model";
 import { Cart } from "@/models/cart-model";
+import { Product } from "@/models/product-model";
 
 export async function POST(request) {
   try {
@@ -12,36 +13,80 @@ export async function POST(request) {
     }
 
     const body = await request.json();
-    const { cartId, shippingDetails, subtotal, shipping, total } = body;
+    const { cartId, shippingDetails, paymentDetails } = body;
 
-    if (!cartId || !shippingDetails || !subtotal || !total) {
+    if (!cartId || !shippingDetails || !paymentDetails) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
     await dbConnect();
 
     // Find the cart to get the items
-    const cart = await Cart.findById(cartId);
+    const cart = await Cart.findById(cartId).populate("items.product");
     if (!cart || cart.user.toString() !== userSession.user.id) {
       return NextResponse.json({ error: "Cart not found" }, { status: 404 });
     }
 
+    if (cart.items.length === 0) {
+      return NextResponse.json({ error: "Cart is empty" }, { status: 400 });
+    }
+
+    // Verify stock is still available for every item - never trust client-submitted totals
+    for (const item of cart.items) {
+      if (
+        !item.product ||
+        item.product.availability !== "In Stock" ||
+        item.quantity > item.product.quantity
+      ) {
+        return NextResponse.json(
+          {
+            error: `${item.product?.title || "An item"} in your cart is no longer available in that quantity`,
+          },
+          { status: 400 }
+        );
+      }
+    }
+
+    // Recompute pricing server-side from the cart's own stored prices
+    const subtotal = cart.items.reduce(
+      (sum, item) => sum + item.price * item.quantity,
+      0
+    );
+    const shipping = 0;
+    const total = subtotal + shipping;
+
     // Create the order
     const order = new Order({
       user: userSession.user.id,
-      items: cart.items, // Copy items from the cart
+      items: cart.items.map((item) => ({
+        product: item.product._id,
+        quantity: item.quantity,
+        price: item.price,
+      })),
       shippingDetails,
+      paymentDetails,
       subtotal,
-      shipping: shipping || 0,
+      shipping,
       total,
       status: "Pending",
     });
 
     await order.save();
 
+    // Decrement stock for each purchased item
+    for (const item of cart.items) {
+      const remaining = Math.max(item.product.quantity - item.quantity, 0);
+      await Product.findByIdAndUpdate(item.product._id, {
+        quantity: remaining,
+        availability: remaining <= 0 ? "Out of Stock" : "In Stock",
+      });
+    }
+
     // Clear the cart by removing all items
     cart.items = [];
     await cart.save();
+
+    await order.populate("items.product");
 
     return NextResponse.json({ message: "Order placed successfully", order }, { status: 201 });
   } catch (error) {

@@ -516,7 +516,7 @@ export default function AddProduct() {
               <button
                 type="submit"
                 className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-medium px-6 py-2 sm:px-8 sm:py-3 rounded-lg shadow-md hover:shadow-lg transition-all hover:from-indigo-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 w-full sm:w-auto"
-                disabled={mutation.isLoading}
+                disabled={mutation.isPending}
               >
                 {mutation.isPending ? (
                   <span className="flex items-center justify-center">

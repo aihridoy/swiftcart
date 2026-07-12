@@ -15,7 +15,7 @@ export const addToCart = async (productId, quantity = 1) => {
     });
     return result.data;
   } catch (error) {
-    throw new Error(error.message);
+    throw new Error(error.response?.data?.error || error.message);
   }
 };
 
@@ -31,7 +31,7 @@ export const getCart = async () => {
     });
     return result.data; 
   } catch (error) {
-    throw new Error(error.message);
+    throw new Error(error.response?.data?.error || error.message);
   }
 };
 
@@ -48,7 +48,7 @@ export const removeFromCart = async (productId) => {
     });
     return result.data;
   } catch (error) {
-    throw new Error(error.message);
+    throw new Error(error.response?.data?.error || error.message);
   }
 };
 
@@ -71,7 +71,7 @@ export const updateCartQuantity = async (productId, quantity) => {
     );
     return result.data;
   } catch (error) {
-    throw new Error(error.message);
+    throw new Error(error.response?.data?.error || error.message);
   }
 };
 
@@ -91,6 +91,6 @@ export const getCartItemById = async (cartId) => {
     });
     return result.data;
   } catch (error) {
-    throw new Error(error.message);
+    throw new Error(error.response?.data?.error || error.message);
   }
 };

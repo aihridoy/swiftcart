@@ -144,6 +144,8 @@ const ProductCard = ({ product, wishlistData, cartData, queryClient }) => {
     (item) => item._id.toString() === product._id
   );
 
+  const outOfStock = product.availability !== "In Stock";
+
   return (
     <div className="bg-white shadow-md rounded-lg overflow-hidden h-[400px] w-full flex flex-col group">
       <div className="relative w-full h-48">
@@ -249,16 +251,20 @@ const ProductCard = ({ product, wishlistData, cartData, queryClient }) => {
 
         <button
           onClick={handleCartAction}
-          disabled={cartMutation.isPending}
+          disabled={outOfStock || cartMutation.isPending}
           className={`mt-auto block w-full py-2 text-center text-white rounded-lg font-medium uppercase transition ${
-            cartMutation.isPending
+            outOfStock
+              ? "bg-gray-300 cursor-not-allowed"
+              : cartMutation.isPending
               ? "bg-red-400 cursor-not-allowed"
               : isInCart
               ? "bg-blue-500 hover:bg-blue-600"
               : "bg-red-500 hover:bg-red-600"
           }`}
         >
-          {cartMutation.isPending ? (
+          {outOfStock ? (
+            "Out of Stock"
+          ) : cartMutation.isPending ? (
             <svg
               className="animate-spin h-5 w-5 text-white mx-auto"
               xmlns="http://www.w3.org/2000/svg"

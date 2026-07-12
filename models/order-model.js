@@ -36,6 +36,11 @@ const orderSchema = new mongoose.Schema(
       phone: { type: String, required: true },
       email: { type: String, required: true },
     },
+    paymentDetails: {
+      paymentMethod: { type: String, required: true },
+      cardLast4: { type: String, required: true },
+      cardholderName: { type: String, required: true },
+    },
     subtotal: {
       type: Number,
       required: true,

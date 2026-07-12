@@ -104,7 +104,7 @@ const Checkout = () => {
         <table style="width: 100%; border-collapse: collapse;">
           <thead>
             <tr style="background-color: #e6f0fa;">
-              <th style="border: 1px solid #ddd; padding: 8px;">Product ID</th>
+              <th style="border: 1px solid #ddd; padding: 8px;">Product</th>
               <th style="border: 1px solid #ddd; padding: 8px;">Quantity</th>
               <th style="border: 1px solid #ddd; padding: 8px;">Total</th>
             </tr>
@@ -114,7 +114,7 @@ const Checkout = () => {
               ?.map(
                 (item) => `
                   <tr>
-                    <td style="border: 1px solid #ddd; padding: 8px;">${item?.product}</td>
+                    <td style="border: 1px solid #ddd; padding: 8px;">${item?.product?.title || "Product"}</td>
                     <td style="border: 1px solid #ddd; padding: 8px;">${item?.quantity}</td>
                     <td style="border: 1px solid #ddd; padding: 8px;">$${(item?.price * item?.quantity).toFixed(2)}</td>
                   </tr>

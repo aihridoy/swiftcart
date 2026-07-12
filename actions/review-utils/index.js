@@ -16,7 +16,7 @@ export async function addReview({ productId, review, rating }) {
     });
     return response.data;
   } catch (error) {
-    throw new Error(error || "Failed to add review");
+    throw new Error(error.response?.data?.error || error.message || "Failed to add review");
   }
 }
 
@@ -32,6 +32,6 @@ export async function getReviewsByProductId(productId) {
     });
     return response.data.reviews;
   } catch (error) {
-    throw new Error(error || "Failed to fetch reviews");
+    throw new Error(error.response?.data?.error || error.message || "Failed to fetch reviews");
   }
 }

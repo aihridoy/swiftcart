@@ -393,7 +393,7 @@ const OrderList = () => {
                               ? "bg-green-100 text-green-800"
                               : "bg-red-100 text-red-800"
                           }`}
-                          disabled={mutation.isLoading}
+                          disabled={mutation.isPending}
                         >
                           <option value="Pending">Pending</option>
                           <option value="Processing">Processing</option>

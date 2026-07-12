@@ -274,7 +274,7 @@ const ProductDetails = ({ params, initialProduct }) => {
       return;
     }
 
-    const maxQuantity = product.inStock !== undefined ? product.inStock : 10;
+    const maxQuantity = product.quantity !== undefined ? product.quantity : 10;
     if (quantity > maxQuantity) {
       toast.warn(`Cannot add more than ${maxQuantity} items.`, {
         position: "top-right",
@@ -304,7 +304,9 @@ const ProductDetails = ({ params, initialProduct }) => {
       return;
     }
 
-    if (!reviewText || rating < 1) {
+    const trimmedReview = reviewText.trim();
+
+    if (!trimmedReview || rating < 1) {
       toast.warn("Please provide a review and rating.", {
         position: "top-right",
         autoClose: 3000,
@@ -312,8 +314,16 @@ const ProductDetails = ({ params, initialProduct }) => {
       return;
     }
 
+    if (trimmedReview.length < 3 || trimmedReview.length > 500) {
+      toast.warn("Review must be between 3 and 500 characters.", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+      return;
+    }
+
     if (reviewMutation.isPending) return;
-    reviewMutation.mutate({ productId: id, review: reviewText, rating });
+    reviewMutation.mutate({ productId: id, review: trimmedReview, rating });
   };
 
   // Handle star rating click
@@ -345,7 +355,7 @@ const ProductDetails = ({ params, initialProduct }) => {
       return;
     }
 
-    const maxQuantity = product.inStock !== undefined ? product.inStock : 10;
+    const maxQuantity = product.quantity !== undefined ? product.quantity : 10;
     const newQuantity = quantity + 1;
 
     if (newQuantity > maxQuantity) {
@@ -403,7 +413,7 @@ const ProductDetails = ({ params, initialProduct }) => {
     ? Number((reviews.reduce((sum, review) => sum + review.rating, 0) / totalReviews).toFixed(1))
     : 0;
 
-  const maxQuantity = product.inStock !== undefined ? product.inStock : 10;
+  const maxQuantity = product.quantity !== undefined ? product.quantity : 10;
 
   return (
     <>
@@ -495,7 +505,7 @@ const ProductDetails = ({ params, initialProduct }) => {
               }
               className={`border px-8 py-2 font-medium rounded uppercase flex items-center gap-2 transition ${
                 cartMutation.isPending ||
-                updateCartQuantityMutation.isLoading ||
+                updateCartQuantityMutation.isPending ||
                 cartLoading ||
                 product.availability !== "In Stock"
                   ? "bg-primary opacity-50 cursor-not-allowed"
@@ -626,7 +636,7 @@ const ProductDetails = ({ params, initialProduct }) => {
                 type="submit"
                 disabled={reviewMutation.isPending}
                 className={`bg-primary text-white px-6 py-2 rounded-lg font-medium hover:bg-primary-dark transition ${
-                  reviewMutation.isLoading ? "opacity-50 cursor-not-allowed" : ""
+                  reviewMutation.isPending ? "opacity-50 cursor-not-allowed" : ""
                 }`}
               >
                 {reviewMutation.isPending ? (
