@@ -174,7 +174,7 @@ export default function DashboardPage() {
 
   if (isLoading) {
     return (
-      <div className="p-6 max-w-7xl mx-auto">
+      <div className="container py-6">
         <Skeleton className="h-8 w-64 mb-8" />
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           {Array.from({ length: 4 }).map((_, i) => (
@@ -194,7 +194,7 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="p-6 max-w-7xl mx-auto">
+    <div className="container py-6">
       <div className="mb-8">
         <h1 className="text-2xl font-semibold text-gray-800 uppercase">Dashboard</h1>
         <p className="text-gray-600 mt-1">

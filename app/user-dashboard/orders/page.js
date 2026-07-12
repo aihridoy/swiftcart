@@ -94,7 +94,7 @@ const OrderHistory = () => {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-50 py-8 px-4">
-        <div className="max-w-6xl mx-auto space-y-4">
+        <div className="container space-y-4">
           {Array.from({ length: 3 }).map((_, index) => (
             <SkeletonOrderItem key={index} />
           ))}
@@ -108,13 +108,13 @@ const OrderHistory = () => {
     return (
       <div className="min-h-screen bg-gray-50 py-8 px-4">
         <div className="sticky top-0 z-10 bg-white/80 backdrop-blur-md shadow-md p-6 rounded-b-xl mb-6">
-          <div className="flex items-center justify-between max-w-6xl mx-auto">
+          <div className="flex items-center justify-between container">
             <h1 className="text-2xl font-bold text-gray-800">
               {userSession?.user?.role === "admin" ? "Users Order History" : "Your Order History"}
             </h1>
           </div>
         </div>
-        <div className="max-w-6xl mx-auto text-center bg-white/90 backdrop-blur-lg rounded-xl shadow-lg p-6">
+        <div className="container text-center bg-white/90 backdrop-blur-lg rounded-xl shadow-lg p-6">
           <p className="text-red-600 text-lg">Failed to load orders. Please try again later.</p>
         </div>
       </div>
@@ -137,7 +137,7 @@ const OrderHistory = () => {
   return (
     <div className="min-h-screen bg-gray-50 py-8 px-4 mb-12 sm:mb-0">
       {/* Main Content */}
-      <div className="max-w-6xl mx-auto">
+      <div className="container">
         {/* Orders Summary */}
         <div className="bg-white/90 backdrop-blur-lg rounded-xl shadow-lg p-6 mb-6 flex items-center justify-between">
           <div className="flex items-center space-x-3">

@@ -119,7 +119,7 @@ export default function UserProfile() {
 
   return (
     <div className="w-full min-h-screen bg-gray-100 p-6 mb-12 sm:mb-0">
-      <div className="max-w-full mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
+      <div className="container bg-white shadow-lg rounded-lg overflow-hidden">
         <div className="bg-primary p-4 sm:p-8 text-white">
           <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-6">
             <div className="relative w-20 h-20 sm:w-32 sm:h-32 rounded-full overflow-hidden bg-gray-100 border-4 border-white">

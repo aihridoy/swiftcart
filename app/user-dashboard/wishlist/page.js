@@ -221,7 +221,7 @@ const UserWishlist = () => {
   if (isLoading || cartLoading) {
     return (
       <div className="p-4 md:p-6 lg:p-8">
-        <div className="max-w-7xl mx-auto">
+        <div className="container">
           <div className="mb-6 md:mb-8">
             <div className="flex items-center justify-between flex-wrap gap-4">
               <div>
@@ -267,7 +267,7 @@ const UserWishlist = () => {
   if (error || cartError) {
     return (
       <div className="p-4 md:p-6 lg:p-8">
-        <div className="max-w-7xl mx-auto">
+        <div className="container">
           <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
             <div className="text-red-600 mb-2">
               <AiOutlineHeart className="w-12 h-12 mx-auto mb-4" />
@@ -288,7 +288,7 @@ const UserWishlist = () => {
 
   return (
     <div className="p-4 md:p-6 lg:p-8">
-      <div className="max-w-7xl mx-auto">
+      <div className="container">
         {/* Header */}
         <div className="mb-6 md:mb-8">
           <div className="flex items-center justify-between flex-wrap gap-4">

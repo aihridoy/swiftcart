@@ -132,7 +132,7 @@ export default function AddProduct() {
 
   return (
     <div className="min-h-screen bg-gray-50 py-8 sm:py-12 mb-16 md:mb-0">
-      <div className="max-w-full sm:max-w-6xl mx-auto px-2 sm:px-4">
+      <div className="container">
         <div className="bg-white rounded-2xl shadow-sm overflow-hidden border border-gray-100">
           <div className="flex flex-col sm:flex-row items-center justify-between bg-primary p-4 sm:p-6">
             <h1 className="text-2xl sm:text-3xl font-bold text-white mb-4 sm:mb-0">Add New Product</h1>
