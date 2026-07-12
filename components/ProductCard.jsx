@@ -26,6 +26,7 @@ const ProductCard = ({
 
   // Check if the product is in the cart
   const productInCart = isInCart(product._id);
+  const outOfStock = product.availability !== "In Stock";
 
   // Fetch reviews for this product
   const { data: reviewsData, error: reviewsError, isLoading: reviewsLoading } = useQuery({
@@ -161,19 +162,24 @@ const ProductCard = ({
         <button
           onClick={(e) => handleCartAction(product._id, e)}
           disabled={
+            outOfStock ||
             cartLoading ||
             (cartMutation.isPending && cartMutation.variables?.productId === product._id)
           }
           className={`mt-auto block w-full py-2 text-center text-white rounded-lg font-medium uppercase transition ${
-            cartLoading ||
-            (cartMutation.isPending && cartMutation.variables?.productId === product._id)
+            outOfStock
+              ? "bg-gray-300 cursor-not-allowed"
+              : cartLoading ||
+                (cartMutation.isPending && cartMutation.variables?.productId === product._id)
               ? "bg-red-400 cursor-not-allowed"
               : productInCart
               ? "bg-blue-500 hover:bg-blue-600"
               : "bg-red-500 hover:bg-red-600"
           }`}
         >
-          {cartMutation.isPending && cartMutation.variables?.productId === product._id ? (
+          {outOfStock ? (
+            "Out of Stock"
+          ) : cartMutation.isPending && cartMutation.variables?.productId === product._id ? (
             <svg
               className="animate-spin h-5 w-5 text-white mx-auto"
               xmlns="http://www.w3.org/2000/svg"

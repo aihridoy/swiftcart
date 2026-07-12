@@ -142,7 +142,7 @@ const CartPage = () => {
       }, 3000);
       return;
     }
-    if (removeMutation.isLoading) return;
+    if (removeMutation.isPending) return;
     removeMutation.mutate(productId);
   };
 
@@ -171,7 +171,7 @@ const CartPage = () => {
       return;
     }
 
-    if (updateQuantityMutation.isLoading) return;
+    if (updateQuantityMutation.isPending) return;
     updateQuantityMutation.mutate({ productId, quantity: newQuantity });
   };
 
@@ -191,7 +191,7 @@ const CartPage = () => {
 
     const newQuantity = currentQuantity > 1 ? currentQuantity - 1 : 1;
     if (newQuantity === currentQuantity) return;
-    if (updateQuantityMutation.isLoading) return;
+    if (updateQuantityMutation.isPending) return;
     updateQuantityMutation.mutate({ productId, quantity: newQuantity });
   };
 
@@ -368,7 +368,7 @@ const CartPage = () => {
                               }
                               disabled={
                                 item.quantity === 1 ||
-                                (updateQuantityMutation.isLoading &&
+                                (updateQuantityMutation.isPending &&
                                   updateQuantityMutation.variables?.productId === item.product._id)
                               }
                               className={`w-8 h-8 flex items-center justify-center rounded-full transition-all duration-300 ${
@@ -383,7 +383,7 @@ const CartPage = () => {
                               <FaMinus />
                             </button>
                             <div className="w-12 text-center py-2 bg-white border border-gray-200 rounded-lg">
-                              {updateQuantityMutation.isLoading &&
+                              {updateQuantityMutation.isPending &&
                               updateQuantityMutation.variables?.productId === item.product._id ? (
                                 <FaSpinner className="animate-spin mx-auto" />
                               ) : (
@@ -395,19 +395,19 @@ const CartPage = () => {
                                 handleIncreaseQuantity(
                                   item.product._id,
                                   item.quantity,
-                                  item.product.inStock,
+                                  item.product.quantity,
                                   e
                                 )
                               }
                               disabled={
-                                (item.product.inStock !== undefined &&
-                                  item.quantity >= item.product.inStock) ||
-                                (updateQuantityMutation.isLoading &&
+                                (item.product.quantity !== undefined &&
+                                  item.quantity >= item.product.quantity) ||
+                                (updateQuantityMutation.isPending &&
                                   updateQuantityMutation.variables?.productId === item.product._id)
                               }
                               className={`w-8 h-8 flex items-center justify-center rounded-full transition-all duration-300 ${
-                                (item.product.inStock !== undefined &&
-                                  item.quantity >= item.product.inStock) ||
+                                (item.product.quantity !== undefined &&
+                                  item.quantity >= item.product.quantity) ||
                                 (updateQuantityMutation.isPending &&
                                   updateQuantityMutation.variables?.productId === item.product._id)
                                   ? "bg-gray-200 text-gray-400 cursor-not-allowed"
@@ -421,11 +421,11 @@ const CartPage = () => {
                           <button
                             onClick={(e) => handleRemoveFromCart(item.product._id, e)}
                             disabled={
-                              removeMutation.isLoading &&
+                              removeMutation.isPending &&
                               removeMutation.variables === item.product._id
                             }
                             className={`p-2 rounded-full transition-all duration-300 ${
-                              removeMutation.isLoading &&
+                              removeMutation.isPending &&
                               removeMutation.variables === item.product._id
                                 ? "bg-gray-200 text-gray-400 cursor-not-allowed"
                                 : "bg-red-100 text-red-600 hover:bg-red-200 hover:shadow-md"

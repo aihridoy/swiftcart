@@ -124,7 +124,7 @@ const UserCart = () => {
       }, 3000);
       return;
     }
-    if (removeMutation.isLoading) return;
+    if (removeMutation.isPending) return;
     removeMutation.mutate(productId);
   };
 
@@ -158,7 +158,7 @@ const UserCart = () => {
       return;
     }
 
-    if (updateQuantityMutation.isLoading) return;
+    if (updateQuantityMutation.isPending) return;
     updateQuantityMutation.mutate({ productId, quantity: newQuantity });
   };
 
@@ -178,7 +178,7 @@ const UserCart = () => {
 
     const newQuantity = currentQuantity > 1 ? currentQuantity - 1 : 1;
     if (newQuantity === currentQuantity) return;
-    if (updateQuantityMutation.isLoading) return;
+    if (updateQuantityMutation.isPending) return;
     updateQuantityMutation.mutate({ productId, quantity: newQuantity });
   };
 
@@ -415,7 +415,7 @@ const UserCart = () => {
                           }
                           disabled={
                             item.quantity <= 1 ||
-                            updateQuantityMutation.isLoading
+                            updateQuantityMutation.isPending
                           }
                           className="p-2 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                         >
@@ -433,7 +433,7 @@ const UserCart = () => {
                               e
                             )
                           }
-                          disabled={updateQuantityMutation.isLoading}
+                          disabled={updateQuantityMutation.isPending}
                           className="p-2 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                         >
                           <BsPlus className="w-3 h-3" />
@@ -454,7 +454,7 @@ const UserCart = () => {
                     {/* Remove Button */}
                     <button
                       onClick={(e) => handleRemoveFromCart(item.product._id, e)}
-                      disabled={removeMutation.isLoading}
+                      disabled={removeMutation.isPending}
                       className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50"
                       title="Remove from cart"
                     >
@@ -477,7 +477,7 @@ const UserCart = () => {
                           }
                           disabled={
                             item.quantity <= 1 ||
-                            updateQuantityMutation.isLoading
+                            updateQuantityMutation.isPending
                           }
                           className="p-1 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                         >
@@ -495,7 +495,7 @@ const UserCart = () => {
                               e
                             )
                           }
-                          disabled={updateQuantityMutation.isLoading}
+                          disabled={updateQuantityMutation.isPending}
                           className="p-1 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                         >
                           <BsPlus className="w-3 h-3" />
@@ -523,7 +523,7 @@ const UserCart = () => {
                         onClick={(e) =>
                           handleRemoveFromCart(item.product._id, e)
                         }
-                        disabled={removeMutation.isLoading}
+                        disabled={removeMutation.isPending}
                         className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50"
                         title="Remove from cart"
                       >

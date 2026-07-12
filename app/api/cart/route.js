@@ -22,6 +22,10 @@ export async function POST(request) {
       return NextResponse.json({ error: "Product not found" }, { status: 404 });
     }
 
+    if (product.availability !== "In Stock") {
+      return NextResponse.json({ error: "Product is out of stock" }, { status: 400 });
+    }
+
     // Find or create cart for the user
     let cart = await Cart.findOne({ user: userSession.user.id });
     if (!cart) {
@@ -33,9 +37,20 @@ export async function POST(request) {
       (item) => item.product.toString() === productId
     );
 
+    const existingQuantity = itemIndex > -1 ? cart.items[itemIndex].quantity : 0;
+    const newQuantity = existingQuantity + quantity;
+
+    if (newQuantity > product.quantity) {
+      return NextResponse.json(
+        { error: `Only ${product.quantity} left in stock` },
+        { status: 400 }
+      );
+    }
+
     if (itemIndex > -1) {
       // Update quantity if product exists
-      cart.items[itemIndex].quantity += quantity;
+      cart.items[itemIndex].quantity = newQuantity;
+      cart.items[itemIndex].price = product.price;
     } else {
       // Add new product to cart
       cart.items.push({
@@ -158,8 +173,21 @@ export async function PUT(request) {
       );
     }
 
+    const product = await Product.findById(productId);
+    if (!product) {
+      return NextResponse.json({ error: "Product not found" }, { status: 404 });
+    }
+
+    if (quantity > product.quantity) {
+      return NextResponse.json(
+        { error: `Only ${product.quantity} left in stock` },
+        { status: 400 }
+      );
+    }
+
     // Update the quantity
     cart.items[itemIndex].quantity = quantity;
+    cart.items[itemIndex].price = product.price;
 
     await cart.save();
 

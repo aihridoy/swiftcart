@@ -270,7 +270,8 @@ const Wishlist = () => {
   // Pagination logic
   const totalItems = wishlist.length;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
+  const validCurrentPage = Math.min(Math.max(1, currentPage), totalPages || 1);
+  const startIndex = (validCurrentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const paginatedWishlist = wishlist.slice(startIndex, endIndex);
 
@@ -453,10 +454,10 @@ const Wishlist = () => {
               <div className="flex justify-center mt-8">
                 <nav className="flex items-center gap-2">
                   <button
-                    onClick={() => handlePageChange(currentPage - 1)}
-                    disabled={currentPage === 1}
+                    onClick={() => handlePageChange(validCurrentPage - 1)}
+                    disabled={validCurrentPage === 1}
                     className={`px-4 py-2 rounded-lg font-semibold flex items-center space-x-2 ${
-                      currentPage === 1
+                      validCurrentPage === 1
                         ? "bg-gray-200 text-gray-500 cursor-not-allowed"
                         : "bg-blue-600 text-white hover:bg-blue-700"
                     } transition-all duration-300 shadow-md`}
@@ -472,21 +473,21 @@ const Wishlist = () => {
                       key={page}
                       onClick={() => handlePageChange(page)}
                       className={`px-4 py-2 rounded-lg font-semibold ${
-                        currentPage === page
+                        validCurrentPage === page
                           ? "bg-blue-600 text-white shadow-lg"
                           : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                       } transition-all duration-300`}
                       aria-label={`Page ${page}`}
-                      aria-current={currentPage === page ? "page" : undefined}
+                      aria-current={validCurrentPage === page ? "page" : undefined}
                     >
                       {page}
                     </button>
                   ))}
                   <button
-                    onClick={() => handlePageChange(currentPage + 1)}
-                    disabled={currentPage === totalPages}
+                    onClick={() => handlePageChange(validCurrentPage + 1)}
+                    disabled={validCurrentPage === totalPages}
                     className={`px-4 py-2 rounded-lg font-semibold flex items-center space-x-2 ${
-                      currentPage === totalPages
+                      validCurrentPage === totalPages
                         ? "bg-gray-200 text-gray-500 cursor-not-allowed"
                         : "bg-blue-600 text-white hover:bg-blue-700"
                     } transition-all duration-300 shadow-md`}

@@ -8,7 +8,7 @@ export const registerUser = async (userData) => {
     console.error("Error registering user:", error);
     return {
       success: false,
-      message: error.message || "An unexpected error occurred",
+      message: error.response?.data?.error || error.message || "An unexpected error occurred",
     };
   }
 };

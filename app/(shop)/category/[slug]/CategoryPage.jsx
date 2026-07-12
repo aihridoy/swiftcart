@@ -147,7 +147,7 @@ const CategoryPage = ({ params, initialProducts }) => {
       setTimeout(() => router.push("/login"), 3000);
       return;
     }
-    if (wishlistLoading || wishlistMutation.isLoading) return;
+    if (wishlistLoading || wishlistMutation.isPending) return;
     const action = wishlistData?.wishlist?.some((item) => item._id === productId) ? "remove" : "add";
     wishlistMutation.mutate({ productId, action });
   };
@@ -167,7 +167,7 @@ const CategoryPage = ({ params, initialProducts }) => {
     if (isInCart(productId)) {
       router.push("/cart");
     } else {
-      if (cartMutation.isLoading) return;
+      if (cartMutation.isPending) return;
       cartMutation.mutate({ productId, quantity: 1 });
     }
   };

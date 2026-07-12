@@ -212,7 +212,7 @@ const Products = ({ initialProducts }) => {
 
     // Apply in-stock filter
     if (filters.inStock) {
-      result = result.filter((product) => product.inStock !== false);
+      result = result.filter((product) => product.availability === "In Stock");
     }
 
     // Apply sorting
@@ -261,7 +261,7 @@ const Products = ({ initialProducts }) => {
     if (isInCart(productId)) {
       router.push("/cart");
     } else {
-      if (cartMutation.isLoading) return;
+      if (cartMutation.isPending) return;
       cartMutation.mutate({ productId, quantity: 1 });
     }
   };
