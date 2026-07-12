@@ -136,26 +136,39 @@ const Checkout = () => {
         <p style="color: #0087de;">Thank you for shopping with SwiftCart!</p>
         <p style="color: #0087de;">Contact us: <a href="mailto:support@swiftcart.com">support@swiftcart.com</a></p>
       `;
-      // Send confirmation email
-      await sendEmail({
-        to: orderResponse?.order?.shippingDetails?.email,
-        subject: `SwiftCart Order Confirmation - ${orderResponse?.order?._id}`,
-        html: emailHtml,
-      });
-      return orderResponse;
+      // Send confirmation email - failure here shouldn't fail the whole
+      // order, the order is already placed at this point.
+      let emailSent = true;
+      try {
+        const emailResult = await sendEmail({
+          to: orderResponse?.order?.shippingDetails?.email,
+          subject: `SwiftCart Order Confirmation - ${orderResponse?.order?._id}`,
+          html: emailHtml,
+        });
+        emailSent = !!emailResult?.success;
+      } catch (emailError) {
+        console.error("Error sending confirmation email:", emailError);
+        emailSent = false;
+      }
+      return { ...orderResponse, emailSent };
     },
     onSuccess: (data) => {
-      toast.success("Order placed successfully and confirmation email sent!", {
-        position: "top-right",
-        autoClose: 3000,
-      });
+      toast.success(
+        data?.emailSent
+          ? "Order placed successfully and confirmation email sent!"
+          : "Order placed successfully! We couldn't send a confirmation email, but your order is confirmed.",
+        {
+          position: "top-right",
+          autoClose: 3000,
+        }
+      );
       // Redirect to an order confirmation page or homepage
       setTimeout(() => {
         router.push("/");
       }, 3000);
     },
     onError: (error) => {
-      toast.error(`Error placing order or sending email: ${error?.message}`, {
+      toast.error(`Error placing order: ${error?.message}`, {
         position: "top-right",
         autoClose: 3000,
       });

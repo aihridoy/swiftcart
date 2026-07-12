@@ -52,6 +52,14 @@ export const POST = async (req) => {
       html: htmlContent,
     });
 
+    if (emailResponse.error) {
+      console.error("Resend rejected password reset email:", emailResponse.error);
+      return new Response(
+        JSON.stringify({ success: false, error: emailResponse.error.message }),
+        { status: 502, headers: { "Content-Type": "application/json" } }
+      );
+    }
+
     return new Response(
       JSON.stringify({ success: true, message: "Password reset email sent" }),
       { status: 200, headers: { "Content-Type": "application/json" } }
