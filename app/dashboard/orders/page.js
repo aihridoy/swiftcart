@@ -98,13 +98,18 @@ const OrderList = () => {
   // Mutation for updating order status
   const mutation = useMutation({
     mutationFn: updateOrderStatus,
-    onSuccess: () => {
+    onSuccess: (data) => {
       // Refetch orders to update the UI
       queryClient.invalidateQueries(["orders", currentPage]);
-      toast.success("Order status updated successfully", {
-        position: "top-right",
-        autoClose: 3000,
-      });
+      toast.success(
+        data?.emailSent
+          ? "Order status updated and customer notified by email"
+          : "Order status updated, but we couldn't email the customer",
+        {
+          position: "top-right",
+          autoClose: 3000,
+        }
+      );
     },
     onError: (error) => {
       toast.error(`Failed to update order: ${error.message}`, {

@@ -8,7 +8,6 @@ import { toast } from "react-toastify";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { getCartItemById } from "@/actions/cart-utils";
-import { sendEmail } from "@/actions/contact";
 import { DetailSkeleton } from "@/components/skeletons";
 
 const Checkout = () => {
@@ -72,86 +71,10 @@ const Checkout = () => {
     }
   }, [cartId, sessionStatus, refetch]);
 
-  // Mutation to create an order and send email
+  // Mutation to create an order - confirmation email is sent server-side
+  // in POST /api/orders, to the logged-in account's email address
   const orderMutation = useMutation({
-    mutationFn: async (orderData) => {
-      const orderResponse = await createOrder(orderData);
-      // Prepare email content
-      const emailHtml = `
-        <h1 style="color: #0087de;">SwiftCart Order Confirmation</h1>
-        <h2>Order Overview</h2>
-        <p><strong>Order ID:</strong> ${orderResponse?.order?._id}</p>
-        <p><strong>Placed on:</strong> ${new Date(orderResponse?.order?.createdAt).toLocaleDateString()}</p>
-        <p><strong>Status:</strong> ${orderResponse?.order?.status}</p>
-        
-        <h2>Shipping Details</h2>
-        <p><strong>Name:</strong> ${orderResponse?.order?.shippingDetails?.firstName} ${orderResponse?.order?.shippingDetails?.lastName}</p>
-        ${
-          orderResponse?.order?.shippingDetails?.company
-            ? `<p><strong>Company:</strong> ${orderResponse.order.shippingDetails.company}</p>`
-            : ""
-        }
-        <p><strong>Address:</strong> ${orderResponse?.order?.shippingDetails?.address}</p>
-        <p><strong>City, Country:</strong> ${orderResponse?.order?.shippingDetails?.city}, ${orderResponse?.order?.shippingDetails?.country}</p>
-        <p><strong>Phone:</strong> ${orderResponse?.order?.shippingDetails?.phone}</p>
-        <p><strong>Email:</strong> ${orderResponse?.order?.shippingDetails?.email}</p>
-        
-        <h2>Payment Information</h2>
-        <p><strong>Payment Method:</strong> ${orderResponse?.order?.paymentDetails?.paymentMethod?.toUpperCase()}</p>
-        <p><strong>Card:</strong> **** **** **** ${orderResponse?.order?.paymentDetails?.cardLast4}</p>
-        
-        <h2>Items</h2>
-        <table style="width: 100%; border-collapse: collapse;">
-          <thead>
-            <tr style="background-color: #e6f0fa;">
-              <th style="border: 1px solid #ddd; padding: 8px;">Product</th>
-              <th style="border: 1px solid #ddd; padding: 8px;">Quantity</th>
-              <th style="border: 1px solid #ddd; padding: 8px;">Total</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${orderResponse?.order?.items
-              ?.map(
-                (item) => `
-                  <tr>
-                    <td style="border: 1px solid #ddd; padding: 8px;">${item?.product?.title || "Product"}</td>
-                    <td style="border: 1px solid #ddd; padding: 8px;">${item?.quantity}</td>
-                    <td style="border: 1px solid #ddd; padding: 8px;">$${(item?.price * item?.quantity).toFixed(2)}</td>
-                  </tr>
-                `
-              )
-              .join("")}
-          </tbody>
-        </table>
-        
-        <h2>Order Summary</h2>
-        <p><strong>Subtotal:</strong> $${orderResponse?.order?.subtotal?.toFixed(2)}</p>
-        <p><strong>Shipping:</strong> ${
-          orderResponse?.order?.shipping === 0
-            ? "Free"
-            : `$${orderResponse?.order?.shipping?.toFixed(2)}`
-        }</p>
-        <p><strong>Total:</strong> $${orderResponse?.order?.total?.toFixed(2)}</p>
-        
-        <p style="color: #0087de;">Thank you for shopping with SwiftCart!</p>
-        <p style="color: #0087de;">Contact us: <a href="mailto:support@swiftcart.com">support@swiftcart.com</a></p>
-      `;
-      // Send confirmation email - failure here shouldn't fail the whole
-      // order, the order is already placed at this point.
-      let emailSent = true;
-      try {
-        const emailResult = await sendEmail({
-          to: orderResponse?.order?.shippingDetails?.email,
-          subject: `SwiftCart Order Confirmation - ${orderResponse?.order?._id}`,
-          html: emailHtml,
-        });
-        emailSent = !!emailResult?.success;
-      } catch (emailError) {
-        console.error("Error sending confirmation email:", emailError);
-        emailSent = false;
-      }
-      return { ...orderResponse, emailSent };
-    },
+    mutationFn: (orderData) => createOrder(orderData),
     onSuccess: (data) => {
       toast.success(
         data?.emailSent
