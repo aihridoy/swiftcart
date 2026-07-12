@@ -302,7 +302,7 @@ const UserCart = () => {
           <div className="flex items-center justify-between flex-wrap gap-4">
             <div>
               <h1 className="text-2xl md:text-3xl font-bold text-gray-900 flex items-center gap-2">
-                <BsCart3 className="w-7 h-7 text-blue-600" />
+                <BsCart3 className="w-7 h-7 text-primary" />
                 Shopping Cart
               </h1>
               <p className="text-gray-600 mt-1">
@@ -333,7 +333,7 @@ const UserCart = () => {
             </p>
             <button
               onClick={() => router.push("/products")}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors"
+              className="bg-primary hover:bg-primary/90 text-white px-6 py-3 rounded-lg font-medium transition-colors"
             >
               Browse Products
             </button>
@@ -558,7 +558,7 @@ const UserCart = () => {
                           disabled={page === "..."}
                           className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
                             page === currentPage
-                              ? "bg-blue-600 text-white"
+                              ? "bg-primary text-white"
                               : page === "..."
                                 ? "cursor-default"
                                 : "border border-gray-300 hover:bg-gray-50"
@@ -587,7 +587,7 @@ const UserCart = () => {
                 <div>
                   <p className="text-lg font-semibold text-gray-900">
                     Total:{" "}
-                    <span className="text-blue-600">
+                    <span className="text-primary">
                       ${subtotal.toFixed(2)}
                     </span>
                   </p>
@@ -606,7 +606,7 @@ const UserCart = () => {
                   </button>
                   <button
                     onClick={() => handleProceed(cart._id)}
-                    className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
+                    className="px-6 py-3 bg-primary hover:bg-primary/90 text-white rounded-lg font-medium transition-colors"
                   >
                     Proceed to Checkout
                   </button>

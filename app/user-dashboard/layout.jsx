@@ -1,10 +1,19 @@
-import MyDashboardSidebar from "@/components/MyDashboardSidebar";
+import DashboardSidebar from "@/components/DashboardSidebar";
+import { FiGrid, FiHeart, FiShoppingCart, FiPackage, FiUser } from "react-icons/fi";
 
-export default function DashboardLayout({ children }) {
+const navItems = [
+  { href: "/user-dashboard", icon: FiGrid, label: "Overview" },
+  { href: "/user-dashboard/wishlist", icon: FiHeart, label: "Wishlist" },
+  { href: "/user-dashboard/cart", icon: FiShoppingCart, label: "Cart" },
+  { href: "/user-dashboard/orders", icon: FiPackage, label: "Orders" },
+  { href: "/user-dashboard/profile", icon: FiUser, label: "Profile" },
+];
+
+export default function UserDashboardLayout({ children }) {
   return (
     <div className="flex h-screen">
-      <MyDashboardSidebar />
-      <main className="flex-1 overflow-y-auto bg-gray-100">
+      <DashboardSidebar title="My Account" navItems={navItems} />
+      <main className="flex-1 overflow-y-auto bg-gray-50 pb-16 md:pb-0">
         {children}
       </main>
     </div>

@@ -1,105 +1,63 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { FiPlus, FiPackage, FiUsers, FiShoppingCart, FiLogOut, FiHome } from "react-icons/fi";
+import { FiHome } from "react-icons/fi";
+import SignOut from "./SignOut";
 
-export default function DashboardSidebar() {
+export default function DashboardSidebar({ title, navItems }) {
   const pathname = usePathname();
 
+  const items = [
+    ...navItems,
+    { href: "/", icon: FiHome, label: "Home" },
+  ];
+
   return (
-    <aside className="fixed md:static bottom-0 left-0 w-full md:w-72 bg-gradient-to-b from-blue-50 to-indigo-100 shadow-xl h-16 md:h-full flex md:flex-col justify-between md:justify-start z-50">
-      
-      {/* Header/Logo Area */}
-      <div className="hidden md:block p-6 border-b border-indigo-200/40">
-        <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2 text-indigo-700">
-          <FiShoppingCart className="h-6 w-6" />
-          <span>SwiftCart Admin</span>
-        </h1>
+    <aside className="fixed md:static bottom-0 left-0 z-50 flex h-16 w-full justify-between border-t border-gray-200 bg-white md:h-full md:w-64 md:flex-col md:justify-start md:border-r md:border-t-0 md:shadow-sm">
+      <div className="hidden border-b border-gray-100 p-6 md:block">
+        <Link href="/" className="flex items-center gap-2">
+          <Image
+            src="/images/swiftcart-logo.svg"
+            alt="SwiftCart"
+            width={128}
+            height={32}
+            className="w-28 h-auto"
+          />
+        </Link>
+        <p className="mt-2 text-xs font-medium uppercase tracking-wider text-gray-400">
+          {title}
+        </p>
       </div>
 
-      {/* Navigation Links */}
-      <nav className="flex flex-grow md:flex-grow-0 md:flex-col md:p-4 px-2 py-1">
-        <div className="hidden md:block text-xs uppercase tracking-wider text-indigo-600 font-semibold mb-4 ml-2">
-          Management
-        </div>
-        <ul className="flex md:flex-col justify-around md:space-y-1 w-full">
-          <NavItem 
-            href="/dashboard/add-product" 
-            icon={<FiPlus className="h-6 w-6" />} 
-            text="Add" 
-            isActive={pathname === "/dashboard/add-product"}
-            showText={false}
-          />
-          <NavItem 
-            href="/dashboard/products-list" 
-            icon={<FiPackage className="h-6 w-6" />} 
-            text="Products" 
-            isActive={pathname === "/dashboard/products-list"}
-            showText={false}
-          />
-          <NavItem 
-            href="/dashboard/users" 
-            icon={<FiUsers className="h-6 w-6" />} 
-            text="Users" 
-            isActive={pathname === "/dashboard/users"}
-            showText={false}
-          />
-          <NavItem 
-            href="/dashboard/orders" 
-            icon={<FiShoppingCart className="h-6 w-6" />} 
-            text="Orders" 
-            isActive={pathname === "/dashboard/orders"}
-            showText={false}
-          />
-          <NavItem 
-            href="/" 
-            icon={<FiHome className="h-6 w-6" />} 
-            text="Home" 
-            isActive={pathname === "/"}
-            showText={false}
-          />
+      <nav className="flex flex-grow md:flex-grow-0 md:flex-col md:p-4">
+        <ul className="flex w-full justify-around md:flex-col md:space-y-1">
+          {items.map(({ href, icon: Icon, label }) => {
+            const isActive = pathname === href;
+            return (
+              <li key={href} className="w-full">
+                <Link
+                  href={href}
+                  aria-current={isActive ? "page" : undefined}
+                  className={`flex flex-col items-center justify-center gap-0.5 rounded-lg p-2 transition-colors md:flex-row md:justify-start md:gap-3 md:p-3 ${
+                    isActive
+                      ? "bg-primary text-white font-medium"
+                      : "text-gray-600 hover:bg-gray-100 hover:text-primary"
+                  }`}
+                >
+                  <Icon className="h-5 w-5 md:h-5 md:w-5" />
+                  <span className="text-[11px] md:text-sm md:font-medium">{label}</span>
+                </Link>
+              </li>
+            );
+          })}
         </ul>
       </nav>
 
-      {/* Footer with Sign Out */}
-      <div className="hidden md:flex p-4 border-t border-indigo-200/40 mt-auto">
-        <Link 
-          href="/api/auth/signout" 
-          className="flex items-center gap-2 w-full py-3 px-4 bg-indigo-600 hover:bg-indigo-500 rounded-lg text-white font-medium transition-all duration-200 shadow-md hover:shadow-lg group"
-        >
-          <FiLogOut className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
-          <span>Sign Out</span>
-        </Link>
+      <div className="hidden border-t border-gray-100 p-4 md:mt-auto md:block [&>form>button]:w-full">
+        <SignOut />
       </div>
     </aside>
-  );
-}
-
-// Helper component for nav items with active state
-function NavItem({ href, icon, text, isActive, showText }) {
-  const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
-
-  return (
-    <li className="w-full">
-      <Link
-        href={href}
-        className={`flex flex-col md:flex-row items-center justify-center md:justify-start gap-0.5 md:gap-3 p-2 md:p-3 rounded-lg transition-all duration-200 group
-          ${isActive 
-            ? "bg-indigo-500 text-white font-medium shadow-md" 
-            : "text-gray-700 hover:bg-indigo-200/30 hover:text-indigo-700"
-          }`}
-      >
-        <div className={`${isActive 
-          ? "text-white" 
-          : "text-indigo-500 group-hover:text-indigo-700"} transition-colors`}
-        >
-          {icon}
-        </div>
-        <span className={`hidden md:block font-medium ${!isActive && "group-hover:translate-x-1"} transition-transform`}>
-          {text}
-        </span>
-      </Link>
-    </li>
   );
 }

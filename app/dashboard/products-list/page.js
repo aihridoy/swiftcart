@@ -150,7 +150,7 @@ const ProductsPage = () => {
         <h1 className="text-2xl sm:text-3xl font-bold">Product List</h1>
         <Link
           href="/dashboard/add-product"
-          className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-md shadow-md transition-colors duration-300 text-center"
+          className="w-full sm:w-auto bg-primary hover:bg-primary/90 text-white font-semibold py-2 px-6 rounded-md shadow-md transition-colors duration-300 text-center"
         >
           Add Product
         </Link>
@@ -167,7 +167,7 @@ const ProductsPage = () => {
             placeholder="Search products by name, brand, category, or SKU..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="block w-full pl-10 pr-10 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+            className="block w-full pl-10 pr-10 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-primary focus:border-primary sm:text-sm"
           />
           {searchTerm && (
             <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
@@ -270,7 +270,7 @@ const ProductsPage = () => {
                     <div className="flex flex-wrap justify-center gap-2 w-full sm:w-auto">
                       <Link
                         href={`/products/${product._id}`}
-                        className="border border-blue-600 text-blue-600 hover:bg-blue-50 font-medium py-2 px-4 rounded-md transition-all duration-300 text-center"
+                        className="border border-primary text-primary hover:bg-primary/5 font-medium py-2 px-4 rounded-md transition-all duration-300 text-center"
                       >
                         View Details
                       </Link>
