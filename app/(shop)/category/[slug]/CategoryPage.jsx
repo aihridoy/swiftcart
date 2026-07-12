@@ -33,6 +33,7 @@ const CategoryPage = ({ params, initialProducts }) => {
     queryKey: ["categoryProducts", slug],
     queryFn: () => getProducts({ category: decodedSlug }),
     initialData: initialProducts ? { products: initialProducts } : undefined,
+    staleTime: 60 * 1000,
     onError: (error) => {
       toast.error(`Error fetching products: ${error.message}`, {
         position: "top-right",

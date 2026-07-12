@@ -13,6 +13,23 @@ const getProduct = cache(async (id) => {
   }
 });
 
+// Pre-render the top products at build time; anything else is rendered
+// on first request and cached (ISR fallback), see `revalidate` below.
+export async function generateStaticParams() {
+  try {
+    await dbConnect();
+    const products = await Product.find({}, { _id: 1 })
+      .sort({ popularityScore: -1 })
+      .limit(50)
+      .lean();
+    return products.map((product) => ({ id: product._id.toString() }));
+  } catch {
+    return [];
+  }
+}
+
+export const revalidate = 3600;
+
 export async function generateMetadata({ params }) {
   const product = await getProduct(params.id);
 

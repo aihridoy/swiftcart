@@ -16,6 +16,18 @@ const getCategoryProducts = cache(async (category) => {
   }
 });
 
+export async function generateStaticParams() {
+  try {
+    await dbConnect();
+    const categories = await Product.distinct("category");
+    return categories.filter(Boolean).map((category) => ({ slug: category }));
+  } catch {
+    return [];
+  }
+}
+
+export const revalidate = 3600;
+
 function formatCategoryName(slug) {
   return decodeURIComponent(slug)
     .split("-")
