@@ -27,17 +27,11 @@ export async function POST(request) {
     }
 
     // Find or create cart for the user
-    let cart = await Cart.findOne({ user: userSession.user.id });
-    if (!cart) {
-      cart = new Cart({ user: userSession.user.id, items: [] });
-    }
-
-    // Check if product already exists in cart
-    const itemIndex = cart.items.findIndex(
+    const existingCart = await Cart.findOne({ user: userSession.user.id });
+    const existingItem = existingCart?.items.find(
       (item) => item.product.toString() === productId
     );
-
-    const existingQuantity = itemIndex > -1 ? cart.items[itemIndex].quantity : 0;
+    const existingQuantity = existingItem ? existingItem.quantity : 0;
     const newQuantity = existingQuantity + quantity;
 
     if (newQuantity > product.quantity) {
@@ -47,20 +41,26 @@ export async function POST(request) {
       );
     }
 
-    if (itemIndex > -1) {
-      // Update quantity if product exists
-      cart.items[itemIndex].quantity = newQuantity;
-      cart.items[itemIndex].price = product.price;
+    // Atomic update - a plain read/modify/save race would let two rapid
+    // "Add to cart" clicks each read the same starting quantity and
+    // silently clobber one another instead of accumulating.
+    let cart;
+    if (existingItem) {
+      cart = await Cart.findOneAndUpdate(
+        { user: userSession.user.id, "items.product": productId },
+        {
+          $inc: { "items.$.quantity": quantity },
+          $set: { "items.$.price": product.price },
+        },
+        { new: true }
+      );
     } else {
-      // Add new product to cart
-      cart.items.push({
-        product: productId,
-        quantity,
-        price: product.price,
-      });
+      cart = await Cart.findOneAndUpdate(
+        { user: userSession.user.id },
+        { $push: { items: { product: productId, quantity, price: product.price } } },
+        { new: true, upsert: true }
+      );
     }
-
-    await cart.save();
 
     return NextResponse.json(
       { message: "Product added to cart successfully!", cart },
@@ -156,23 +156,6 @@ export async function PUT(request) {
       );
     }
 
-    const cart = await Cart.findOne({ user: userSession.user.id });
-    if (!cart) {
-      return NextResponse.json({ error: "Cart not found" }, { status: 404 });
-    }
-
-    // Find the item in the cart
-    const itemIndex = cart.items.findIndex(
-      (item) => item.product.toString() === productId
-    );
-
-    if (itemIndex === -1) {
-      return NextResponse.json(
-        { error: "Product not found in cart" },
-        { status: 404 }
-      );
-    }
-
     const product = await Product.findById(productId);
     if (!product) {
       return NextResponse.json({ error: "Product not found" }, { status: 404 });
@@ -185,11 +168,21 @@ export async function PUT(request) {
       );
     }
 
-    // Update the quantity
-    cart.items[itemIndex].quantity = quantity;
-    cart.items[itemIndex].price = product.price;
+    // Atomic update - a read/modify/save race would let an earlier click's
+    // stale write land after a later click's write and silently overwrite
+    // it, even though both requests report success.
+    const cart = await Cart.findOneAndUpdate(
+      { user: userSession.user.id, "items.product": productId },
+      { $set: { "items.$.quantity": quantity, "items.$.price": product.price } },
+      { new: true }
+    );
 
-    await cart.save();
+    if (!cart) {
+      return NextResponse.json(
+        { error: "Product not found in cart" },
+        { status: 404 }
+      );
+    }
 
     return NextResponse.json(
       { message: "Cart updated successfully!", cart },
