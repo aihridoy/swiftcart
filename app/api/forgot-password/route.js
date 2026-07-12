@@ -46,7 +46,7 @@ export const POST = async (req) => {
     `;
 
     const emailResponse = await resend.emails.send({
-      from: "SwiftCart <noreply@aihridoy.com>",
+      from: "SwiftCart <noreply@ashrafulislam.im>",
       to: email,
       subject: "Password Reset Request",
       html: htmlContent,
