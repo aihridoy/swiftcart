@@ -53,3 +53,37 @@ export const POST = async (req) => {
         );
     }
 };
+
+export const DELETE = async (req) => {
+    try {
+        const { email } = await req.json();
+
+        if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            return new Response(
+                JSON.stringify({ success: false, error: "Please enter a valid email address" }),
+                { status: 400, headers: { "Content-Type": "application/json" } }
+            );
+        }
+
+        await dbConnect();
+
+        const deleted = await Newsletter.findOneAndDelete({ email: email.toLowerCase() });
+        if (!deleted) {
+            return new Response(
+                JSON.stringify({ success: false, error: "This email is not subscribed" }),
+                { status: 404, headers: { "Content-Type": "application/json" } }
+            );
+        }
+
+        return new Response(
+            JSON.stringify({ success: true, message: "Unsubscribed successfully" }),
+            { status: 200, headers: { "Content-Type": "application/json" } }
+        );
+    } catch (error) {
+        console.error("Error in newsletter DELETE API:", error);
+        return new Response(
+            JSON.stringify({ success: false, error: "Something went wrong. Please try again." }),
+            { status: 500, headers: { "Content-Type": "application/json" } }
+        );
+    }
+};

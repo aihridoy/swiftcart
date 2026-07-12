@@ -62,6 +62,7 @@ const ProductCard = ({
             href={`/products/${product._id}`}
             className="text-white text-lg w-9 h-8 rounded-full bg-primary flex items-center justify-center hover:bg-gray-800 transition"
             title="View Product"
+            aria-label="View Product"
           >
             <FaEye />
           </Link>
@@ -82,6 +83,7 @@ const ProductCard = ({
                 : ""
             }`}
             title={isInWishlist ? "Remove from Wishlist" : "Add to Wishlist"}
+            aria-label={isInWishlist ? "Remove from Wishlist" : "Add to Wishlist"}
           >
             {mutation.isPending && mutation.variables?.productId === product._id ? (
               <svg

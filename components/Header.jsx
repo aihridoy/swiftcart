@@ -228,7 +228,7 @@ const Header = () => {
             <button
               className="sm:hidden text-2xl text-gray-700 focus:outline-none"
               onClick={toggleMenu}
-              aria-label={isScrolled ? "Close Menu" : "Open Menu"}
+              aria-label={isMenuOpen ? "Close Menu" : "Open Menu"}
             >
               {isMenuOpen ? <FaTimes /> : <FaBars />}
             </button>

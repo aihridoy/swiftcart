@@ -286,6 +286,8 @@ const OrderHistory = () => {
                           ? "bg-blue-600 text-white shadow-lg"
                           : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                       } transition-all duration-300`}
+                      aria-label={`Page ${page}`}
+                      aria-current={validCurrentPage === page ? "page" : undefined}
                     >
                       {page}
                     </button>
