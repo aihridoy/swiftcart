@@ -21,5 +21,5 @@ export async function session() {
 }
 
 export async function doSignOut() {
-    await signOut();
+    await signOut({ redirectTo: "/login" });
   }
