@@ -11,7 +11,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import ProductCard from "@/components/ProductCard";
 
-const CategoryPage = ({ params }) => {
+const CategoryPage = ({ params, initialProducts }) => {
   const { slug } = params;
   const queryClient = useQueryClient();
   const { data: session, status } = useSession();
@@ -31,6 +31,7 @@ const CategoryPage = ({ params }) => {
   const { data, error, isLoading } = useQuery({
     queryKey: ["categoryProducts", slug],
     queryFn: () => getProducts({ category: decodedSlug }),
+    initialData: initialProducts ? { products: initialProducts } : undefined,
     onError: (error) => {
       toast.error(`Error fetching products: ${error.message}`, {
         position: "top-right",
