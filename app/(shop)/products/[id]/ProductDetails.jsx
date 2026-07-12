@@ -17,9 +17,9 @@ import {
   FaHeart,
   FaRegHeart,
   FaFacebookF,
-  FaTwitter,
-  FaInstagram,
+  FaLinkedinIn,
 } from "react-icons/fa";
+import { FaXTwitter } from "react-icons/fa6";
 import { ProductDetailSkeleton } from "@/components/skeletons";
 import ProductImageGallery from "@/components/ProductImageGallery";
 import { session } from "@/actions/auth-utils";
@@ -567,16 +567,45 @@ const ProductDetails = ({ params, initialProduct }) => {
               {isInWishlist ? "Remove from Wishlist" : "Add to Wishlist"}
             </button>
           </div>
-          <div className="flex gap-3 mt-4">
-            {[FaFacebookF, FaTwitter, FaInstagram].map((Icon, index) => (
-              <a
-                key={index}
-                href="#"
-                className="text-gray-400 hover:text-gray-500 h-8 w-8 rounded-full border border-gray-300 flex items-center justify-center"
-              >
-                <Icon size={14} />
-              </a>
-            ))}
+          <div className="flex items-center gap-3 mt-4">
+            <span className="text-sm text-gray-500">Share:</span>
+            {(() => {
+              const baseUrl =
+                process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3000";
+              const shareUrl = `${baseUrl}/products/${id}`;
+              const shareText = product.title;
+
+              const shareLinks = [
+                {
+                  label: "Share on Facebook",
+                  Icon: FaFacebookF,
+                  href: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`,
+                },
+                {
+                  label: "Share on X",
+                  Icon: FaXTwitter,
+                  href: `https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`,
+                },
+                {
+                  label: "Share on LinkedIn",
+                  Icon: FaLinkedinIn,
+                  href: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`,
+                },
+              ];
+
+              return shareLinks.map(({ label, Icon, href }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={label}
+                  className="text-gray-400 hover:text-gray-500 h-8 w-8 rounded-full border border-gray-300 flex items-center justify-center"
+                >
+                  <Icon size={14} />
+                </a>
+              ));
+            })()}
           </div>
         </div>
       </div>
