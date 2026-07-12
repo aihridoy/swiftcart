@@ -2,18 +2,18 @@
 
 const RouteLoader = () => {
   return (
-    <div className="flex min-h-[60vh] flex-col items-center justify-center gap-6">
-      <div className="relative h-16 w-16">
-        <div className="absolute inset-0 rounded-full bg-red-500/20 blur-xl animate-pulse" />
-        <div className="absolute inset-0 rounded-full border-4 border-gray-200" />
-        <div className="absolute inset-0 rounded-full border-4 border-transparent border-t-red-600 border-r-red-600 animate-spin" />
-        <div className="absolute inset-2 rounded-full border-[3px] border-transparent border-b-red-400 animate-spin-slow" />
+    <div className="flex min-h-screen flex-col items-center justify-center gap-8">
+      <div className="relative h-28 w-28">
+        <div className="absolute inset-0 rounded-full bg-red-500/20 blur-2xl animate-pulse" />
+        <div className="absolute inset-0 rounded-full border-[6px] border-gray-200" />
+        <div className="absolute inset-0 rounded-full border-[6px] border-transparent border-t-red-600 border-r-red-600 animate-spin" />
+        <div className="absolute inset-3 rounded-full border-[5px] border-transparent border-b-red-400 animate-spin-slow" />
       </div>
 
-      <div className="flex gap-1.5">
-        <span className="h-2 w-2 rounded-full bg-red-600 animate-bounce [animation-delay:-0.3s]" />
-        <span className="h-2 w-2 rounded-full bg-red-600 animate-bounce [animation-delay:-0.15s]" />
-        <span className="h-2 w-2 rounded-full bg-red-600 animate-bounce" />
+      <div className="flex gap-2.5">
+        <span className="h-3 w-3 rounded-full bg-red-600 animate-bounce [animation-delay:-0.3s]" />
+        <span className="h-3 w-3 rounded-full bg-red-600 animate-bounce [animation-delay:-0.15s]" />
+        <span className="h-3 w-3 rounded-full bg-red-600 animate-bounce" />
       </div>
 
       <style jsx>{`
