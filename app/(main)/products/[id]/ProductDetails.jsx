@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import Image from "next/image";
 import { toast } from "react-toastify";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import RelatedProducts from "@/components/RelatedProducts";
@@ -11,8 +10,18 @@ import { addToCart, getCart, updateCartQuantity } from "@/actions/cart-utils";
 import { addReview, getReviewsByProductId } from "@/actions/review-utils";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { FaStar, FaRegStar, FaShoppingBag } from "react-icons/fa";
+import {
+  FaStar,
+  FaRegStar,
+  FaShoppingBag,
+  FaHeart,
+  FaRegHeart,
+  FaFacebookF,
+  FaTwitter,
+  FaInstagram,
+} from "react-icons/fa";
 import { ProductDetailSkeleton } from "@/components/skeletons";
+import ProductImageGallery from "@/components/ProductImageGallery";
 import { session } from "@/actions/auth-utils";
 
 const ProductDetails = ({ params, initialProduct }) => {
@@ -401,27 +410,11 @@ const ProductDetails = ({ params, initialProduct }) => {
       {/* Main Product Section */}
       <div className="container grid grid-cols-1 md:grid-cols-2 gap-6 py-5">
         {/* Product Images Section */}
-        <div>
-          <Image
-            src={product.mainImage}
-            alt={product.title}
-            width={500}
-            height={500}
-            className="w-full rounded-lg shadow-md"
-          />
-          <div className="grid grid-cols-5 gap-4 mt-4">
-            {product.thumbnails.map((thumbnail, index) => (
-              <Image
-                key={index}
-                src={thumbnail}
-                alt={`Thumbnail ${index + 1}`}
-                width={100}
-                height={100}
-                className="w-full cursor-pointer border rounded-lg shadow-sm hover:shadow-md transition"
-              />
-            ))}
-          </div>
-        </div>
+        <ProductImageGallery
+          mainImage={product.mainImage}
+          thumbnails={product.thumbnails}
+          title={product.title}
+        />
 
         {/* Product Information Section */}
         <div>
@@ -555,20 +548,22 @@ const ProductDetails = ({ params, initialProduct }) => {
                     d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                   ></path>
                 </svg>
+              ) : isInWishlist ? (
+                <FaHeart className="text-red-500" />
               ) : (
-                <i className={`fa-heart ${isInWishlist ? "fa-solid text-red-500" : "fa-regular"}`}></i>
+                <FaRegHeart />
               )}
               {isInWishlist ? "Remove from Wishlist" : "Add to Wishlist"}
             </button>
           </div>
           <div className="flex gap-3 mt-4">
-            {["facebook-f", "twitter", "instagram"].map((icon, index) => (
+            {[FaFacebookF, FaTwitter, FaInstagram].map((Icon, index) => (
               <a
                 key={index}
                 href="#"
                 className="text-gray-400 hover:text-gray-500 h-8 w-8 rounded-full border border-gray-300 flex items-center justify-center"
               >
-                <i className={`fa-brands fa-${icon}`}></i>
+                <Icon size={14} />
               </a>
             ))}
           </div>
