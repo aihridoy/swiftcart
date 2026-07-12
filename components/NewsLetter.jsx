@@ -52,15 +52,28 @@ const NewsLetter = () => {
       return;
     }
 
-    // Simulate API call
-    setTimeout(() => {
+    try {
+      const res = await fetch("/api/newsletter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        setError(data.error || "Something went wrong. Please try again.");
+        setIsSubmitting(false);
+        return;
+      }
+
       setSuccess("🎉 Welcome aboard! You will get our regular welcome offers.");
       setEmail("");
       setIsSubmitting(false);
-
-      // Clear success message after 5 seconds
       setTimeout(() => setSuccess(""), 5000);
-    }, 1500);
+    } catch (err) {
+      setError("Something went wrong. Please try again.");
+      setIsSubmitting(false);
+    }
   };
 
   const handleInputChange = (e) => {
