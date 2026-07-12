@@ -12,7 +12,7 @@ import { getWishlist, updateWishlist } from "@/actions/wishlist";
 import { addToCart, getCart } from "@/actions/cart-utils";
 
 const FeaturedSkeleton = () => (
-  <section className="mx-auto max-w-screen-xl px-4 py-14">
+  <section className="container py-14">
     <div className="mb-8 text-center">
       <div className="mx-auto h-10 w-64 animate-pulse rounded-lg bg-gray-200" />
       <div className="mx-auto mt-2 h-4 w-48 animate-pulse rounded bg-gray-200" />
@@ -232,7 +232,7 @@ const FeaturedProduct = () => {
   const discount = calculateDiscount();
 
   return (
-    <section className="mx-auto max-w-screen-xl px-4 pb-16">
+    <section className="container pb-16">
       <div className="mb-12 text-center">
         <div className="mb-2 inline-block rounded-full bg-gradient-to-r from-blue-600 to-purple-600 px-4 py-1 text-sm font-semibold text-white shadow-lg">
           ✨ Hand-picked for you
