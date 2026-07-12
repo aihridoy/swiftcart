@@ -21,6 +21,7 @@ import {
   FaSearch
 } from "react-icons/fa";
 import { session } from "@/actions/auth-utils";
+import { useDebounce } from "@/hooks/useDebounce";
 
 // Skeleton Loader Component
 const SkeletonRow = () => (
@@ -57,6 +58,7 @@ const OrderList = () => {
   const queryClient = useQueryClient();
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
+  const debouncedSearchTerm = useDebounce(searchTerm, 400);
   const limit = 10;
   
   useEffect(() => {
@@ -125,9 +127,9 @@ const OrderList = () => {
   };
 
   // Filter orders based on search term
-  const filteredOrders = orders.filter(order => 
-    order._id.toLowerCase().includes(searchTerm.toLowerCase()) || 
-    (order.user?.name && order.user.name.toLowerCase().includes(searchTerm.toLowerCase()))
+  const filteredOrders = orders.filter(order =>
+    order._id.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
+    (order.user?.name && order.user.name.toLowerCase().includes(debouncedSearchTerm.toLowerCase()))
   );
 
   // Pagination controls

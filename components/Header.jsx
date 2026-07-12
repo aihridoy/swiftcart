@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { FaSearch, FaHeart, FaShoppingBag, FaUser, FaBox, FaBars, FaTimes } from "react-icons/fa";
@@ -12,6 +12,7 @@ import { getOrders } from "@/actions/order-utils";
 import { searchProducts } from "@/actions/products";
 import { useRouter } from "next/navigation";
 import { session } from "@/actions/auth-utils";
+import { useDebounce } from "@/hooks/useDebounce";
 
 const Header = () => {
   const queryClient = useQueryClient();
@@ -22,17 +23,8 @@ const Header = () => {
 
   // Search state
   const [searchTerm, setSearchTerm] = useState("");
-  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
+  const debouncedSearchTerm = useDebounce(searchTerm, 500);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
-  // Debounce search term
-  const debounce = useCallback((func, delay) => {
-    let timer;
-    return (...args) => {
-      clearTimeout(timer);
-      timer = setTimeout(() => func(...args), delay);
-    };
-  }, []);
 
   useEffect(() => {
     const fetchUserSession = async () => {
@@ -48,12 +40,8 @@ const Header = () => {
   }, []);
 
   useEffect(() => {
-    const debouncedSetSearchTerm = debounce((value) => {
-      setDebouncedSearchTerm(value);
-      setIsDropdownOpen(value.length > 0);
-    }, 500);
-    debouncedSetSearchTerm(searchTerm);
-  }, [searchTerm, debounce]);
+    setIsDropdownOpen(debouncedSearchTerm.length > 0);
+  }, [debouncedSearchTerm]);
 
   // Scroll effect
   useEffect(() => {

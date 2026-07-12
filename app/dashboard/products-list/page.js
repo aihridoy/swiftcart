@@ -1,7 +1,7 @@
 /* eslint-disable react/no-unescaped-entities */
 "use client";
 
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import Link from "next/link";
@@ -12,6 +12,7 @@ import { FaSearch, FaTimes } from "react-icons/fa";
 import { getProducts, deleteProduct } from "@/actions/products";
 import { session } from "@/actions/auth-utils";
 import { Skeleton } from "@/components/skeletons";
+import { useDebounce } from "@/hooks/useDebounce";
 
 const ProductsPage = () => {
   const [visibleProducts, setVisibleProducts] = useState(10);
@@ -20,27 +21,10 @@ const ProductsPage = () => {
   
   // Search state
   const [searchTerm, setSearchTerm] = useState("");
-  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
-  
+  const debouncedSearchTerm = useDebounce(searchTerm, 800);
+
   const queryClient = useQueryClient();
   const router = useRouter();
-
-  // Debounce function
-  const debounce = useCallback((func, delay) => {
-    let timer;
-    return (...args) => {
-      clearTimeout(timer);
-      timer = setTimeout(() => func(...args), delay);
-    };
-  }, []);
-
-  // Debounce search term
-  useEffect(() => {
-    const debouncedSetSearchTerm = debounce((value) => {
-      setDebouncedSearchTerm(value);
-    }, 800);
-    debouncedSetSearchTerm(searchTerm);
-  }, [searchTerm, debounce]);
 
   if(user && user?.user?.role !== "admin") {
     router.push('/');

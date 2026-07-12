@@ -23,6 +23,7 @@ import {
   FaInfoCircle
 } from "react-icons/fa";
 import { session } from "@/actions/auth-utils";
+import { useDebounce } from "@/hooks/useDebounce";
 
 const SkeletonRow = () => (
   <tr className="animate-pulse">
@@ -65,6 +66,7 @@ const UserList = () => {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
+  const debouncedSearchTerm = useDebounce(searchTerm, 400);
   const [roleFilter, setRoleFilter] = useState("all");
   const limit = 10;
   
@@ -109,9 +111,9 @@ const UserList = () => {
 
   // Filter users based on search term and role filter
   const filteredUsers = users.filter(user => {
-    const matchesSearch = 
-      user.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-      user.email.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSearch =
+      user.name.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
+      user.email.toLowerCase().includes(debouncedSearchTerm.toLowerCase());
     
     const matchesRole = roleFilter === "all" || user.role === roleFilter;
     
