@@ -4,7 +4,7 @@ const RouteLoader = ({ fill = false }) => {
   return (
     <div
       className={`flex flex-col items-center justify-center gap-8 ${
-        fill ? "flex-1" : "min-h-screen"
+        fill ? "flex-1 min-h-[50vh] py-20" : "min-h-screen"
       }`}
     >
       <div className="relative h-28 w-28">
