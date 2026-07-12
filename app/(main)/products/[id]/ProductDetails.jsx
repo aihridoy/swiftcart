@@ -12,6 +12,7 @@ import { addReview, getReviewsByProductId } from "@/actions/review-utils";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { FaStar, FaRegStar, FaShoppingBag } from "react-icons/fa";
+import { ProductDetailSkeleton } from "@/components/skeletons";
 import { session } from "@/actions/auth-utils";
 
 const ProductDetails = ({ params, initialProduct }) => {
@@ -366,11 +367,7 @@ const ProductDetails = ({ params, initialProduct }) => {
   };
 
   if (productLoading) {
-    return (
-      <div className="flex justify-center items-center min-h-[500px]">
-        <div className="animate-spin rounded-full h-20 w-20 border-b-2 border-gray-900"></div>
-      </div>
-    );
+    return <ProductDetailSkeleton />;
   }
 
   if (productError) {

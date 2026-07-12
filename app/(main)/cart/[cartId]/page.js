@@ -9,6 +9,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { getCartItemById } from "@/actions/cart-utils";
 import { sendEmail } from "@/actions/contact";
+import { DetailSkeleton } from "@/components/skeletons";
 
 const Checkout = () => {
   const { cartId } = useParams();
@@ -291,22 +292,8 @@ const Checkout = () => {
   }, [session]);
 
   // Show loading while session is loading
-  if (sessionStatus === "loading") {
-    return (
-      <div className="flex justify-center items-center min-h-[500px]">
-        <div className="animate-spin rounded-full h-20 w-20 border-b-2 border-gray-900"></div>
-        <p className="ml-4">Loading session...</p>
-      </div>
-    );
-  }
-
-  if (isLoading) {
-    return (
-      <div className="flex justify-center items-center min-h-[500px]">
-        <div className="animate-spin rounded-full h-20 w-20 border-b-2 border-gray-900"></div>
-        <p className="ml-4">Loading checkout data...</p>
-      </div>
-    );
+  if (sessionStatus === "loading" || isLoading) {
+    return <DetailSkeleton />;
   }
 
   if (error) {

@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 import Link from "next/link";
 import Image from "next/image";
 import { PDFDocument, rgb, StandardFonts } from "pdf-lib";
+import { DetailSkeleton } from "@/components/skeletons";
 
 const OrderDetails = () => {
   const { orderId } = useParams();
@@ -342,11 +343,7 @@ const downloadReceipt = async (order) => {
 };
 
   if (isLoading) {
-    return (
-      <div className="flex justify-center items-center min-h-[100vh]">
-        <div className="animate-spin rounded-full h-20 w-20 border-b-2 border-gray-900"></div>
-      </div>
-    );
+    return <DetailSkeleton />;
   }
 
   if (error) {

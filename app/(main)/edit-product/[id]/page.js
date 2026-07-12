@@ -18,6 +18,7 @@ import {
   FaSave,
   FaSpinner,
 } from "react-icons/fa";
+import { FormSkeleton } from "@/components/skeletons";
 
 // Helper function to validate URLs
 const isValidImageUrl = (url) => {
@@ -207,8 +208,10 @@ export default function EditProductPage({ params }) {
   // Loading state while fetching session
   if (isLoadingSession) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-blue-500"></div>
+      <div className="min-h-screen bg-gray-50 py-8 px-4">
+        <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-md p-8">
+          <FormSkeleton fields={8} />
+        </div>
       </div>
     );
   }
@@ -220,8 +223,10 @@ export default function EditProductPage({ params }) {
 
   if (isLoadingProduct || !productData) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-blue-500"></div>
+      <div className="min-h-screen bg-gray-50 py-8 px-4">
+        <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-md p-8">
+          <FormSkeleton fields={8} />
+        </div>
       </div>
     );
   }

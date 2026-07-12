@@ -11,6 +11,7 @@ import { FaSearch, FaTimes } from "react-icons/fa";
 
 import { getProducts, deleteProduct } from "@/actions/products";
 import { session } from "@/actions/auth-utils";
+import { Skeleton } from "@/components/skeletons";
 
 const ProductsPage = () => {
   const [visibleProducts, setVisibleProducts] = useState(10);
@@ -133,8 +134,20 @@ const ProductsPage = () => {
   // Loading UI
   if (isLoadingSession || isLoading) {
     return (
-      <div className="flex justify-center items-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
+      <div className="p-4 sm:p-6">
+        <Skeleton className="h-9 w-48 mb-6" />
+        <div className="divide-y divide-gray-200">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className="py-6 flex flex-col md:flex-row items-center md:items-start gap-6">
+              <Skeleton className="h-40 w-40 rounded-md flex-shrink-0" />
+              <div className="flex-1 w-full space-y-3">
+                <Skeleton className="h-5 w-1/2" />
+                <Skeleton className="h-4 w-1/3" />
+                <Skeleton className="h-4 w-1/4" />
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     );
   }
