@@ -14,7 +14,7 @@ import { useRouter } from "next/navigation";
 import { FaStar, FaRegStar, FaShoppingBag } from "react-icons/fa";
 import { session } from "@/actions/auth-utils";
 
-const ProductDetails = ({ params }) => {
+const ProductDetails = ({ params, initialProduct }) => {
   const { id } = params;
   const [quantity, setQuantity] = useState(1);
   const [reviewText, setReviewText] = useState("");
@@ -38,6 +38,7 @@ const ProductDetails = ({ params }) => {
   const { data: productData, error: productError, isLoading: productLoading } = useQuery({
     queryKey: ["product", id],
     queryFn: () => getProductById(id),
+    initialData: initialProduct ? { product: initialProduct } : undefined,
     onError: (error) => {
       toast.error(`Error fetching product: ${error.message}`, {
         position: "top-right",

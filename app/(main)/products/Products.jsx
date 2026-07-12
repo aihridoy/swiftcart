@@ -11,7 +11,7 @@ import ProductCard from "@/components/ProductCard";
 import { getWishlist, updateWishlist } from "@/actions/wishlist";
 import { session } from "@/actions/auth-utils";
 
-const Products = () => {
+const Products = ({ initialProducts }) => {
   const queryClient = useQueryClient();
   const { data: userSession, status } = useSession();
   const router = useRouter();
@@ -42,6 +42,7 @@ const Products = () => {
   const { data, error, isLoading } = useQuery({
     queryKey: ["products"],
     queryFn: () => getProducts(),
+    initialData: initialProducts ? { products: initialProducts } : undefined,
     onError: (error) => {
       toast.error(`Error fetching products: ${error.message}`, {
         position: "top-right",

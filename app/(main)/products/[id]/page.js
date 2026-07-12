@@ -1,32 +1,39 @@
+import { cache } from "react";
 import { dbConnect } from "@/service/mongo";
 import { Product } from "@/models/product-model";
 import ProductDetails from "./ProductDetails";
 
-export async function generateMetadata({ params }) {
+const getProduct = cache(async (id) => {
   try {
     await dbConnect();
-    const product = await Product.findById(params.id).lean();
+    const product = await Product.findById(id).lean();
+    return product ? JSON.parse(JSON.stringify(product)) : null;
+  } catch {
+    return null;
+  }
+});
 
-    if (!product) {
-      return { title: "Product not found" };
-    }
+export async function generateMetadata({ params }) {
+  const product = await getProduct(params.id);
 
-    const description = product.description?.slice(0, 160);
+  if (!product) {
+    return { title: "Product not found" };
+  }
 
-    return {
+  const description = product.description?.slice(0, 160);
+
+  return {
+    title: product.title,
+    description,
+    openGraph: {
       title: product.title,
       description,
-      openGraph: {
-        title: product.title,
-        description,
-        images: product.mainImage ? [product.mainImage] : [],
-      },
-    };
-  } catch {
-    return { title: "Product" };
-  }
+      images: product.mainImage ? [product.mainImage] : [],
+    },
+  };
 }
 
-export default function Page({ params }) {
-  return <ProductDetails params={params} />;
+export default async function Page({ params }) {
+  const product = await getProduct(params.id);
+  return <ProductDetails params={params} initialProduct={product} />;
 }
