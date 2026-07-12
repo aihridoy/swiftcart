@@ -93,5 +93,4 @@ export const { handlers: { GET, POST }, signIn, signOut, auth } = NextAuth({
       return token;
     },
   },
-  debug: true,
 });
