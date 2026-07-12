@@ -12,7 +12,7 @@ import { useSession } from "next-auth/react";
 const SkeletonProfile = () => (
   <div className="w-full p-6 animate-pulse">
     <div className="bg-white shadow-lg rounded-lg overflow-hidden">
-      <div className="bg-gradient-to-r from-blue-500 to-indigo-600 p-8">
+      <div className="bg-primary p-8">
         <div className="flex items-center space-x-8">
           <div className="w-32 h-32 rounded-full bg-gray-300 border-4 border-white"></div>
           <div className="space-y-3">
@@ -120,7 +120,7 @@ export default function UserProfile() {
   return (
     <div className="w-full min-h-screen bg-gray-100 p-6 mb-12 sm:mb-0">
       <div className="max-w-full mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
-        <div className="bg-gradient-to-r from-blue-500 to-indigo-600 p-4 sm:p-8 text-white">
+        <div className="bg-primary p-4 sm:p-8 text-white">
           <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-6">
             <div className="relative w-20 h-20 sm:w-32 sm:h-32 rounded-full overflow-hidden bg-gray-100 border-4 border-white">
               {hasProfileImage ? (
@@ -188,11 +188,11 @@ export default function UserProfile() {
           </h2>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
             <Link href="/user-dashboard/wishlist" className="group">
-              <div className="bg-white border border-gray-200 hover:border-blue-500 hover:shadow-md rounded-lg p-6 flex flex-col items-center justify-center transition-all duration-200 h-48">
+              <div className="bg-white border border-gray-200 hover:border-primary/50 hover:shadow-md rounded-lg p-6 flex flex-col items-center justify-center transition-all duration-200 h-48">
                 <div className="p-3 bg-pink-50 rounded-full mb-4 group-hover:bg-pink-100 transition-colors duration-200">
                   <FaHeart size={30} className="text-pink-500" />
                 </div>
-                <h3 className="font-medium text-xl text-gray-800 group-hover:text-blue-600">
+                <h3 className="font-medium text-xl text-gray-800 group-hover:text-primary">
                   My Wishlist
                 </h3>
                 <p className="text-md text-gray-500 text-center">
@@ -202,11 +202,11 @@ export default function UserProfile() {
             </Link>
 
             <Link href="/user-dashboard/cart" className="group">
-              <div className="bg-white border border-gray-200 hover:border-blue-500 hover:shadow-md rounded-lg p-6 flex flex-col items-center justify-center transition-all duration-200 h-48">
+              <div className="bg-white border border-gray-200 hover:border-primary/50 hover:shadow-md rounded-lg p-6 flex flex-col items-center justify-center transition-all duration-200 h-48">
                 <div className="p-3 bg-blue-50 rounded-full mb-4 group-hover:bg-blue-100 transition-colors duration-200">
                   <FaShoppingCart size={30} className="text-blue-500" />
                 </div>
-                <h3 className="font-medium text-xl text-gray-800 group-hover:text-blue-600">
+                <h3 className="font-medium text-xl text-gray-800 group-hover:text-primary">
                   Shopping Cart
                 </h3>
                 <p className="text-md text-gray-500 text-center">
@@ -216,11 +216,11 @@ export default function UserProfile() {
             </Link>
 
             <Link href="/user-dashboard/orders" className="group">
-              <div className="bg-white border border-gray-200 hover:border-blue-500 hover:shadow-md rounded-lg p-6 flex flex-col items-center justify-center transition-all duration-200 h-48">
+              <div className="bg-white border border-gray-200 hover:border-primary/50 hover:shadow-md rounded-lg p-6 flex flex-col items-center justify-center transition-all duration-200 h-48">
                 <div className="p-3 bg-green-50 rounded-full mb-4 group-hover:bg-green-100 transition-colors duration-200">
                   <FaBox size={30} className="text-green-500" />
                 </div>
-                <h3 className="font-medium text-xl text-gray-800 group-hover:text-blue-600">
+                <h3 className="font-medium text-xl text-gray-800 group-hover:text-primary">
                   Order History
                 </h3>
                 <p className="text-md text-gray-500 text-center">

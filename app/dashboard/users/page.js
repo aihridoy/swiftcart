@@ -190,7 +190,7 @@ const UserList = () => {
       <div className="container mx-auto px-4 py-8 md:py-16">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
           <h1 className="text-2xl md:text-3xl font-bold flex items-center">
-            <FaUsers className="mr-2 text-blue-600" />
+            <FaUsers className="mr-2 text-primary" />
             Users
           </h1>
           <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 w-full sm:w-auto">
@@ -260,7 +260,7 @@ const UserList = () => {
     <div className="container mx-auto px-4 py-8 md:py-16 mb-12 sm:mb-0">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
         <h1 className="text-2xl md:text-3xl font-bold flex items-center">
-          <FaUsers className="mr-2 text-blue-600" />
+          <FaUsers className="mr-2 text-primary" />
           Users
         </h1>
         <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 w-full sm:w-auto">
@@ -270,7 +270,7 @@ const UserList = () => {
               placeholder="Search users..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
+              className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary w-full"
             />
             <FaSearch className="absolute right-3 top-3 text-gray-400" />
           </div>
@@ -278,7 +278,7 @@ const UserList = () => {
             <select
               value={roleFilter}
               onChange={(e) => setRoleFilter(e.target.value)}
-              className="pl-10 pr-8 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none w-full"
+              className="pl-10 pr-8 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary appearance-none w-full"
             >
               <option value="all">All Roles</option>
               <option value="admin">Admin</option>
@@ -334,7 +334,7 @@ const UserList = () => {
               setSearchTerm("");
               setRoleFilter("all");
             }}
-            className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            className="mt-4 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
           >
             Clear Filters
           </button>
@@ -379,7 +379,7 @@ const UserList = () => {
                     key={user._id}
                     className={`${
                       index % 2 === 0 ? "bg-white" : "bg-gray-50"
-                    } hover:bg-blue-50 transition-colors duration-200`}
+                    } hover:bg-primary/5 transition-colors duration-200`}
                   >
                     <td className="p-2 md:p-4 text-gray-800">
                       <div className="flex items-center">
@@ -505,7 +505,7 @@ const UserList = () => {
                     onClick={() => handlePageChange(page)}
                     className={`px-4 py-2 rounded-lg text-sm font-medium ${
                       currentPage === page
-                        ? "bg-blue-600 text-white border border-blue-600"
+                        ? "bg-primary text-white border border-primary"
                         : "text-gray-700 hover:bg-gray-100 border border-gray-300"
                     } transition-colors duration-200`}
                   >

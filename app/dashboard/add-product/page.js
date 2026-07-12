@@ -52,7 +52,7 @@ export default function AddProduct() {
     price: "",
     originalPrice: "",
     description: "",
-    quantity: 0,
+    quantity: 1,
     mainImage: "",
     thumbnails: ["", "", "", "", ""],
   });
@@ -103,7 +103,7 @@ export default function AddProduct() {
         price: "",
         originalPrice: "",
         description: "",
-        quantity: 0,
+        quantity: 1,
         mainImage: "",
         thumbnails: ["", "", "", "", ""],
       });
@@ -131,18 +131,18 @@ export default function AddProduct() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-purple-50 to-pink-100 py-8 sm:py-12 mb-16 md:mb-0">
+    <div className="min-h-screen bg-gray-50 py-8 sm:py-12 mb-16 md:mb-0">
       <div className="max-w-full sm:max-w-6xl mx-auto px-2 sm:px-4">
-        <div className="bg-white/90 backdrop-blur-xl rounded-2xl shadow-xl overflow-hidden border border-purple-100">
-          <div className="flex flex-col sm:flex-row items-center justify-between bg-gradient-to-r from-indigo-600 to-purple-600 p-4 sm:p-6">
+        <div className="bg-white rounded-2xl shadow-sm overflow-hidden border border-gray-100">
+          <div className="flex flex-col sm:flex-row items-center justify-between bg-primary p-4 sm:p-6">
             <h1 className="text-2xl sm:text-3xl font-bold text-white mb-4 sm:mb-0">Add New Product</h1>
             <div className="flex space-x-2 sm:space-x-1">
               <button 
                 onClick={() => setActiveTab('basic')}
                 className={`px-3 py-2 sm:px-4 sm:py-2 rounded-lg font-medium transition text-sm sm:text-base ${
                   activeTab === 'basic' 
-                    ? 'bg-white text-indigo-700' 
-                    : 'bg-indigo-500/20 text-white hover:bg-indigo-500/40'
+                    ? 'bg-white text-primary' 
+                    : 'bg-primary/20 text-white hover:bg-primary/40'
                 }`}
               >
                 Basic Info
@@ -151,8 +151,8 @@ export default function AddProduct() {
                 onClick={() => setActiveTab('media')}
                 className={`px-3 py-2 sm:px-4 sm:py-2 rounded-lg font-medium transition text-sm sm:text-base ${
                   activeTab === 'media' 
-                    ? 'bg-white text-indigo-700' 
-                    : 'bg-indigo-500/20 text-white hover:bg-indigo-500/40'
+                    ? 'bg-white text-primary' 
+                    : 'bg-primary/20 text-white hover:bg-primary/40'
                 }`}
               >
                 Media & Images
@@ -190,7 +190,7 @@ export default function AddProduct() {
                 <div className="space-y-4 sm:space-y-6">
                   {/* Product Title */}
                   <div className="group">
-                    <label className="block text-sm sm:text-sm font-medium text-gray-700 mb-1 group-hover:text-indigo-600 transition-colors">
+                    <label className="block text-sm sm:text-sm font-medium text-gray-700 mb-1 group-hover:text-primary transition-colors">
                       Product Title
                     </label>
                     <input
@@ -198,7 +198,7 @@ export default function AddProduct() {
                       name="title"
                       value={formData.title}
                       onChange={handleChange}
-                      className="block w-full border border-gray-200 rounded-lg p-2 sm:p-3 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all group-hover:border-indigo-300 shadow-sm text-sm sm:text-base"
+                      className="block w-full border border-gray-200 rounded-lg p-2 sm:p-3 bg-white focus:outline-none focus:ring-2 focus:ring-primary transition-all group-hover:border-primary/40 shadow-sm text-sm sm:text-base"
                       placeholder="Enter product title"
                       required
                     />
@@ -206,7 +206,7 @@ export default function AddProduct() {
 
                   {/* Brand */}
                   <div className="group">
-                    <label className="block text-sm sm:text-sm font-medium text-gray-700 mb-1 group-hover:text-indigo-600 transition-colors">
+                    <label className="block text-sm sm:text-sm font-medium text-gray-700 mb-1 group-hover:text-primary transition-colors">
                       Brand
                     </label>
                     <input
@@ -214,7 +214,7 @@ export default function AddProduct() {
                       name="brand"
                       value={formData.brand}
                       onChange={handleChange}
-                      className="block w-full border border-gray-200 rounded-lg p-2 sm:p-3 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all group-hover:border-indigo-300 shadow-sm text-sm sm:text-base"
+                      className="block w-full border border-gray-200 rounded-lg p-2 sm:p-3 bg-white focus:outline-none focus:ring-2 focus:ring-primary transition-all group-hover:border-primary/40 shadow-sm text-sm sm:text-base"
                       placeholder="Enter brand name"
                       required
                     />
@@ -222,7 +222,7 @@ export default function AddProduct() {
 
                   {/* Category */}
                   <div className="group">
-                    <label className="block text-sm sm:text-sm font-medium text-gray-700 mb-1 group-hover:text-indigo-600 transition-colors">
+                    <label className="block text-sm sm:text-sm font-medium text-gray-700 mb-1 group-hover:text-primary transition-colors">
                       Category
                     </label>
                     <div className="relative">
@@ -230,7 +230,7 @@ export default function AddProduct() {
                         name="category"
                         value={formData.category}
                         onChange={handleChange}
-                        className="block appearance-none w-full border border-gray-200 rounded-lg p-2 sm:p-3 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all group-hover:border-indigo-300 shadow-sm pr-10 text-sm sm:text-base"
+                        className="block appearance-none w-full border border-gray-200 rounded-lg p-2 sm:p-3 bg-white focus:outline-none focus:ring-2 focus:ring-primary transition-all group-hover:border-primary/40 shadow-sm pr-10 text-sm sm:text-base"
                       >
                         <option value="">Select a category</option>
                         <option value="Bedroom">Bedroom</option>
@@ -250,7 +250,7 @@ export default function AddProduct() {
 
                   {/* SKU */}
                   <div className="group">
-                    <label className="block text-sm sm:text-sm font-medium text-gray-700 mb-1 group-hover:text-indigo-600 transition-colors">
+                    <label className="block text-sm sm:text-sm font-medium text-gray-700 mb-1 group-hover:text-primary transition-colors">
                       SKU
                     </label>
                     <input
@@ -258,7 +258,7 @@ export default function AddProduct() {
                       name="sku"
                       value={formData.sku}
                       onChange={handleChange}
-                      className="block w-full border border-gray-200 rounded-lg p-2 sm:p-3 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all group-hover:border-indigo-300 shadow-sm text-sm sm:text-base"
+                      className="block w-full border border-gray-200 rounded-lg p-2 sm:p-3 bg-white focus:outline-none focus:ring-2 focus:ring-primary transition-all group-hover:border-primary/40 shadow-sm text-sm sm:text-base"
                       placeholder="Enter SKU"
                       required
                     />
@@ -266,7 +266,7 @@ export default function AddProduct() {
 
                   {/* Availability Status */}
                   <div className="group">
-                    <label className="block text-sm sm:text-sm font-medium text-gray-700 mb-1 group-hover:text-indigo-600 transition-colors">
+                    <label className="block text-sm sm:text-sm font-medium text-gray-700 mb-1 group-hover:text-primary transition-colors">
                       Availability Status
                     </label>
                     <div className="relative">
@@ -274,7 +274,7 @@ export default function AddProduct() {
                         name="availability"
                         value={formData.availability}
                         onChange={handleChange}
-                        className="block appearance-none w-full border border-gray-200 rounded-lg p-2 sm:p-3 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all group-hover:border-indigo-300 shadow-sm pr-10 text-sm sm:text-base"
+                        className="block appearance-none w-full border border-gray-200 rounded-lg p-2 sm:p-3 bg-white focus:outline-none focus:ring-2 focus:ring-primary transition-all group-hover:border-primary/40 shadow-sm pr-10 text-sm sm:text-base"
                       >
                         <option value="In Stock">In Stock</option>
                         <option value="Out of Stock">Out of Stock</option>
@@ -292,7 +292,7 @@ export default function AddProduct() {
                 <div className="space-y-4 sm:space-y-6">
                   {/* Price Display */}
                   <div className="group">
-                    <label className="block text-sm sm:text-sm font-medium text-gray-700 mb-1 group-hover:text-indigo-600 transition-colors">
+                    <label className="block text-sm sm:text-sm font-medium text-gray-700 mb-1 group-hover:text-primary transition-colors">
                       Price Display ($)
                     </label>
                     <div className="relative">
@@ -302,7 +302,7 @@ export default function AddProduct() {
                         name="price"
                         value={formData.price}
                         onChange={handleChange}
-                        className="block w-full border border-gray-200 rounded-lg pl-8 p-2 sm:p-3 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all group-hover:border-indigo-300 shadow-sm text-sm sm:text-base"
+                        className="block w-full border border-gray-200 rounded-lg pl-8 p-2 sm:p-3 bg-white focus:outline-none focus:ring-2 focus:ring-primary transition-all group-hover:border-primary/40 shadow-sm text-sm sm:text-base"
                         placeholder="0.00"
                         required
                       />
@@ -311,7 +311,7 @@ export default function AddProduct() {
 
                   {/* Original Price Display */}
                   <div className="group">
-                    <label className="block text-sm sm:text-sm font-medium text-gray-700 mb-1 group-hover:text-indigo-600 transition-colors">
+                    <label className="block text-sm sm:text-sm font-medium text-gray-700 mb-1 group-hover:text-primary transition-colors">
                       Original Price Display ($)
                     </label>
                     <div className="relative">
@@ -321,7 +321,7 @@ export default function AddProduct() {
                         name="originalPrice"
                         value={formData.originalPrice}
                         onChange={handleChange}
-                        className="block w-full border border-gray-200 rounded-lg pl-8 p-2 sm:p-3 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all group-hover:border-indigo-300 shadow-sm text-sm sm:text-base"
+                        className="block w-full border border-gray-200 rounded-lg pl-8 p-2 sm:p-3 bg-white focus:outline-none focus:ring-2 focus:ring-primary transition-all group-hover:border-primary/40 shadow-sm text-sm sm:text-base"
                         placeholder="0.00"
                       />
                     </div>
@@ -329,14 +329,14 @@ export default function AddProduct() {
 
                   {/* Quantity Selector */}
                   <div className="group">
-                    <label className="block text-sm sm:text-sm font-medium text-gray-700 mb-1 group-hover:text-indigo-600 transition-colors">
+                    <label className="block text-sm sm:text-sm font-medium text-gray-700 mb-1 group-hover:text-primary transition-colors">
                       Quantity
                     </label>
                     <div className="flex items-center space-x-3">
                       <button
                         type="button"
                         onClick={decreaseQuantity}
-                        className="bg-indigo-100 text-indigo-700 w-12 h-12 sm:w-10 sm:h-10 flex items-center justify-center rounded-full hover:bg-indigo-200 transition-all shadow-sm"
+                        className="bg-primary/10 text-primary w-12 h-12 sm:w-10 sm:h-10 flex items-center justify-center rounded-full hover:bg-primary/20 transition-all shadow-sm"
                       >
                         <svg
                           className="w-6 h-6 sm:w-5 sm:h-5"
@@ -362,7 +362,7 @@ export default function AddProduct() {
                       <button
                         type="button"
                         onClick={increaseQuantity}
-                        className="bg-indigo-100 text-indigo-700 w-12 h-12 sm:w-10 sm:h-10 flex items-center justify-center rounded-full hover:bg-indigo-200 transition-all shadow-sm"
+                        className="bg-primary/10 text-primary w-12 h-12 sm:w-10 sm:h-10 flex items-center justify-center rounded-full hover:bg-primary/20 transition-all shadow-sm"
                       >
                         <svg
                           className="w-6 h-6 sm:w-5 sm:h-5"
@@ -384,15 +384,15 @@ export default function AddProduct() {
 
                   {/* Product Description */}
                   <div className="group">
-                    <label className="block text-sm sm:text-sm font-medium text-gray-700 mb-1 group-hover:text-indigo-600 transition-colors">
+                    <label className="block text-sm sm:text-sm font-medium text-gray-700 mb-1 group-hover:text-primary transition-colors">
                       Product Description
                     </label>
                     <textarea
                       name="description"
                       value={formData.description}
                       onChange={handleChange}
-                      className="block w-full border border-gray-200 rounded-lg p-2 sm:p-3 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all group-hover:border-indigo-300 shadow-sm text-sm sm:text-base"
-                      rows="6 sm:rows-4"
+                      className="block w-full border border-gray-200 rounded-lg p-2 sm:p-3 bg-white focus:outline-none focus:ring-2 focus:ring-primary transition-all group-hover:border-primary/40 shadow-sm text-sm sm:text-base"
+                      rows={4}
                       placeholder="Enter product description"
                       required
                     />
@@ -405,7 +405,7 @@ export default function AddProduct() {
               <div className="space-y-6 sm:space-y-8">
                 {/* Main Product Image */}
                 <div className="group">
-                  <label className="block text-sm sm:text-sm font-medium text-gray-700 mb-2 group-hover:text-indigo-600 transition-colors">
+                  <label className="block text-sm sm:text-sm font-medium text-gray-700 mb-2 group-hover:text-primary transition-colors">
                     Main Product Image URL
                   </label>
                   <input
@@ -413,14 +413,14 @@ export default function AddProduct() {
                     name="mainImage"
                     value={formData.mainImage}
                     onChange={handleChange}
-                    className="block w-full border border-gray-200 rounded-lg p-2 sm:p-3 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all group-hover:border-indigo-300 shadow-sm text-sm sm:text-base"
+                    className="block w-full border border-gray-200 rounded-lg p-2 sm:p-3 bg-white focus:outline-none focus:ring-2 focus:ring-primary transition-all group-hover:border-primary/40 shadow-sm text-sm sm:text-base"
                     placeholder="Enter main image URL (e.g., https://images.unsplash.com/...)"
                     required
                   />
                   {formData.mainImage && (
                     <div className="mt-4">
                       {isValidImageUrl(formData.mainImage) ? (
-                        <div className="relative overflow-hidden rounded-xl shadow-lg border-2 border-indigo-100 group-hover:border-indigo-300 transition-all">
+                        <div className="relative overflow-hidden rounded-xl shadow-lg border-2 border-primary/10 group-hover:border-primary/40 transition-all">
                           <Image
                             width={500}
                             height={500}
@@ -428,7 +428,7 @@ export default function AddProduct() {
                             alt="Main Product Preview"
                             className="w-full h-48 sm:h-64 object-cover transition-transform hover:scale-105 duration-300"
                           />
-                          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-indigo-900/70 p-3 text-white text-sm sm:text-sm font-medium">
+                          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 p-3 text-white text-sm sm:text-sm font-medium">
                             Main Product Image
                           </div>
                         </div>
@@ -450,7 +450,7 @@ export default function AddProduct() {
 
                 {/* Thumbnail Gallery */}
                 <div className="group">
-                  <label className="block text-sm sm:text-sm font-medium text-gray-700 mb-2 group-hover:text-indigo-600 transition-colors">
+                  <label className="block text-sm sm:text-sm font-medium text-gray-700 mb-2 group-hover:text-primary transition-colors">
                     Thumbnail Images
                   </label>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -464,11 +464,11 @@ export default function AddProduct() {
                               onChange={(e) =>
                                 handleThumbnailChange(index, e.target.value)
                               }
-                              className="block w-full border border-gray-200 rounded-lg p-2 sm:p-3 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all group-hover:border-indigo-300 shadow-sm text-sm sm:text-base"
+                              className="block w-full border border-gray-200 rounded-lg p-2 sm:p-3 bg-white focus:outline-none focus:ring-2 focus:ring-primary transition-all group-hover:border-primary/40 shadow-sm text-sm sm:text-base"
                               placeholder={`Thumbnail ${index + 1} URL`}
                             />
                             <div className="absolute inset-y-0 right-2 flex items-center">
-                              <span className="bg-indigo-100 text-indigo-800 text-xs sm:text-xs font-medium px-2 py-1 rounded">
+                              <span className="bg-primary/10 text-primary text-xs sm:text-xs font-medium px-2 py-1 rounded">
                                 #{index + 1}
                               </span>
                             </div>
@@ -477,7 +477,7 @@ export default function AddProduct() {
                         {thumbnail && (
                           <div className="flex-shrink-0">
                             {isValidImageUrl(thumbnail) ? (
-                              <div className="relative w-14 h-14 sm:w-16 sm:h-16 overflow-hidden rounded-lg shadow-md border border-indigo-200 hover:border-indigo-400 transition-all">
+                              <div className="relative w-14 h-14 sm:w-16 sm:h-16 overflow-hidden rounded-lg shadow-md border border-primary/20 hover:border-primary/60 transition-all">
                                 <Image
                                   width={100}
                                   height={100}
@@ -504,7 +504,7 @@ export default function AddProduct() {
 
             <div className="mt-8 sm:mt-10 pt-4 sm:pt-6 border-t border-gray-200 flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-0">
               <div className="flex items-center text-sm sm:text-sm text-gray-500">
-                <svg className="w-5 h-5 mr-2 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <svg className="w-5 h-5 mr-2 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
                 {activeTab === 'basic' ? (
@@ -515,7 +515,7 @@ export default function AddProduct() {
               </div>
               <button
                 type="submit"
-                className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-medium px-6 py-2 sm:px-8 sm:py-3 rounded-lg shadow-md hover:shadow-lg transition-all hover:from-indigo-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 w-full sm:w-auto"
+                className="bg-primary text-white font-medium px-6 py-2 sm:px-8 sm:py-3 rounded-lg shadow-md hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary w-full sm:w-auto"
                 disabled={mutation.isPending}
               >
                 {mutation.isPending ? (

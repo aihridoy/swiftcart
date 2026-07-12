@@ -357,7 +357,7 @@ const downloadReceipt = async (order) => {
   const order = data;
 
   return (
-    <div className="bg-gradient-to-br from-gray-100 via-blue-50 to-teal-50 py-8 px-4">
+    <div className="bg-gray-50 py-8 px-4">
       <div className="container py-5 bg-white/90 ">
       <h2 className="text-2xl font-medium mb-6">Order Details</h2>
 

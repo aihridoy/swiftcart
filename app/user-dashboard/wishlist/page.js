@@ -189,7 +189,7 @@ const UserWishlist = () => {
     }
 
     if (isInCart(product._id)) {
-      router.push("/cart");
+      router.push("/user-dashboard/cart");
     } else {
       if (cartMutation.isPending) return;
       cartMutation.mutate({ productId: product._id, quantity: 1 });
@@ -206,7 +206,8 @@ const UserWishlist = () => {
   // Pagination logic
   const totalItems = wishlist?.length;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
+  const validCurrentPage = Math.min(Math.max(1, currentPage), totalPages || 1);
+  const startIndex = (validCurrentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const paginatedProducts = wishlist?.slice(startIndex, endIndex);
 
@@ -275,7 +276,7 @@ const UserWishlist = () => {
             </div>
             <button
               onClick={() => router.push('/')}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium"
+              className="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg font-medium"
             >
               Return to Home
             </button>
@@ -311,7 +312,7 @@ const UserWishlist = () => {
             <p className="text-gray-600 mb-6">Start adding products you love to your wishlist!</p>
             <button
               onClick={() => router.push('/products')}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors"
+              className="bg-primary hover:bg-primary/90 text-white px-6 py-3 rounded-lg font-medium transition-colors"
             >
               Browse Products
             </button>
@@ -377,7 +378,7 @@ const UserWishlist = () => {
                         className={`px-3 py-2 rounded-lg font-medium text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
                           isInCart(product._id)
                             ? 'bg-green-600 hover:bg-green-700 text-white'
-                            : 'bg-blue-600 hover:bg-blue-700 text-white'
+                            : 'bg-primary hover:bg-primary/90 text-white'
                         }`}
                       >
                         <div className="flex items-center justify-center gap-1">
@@ -426,8 +427,8 @@ const UserWishlist = () => {
               <div className="mt-8 flex justify-center">
                 <div className="flex items-center gap-2">
                   <button
-                    onClick={() => handlePageChange(currentPage - 1)}
-                    disabled={currentPage === 1}
+                    onClick={() => handlePageChange(validCurrentPage - 1)}
+                    disabled={validCurrentPage === 1}
                     className="p-2 rounded-lg border border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <IoChevronBack className="w-4 h-4" />
@@ -436,7 +437,7 @@ const UserWishlist = () => {
                   <div className="flex gap-1">
                     {[...Array(totalPages)].map((_, index) => {
                       const page = index + 1;
-                      const isCurrentPage = page === currentPage;
+                      const isCurrentPage = page === validCurrentPage;
                       
                       return (
                         <button
@@ -444,7 +445,7 @@ const UserWishlist = () => {
                           onClick={() => handlePageChange(page)}
                           className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
                             isCurrentPage
-                              ? 'bg-blue-600 text-white'
+                              ? 'bg-primary text-white'
                               : 'border border-gray-300 hover:bg-gray-50'
                           }`}
                         >
@@ -455,8 +456,8 @@ const UserWishlist = () => {
                   </div>
 
                   <button
-                    onClick={() => handlePageChange(currentPage + 1)}
-                    disabled={currentPage === totalPages}
+                    onClick={() => handlePageChange(validCurrentPage + 1)}
+                    disabled={validCurrentPage === totalPages}
                     className="p-2 rounded-lg border border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <IoChevronForward className="w-4 h-4" />

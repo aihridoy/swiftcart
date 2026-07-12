@@ -179,13 +179,13 @@ const OrderList = () => {
       <div className="container mx-auto px-4 py-8 md:py-16">
         <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-6">
           <h1 className="text-2xl md:text-3xl font-bold flex items-center mb-4 md:mb-0">
-            <FaShoppingCart className="mr-2 text-blue-600" />
+            <FaShoppingCart className="mr-2 text-primary" />
             Orders
           </h1>
         </div>
         <div className="overflow-x-auto bg-white shadow-md rounded-lg">
           <div className="p-4 flex items-center justify-center">
-            <FaSpinner className="animate-spin text-blue-600 text-2xl" />
+            <FaSpinner className="animate-spin text-primary text-2xl" />
             <span className="ml-2 text-gray-600">Loading orders...</span>
           </div>
           <div className="overflow-x-auto">
@@ -229,7 +229,7 @@ const OrderList = () => {
     <div className="container mx-auto px-4 py-8 md:py-16 mb-12 sm:mb-0">
       <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-6">
         <h1 className="text-2xl md:text-3xl font-bold flex items-center mb-4 md:mb-0">
-          <FaShoppingCart className="mr-2 text-blue-600" />
+          <FaShoppingCart className="mr-2 text-primary" />
           Orders
         </h1>
         <div className="relative w-full md:w-auto">
@@ -238,7 +238,7 @@ const OrderList = () => {
             placeholder="Search orders..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full md:w-64 pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full md:w-64 pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
           />
           <FaSearch className="absolute right-3 top-3 text-gray-400" />
         </div>
@@ -255,7 +255,7 @@ const OrderList = () => {
           <p className="text-gray-600 text-lg">No orders match your search criteria.</p>
           <button 
             onClick={() => setSearchTerm("")}
-            className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            className="mt-4 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
           >
             Clear Search
           </button>
@@ -488,7 +488,7 @@ const OrderList = () => {
                     onClick={() => handlePageChange(page)}
                     className={`${!isMobileVisible ? 'hidden md:block' : ''} px-3 md:px-4 py-1 md:py-2 rounded-lg text-xs md:text-sm font-medium ${
                       currentPage === page
-                        ? "bg-blue-600 text-white border border-blue-600"
+                        ? "bg-primary text-white border border-primary"
                         : "text-gray-700 hover:bg-gray-100 border border-gray-300"
                     } transition-colors duration-200`}
                   >

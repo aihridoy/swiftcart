@@ -93,7 +93,7 @@ const OrderHistory = () => {
   // Loading state - Centered on the screen
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-100 via-blue-50 to-teal-50 py-8 px-4">
+      <div className="min-h-screen bg-gray-50 py-8 px-4">
         <div className="max-w-6xl mx-auto space-y-4">
           {Array.from({ length: 3 }).map((_, index) => (
             <SkeletonOrderItem key={index} />
@@ -106,7 +106,7 @@ const OrderHistory = () => {
   // Error state
   if (error) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-100 via-blue-50 to-teal-50 py-8 px-4">
+      <div className="min-h-screen bg-gray-50 py-8 px-4">
         <div className="sticky top-0 z-10 bg-white/80 backdrop-blur-md shadow-md p-6 rounded-b-xl mb-6">
           <div className="flex items-center justify-between max-w-6xl mx-auto">
             <h1 className="text-2xl font-bold text-gray-800">
@@ -135,13 +135,13 @@ const OrderHistory = () => {
   const paginatedOrders = orders.slice(startIndex, endIndex);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-100 via-blue-50 to-teal-50 py-8 px-4 mb-12 sm:mb-0">
+    <div className="min-h-screen bg-gray-50 py-8 px-4 mb-12 sm:mb-0">
       {/* Main Content */}
       <div className="max-w-6xl mx-auto">
         {/* Orders Summary */}
         <div className="bg-white/90 backdrop-blur-lg rounded-xl shadow-lg p-6 mb-6 flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <FaShoppingBag className="text-blue-500 text-2xl" />
+            <FaShoppingBag className="text-primary text-2xl" />
             <div>
               <h2 className="text-lg font-semibold text-gray-800">Total Orders</h2>
               <p className="text-gray-600">{totalItems} {totalItems === 1 ? "order" : "orders"}</p>
@@ -163,7 +163,7 @@ const OrderHistory = () => {
               {userSession?.user?.role !== "admin" && (
                 <Link
                   href="/products"
-                  className="inline-flex items-center space-x-2 px-6 py-3 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-all duration-300 shadow-md hover:shadow-lg"
+                  className="inline-flex items-center space-x-2 px-6 py-3 rounded-lg bg-primary text-white font-semibold hover:bg-primary/90 transition-all duration-300 shadow-md hover:shadow-lg"
                 >
                   <FaShoppingBag />
                   <span>Start Shopping</span>
@@ -202,7 +202,7 @@ const OrderHistory = () => {
                     </div>
                     <Link
                       href={`/user-dashboard/orders/${order._id}`}
-                      className="flex items-center space-x-2 px-4 py-2 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-all duration-300 shadow-md hover:shadow-lg"
+                      className="flex items-center space-x-2 px-4 py-2 rounded-lg bg-primary text-white font-semibold hover:bg-primary/90 transition-all duration-300 shadow-md hover:shadow-lg"
                     >
                       <FaEye />
                       <span>View Details</span>
@@ -271,7 +271,7 @@ const OrderHistory = () => {
                     className={`px-4 py-2 rounded-lg font-semibold flex items-center space-x-2 ${
                       validCurrentPage === 1
                         ? "bg-gray-200 text-gray-500 cursor-not-allowed"
-                        : "bg-blue-600 text-white hover:bg-blue-700"
+                        : "bg-primary text-white hover:bg-primary/90"
                     } transition-all duration-300 shadow-md`}
                   >
                     <FaArrowLeft />
@@ -283,7 +283,7 @@ const OrderHistory = () => {
                       onClick={() => handlePageChange(page)}
                       className={`px-4 py-2 rounded-lg font-semibold ${
                         validCurrentPage === page
-                          ? "bg-blue-600 text-white shadow-lg"
+                          ? "bg-primary text-white shadow-lg"
                           : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                       } transition-all duration-300`}
                     >
@@ -296,7 +296,7 @@ const OrderHistory = () => {
                     className={`px-4 py-2 rounded-lg font-semibold flex items-center space-x-2 ${
                       validCurrentPage === totalPages
                         ? "bg-gray-200 text-gray-500 cursor-not-allowed"
-                        : "bg-blue-600 text-white hover:bg-blue-700"
+                        : "bg-primary text-white hover:bg-primary/90"
                     } transition-all duration-300 shadow-md`}
                   >
                     <span>Next</span>
