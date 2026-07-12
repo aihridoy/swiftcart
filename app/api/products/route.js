@@ -12,11 +12,16 @@ export async function GET(req) {
         const limit = parseInt(searchParams.get("limit")) || 0;
         const sort = searchParams.get("sort");
         const category = searchParams.get("category") || null;
-    
+        const discounted = searchParams.get("discounted") === "true";
+
         let query = Product.find();
 
         if (category) {
           query = query.where("category").regex(new RegExp(`^${category}$`, "i"));
+        }
+
+        if (discounted) {
+          query = query.where({ $expr: { $gt: ["$originalPrice", "$price"] } });
         }
 
         query = query.sort(sort);

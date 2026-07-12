@@ -7,9 +7,22 @@ export const addProduct = async (productData) => {
 };
 
 //get all products
-export const getProducts = async ({ limit, sort, category } = {}) => {
+export const getProducts = async ({ limit, sort, category, discounted } = {}) => {
     const response = await api.get("/products", {
-      params: { limit, sort, category },
+      params: { limit, sort, category, discounted },
+      headers: {
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0'
+      },
+    });
+    return response.data;
+  };
+
+  //get best-selling products (by units sold across orders)
+  export const getBestSellers = async ({ limit } = {}) => {
+    const response = await api.get("/products/best-sellers", {
+      params: { limit },
       headers: {
         'Cache-Control': 'no-cache, no-store, must-revalidate',
         'Pragma': 'no-cache',
