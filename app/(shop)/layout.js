@@ -5,7 +5,7 @@ import ClientLayout from "../ClientLayout";
 import Footer from "@/components/Footer";
 import CopyRight from "@/components/CopyRight";
 
-export default function MainLayout({ children }) {
+export default function ShopLayout({ children }) {
   return (
     <ClientLayout>
       <Header />
