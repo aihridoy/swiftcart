@@ -21,7 +21,7 @@ const OrderDetails = () => {
   const { data, error, isLoading } = useQuery({
     queryKey: ["order", orderId],
     queryFn: async () => {
-      const result = await getOrders();
+      const result = await getOrders({ limit: 1000 });
       const order = result.orders.find((o) => o._id === orderId);
       if (!order) throw new Error("Order not found");
       return order;
