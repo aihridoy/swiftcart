@@ -233,7 +233,7 @@ const UserCart = () => {
   if (isLoading) {
     return (
       <div className="p-4 md:p-6 lg:p-8">
-        <div className="max-w-6xl mx-auto">
+        <div className="container">
           <div className="mb-6">
             <div className="h-8 bg-gray-200 rounded animate-pulse w-48 mb-4"></div>
             <div className="h-4 bg-gray-200 rounded animate-pulse w-32"></div>
@@ -265,7 +265,7 @@ const UserCart = () => {
   if (error) {
     return (
       <div className="p-4 md:p-6 lg:p-8">
-        <div className="max-w-6xl mx-auto">
+        <div className="container">
           <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
             <div className="text-red-600 mb-2">
               <BsCart3 className="w-12 h-12 mx-auto mb-4" />
@@ -296,7 +296,7 @@ const UserCart = () => {
 
   return (
     <div className="p-4 md:p-6 lg:p-8 mb-16 sm:mb-0 border">
-      <div className="max-w-6xl mx-auto">
+      <div className="container">
         {/* Header */}
         <div className="mb-6 md:mb-8">
           <div className="flex items-center justify-between flex-wrap gap-4">
