@@ -13,6 +13,7 @@ const MobileMenu = ({ navLinks, isLoggedIn }) => {
       <button
         onClick={() => setMenuOpen(!menuOpen)}
         className="text-white focus:outline-none"
+        aria-label={menuOpen ? "Close Menu" : "Open Menu"}
       >
         {menuOpen ? <HiOutlineX size={28} /> : <HiOutlineMenuAlt3 size={28} />}
       </button>

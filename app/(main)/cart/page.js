@@ -378,6 +378,7 @@ const CartPage = () => {
                                   ? "bg-gray-200 text-gray-400 cursor-not-allowed"
                                   : "bg-blue-100 text-blue-600 hover:bg-blue-200"
                               }`}
+                              aria-label="Decrease quantity"
                             >
                               <FaMinus />
                             </button>
@@ -412,6 +413,7 @@ const CartPage = () => {
                                   ? "bg-gray-200 text-gray-400 cursor-not-allowed"
                                   : "bg-blue-100 text-blue-600 hover:bg-blue-200"
                               }`}
+                              aria-label="Increase quantity"
                             >
                               <FaPlus />
                             </button>
@@ -428,6 +430,7 @@ const CartPage = () => {
                                 ? "bg-gray-200 text-gray-400 cursor-not-allowed"
                                 : "bg-red-100 text-red-600 hover:bg-red-200 hover:shadow-md"
                             }`}
+                            aria-label="Remove from cart"
                           >
                             {removeMutation.isPending &&
                             removeMutation.variables === item.product._id ? (
@@ -476,6 +479,8 @@ const CartPage = () => {
                               ? "bg-blue-600 text-white shadow-lg"
                               : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                           } transition-all duration-300`}
+                          aria-label={`Page ${page}`}
+                          aria-current={validCurrentPage === page ? "page" : undefined}
                         >
                           {page}
                         </button>

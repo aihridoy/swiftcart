@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Link from "next/link";
 
 const NewsLetter = () => {
   const [email, setEmail] = useState("");
@@ -369,14 +370,12 @@ const NewsLetter = () => {
             <span>No Spam, Ever</span>
           </div>
           <div className="hidden sm:block w-1 h-1 bg-white/30 rounded-full" />
-          <button
+          <Link
+            href="/unsubscribe"
             className="underline hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white/50 rounded"
-            onClick={() => {
-              /* Handle unsubscribe */
-            }}
           >
             Unsubscribe anytime
-          </button>
+          </Link>
         </div>
       </div>
 

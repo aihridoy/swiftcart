@@ -19,7 +19,6 @@ import { addToCart, getCart } from "@/actions/cart-utils";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { session } from "@/actions/auth-utils";
-import { set } from "mongoose";
 
 // Skeleton Loader for Wishlist Items
 const SkeletonWishlistItem = () => (
@@ -432,6 +431,7 @@ const Wishlist = () => {
                               ? "bg-gray-200 text-gray-400 cursor-not-allowed"
                               : "bg-red-100 text-red-600 hover:bg-red-200 hover:shadow-md"
                           }`}
+                          aria-label="Remove from Wishlist"
                         >
                           {wishlistMutation.isPending &&
                           wishlistMutation.variables?.productId ===
@@ -476,6 +476,8 @@ const Wishlist = () => {
                           ? "bg-blue-600 text-white shadow-lg"
                           : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                       } transition-all duration-300`}
+                      aria-label={`Page ${page}`}
+                      aria-current={currentPage === page ? "page" : undefined}
                     >
                       {page}
                     </button>
