@@ -10,6 +10,7 @@ import { getWishlist, updateWishlist } from "@/actions/wishlist";
 import { addToCart, getCart } from "@/actions/cart-utils";
 import { useSession } from "next-auth/react";
 import ProductCard from "@/components/ProductCard";
+import { ProductGridSkeleton } from "@/components/skeletons";
 
 const SearchPage = () => {
   const queryClient = useQueryClient();
@@ -173,8 +174,8 @@ const SearchPage = () => {
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center min-h-[500px]">
-        <div className="animate-spin rounded-full h-20 w-20 border-b-2 border-gray-900"></div>
+      <div className="container py-10">
+        <ProductGridSkeleton count={12} />
       </div>
     );
   }

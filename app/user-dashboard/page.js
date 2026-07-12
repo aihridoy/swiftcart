@@ -37,6 +37,7 @@ import {
   FiGift
 } from 'react-icons/fi';
 import Link from 'next/link';
+import { Skeleton } from '@/components/skeletons';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, ArcElement, Title, Tooltip, Legend);
 
@@ -126,10 +127,20 @@ const UserDashboard = () => {
 
   if (wishlistLoading || cartLoading || orderLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto mb-4"></div>
-          <p className="text-gray-600 text-lg">Loading your dashboard...</p>
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 p-6">
+        <Skeleton className="h-8 w-64 mb-8" />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div key={i} className="bg-white rounded-xl shadow p-6 space-y-3">
+              <Skeleton className="h-10 w-10 rounded-full" />
+              <Skeleton className="h-6 w-16" />
+              <Skeleton className="h-4 w-24" />
+            </div>
+          ))}
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <Skeleton className="h-72 w-full rounded-xl" />
+          <Skeleton className="h-72 w-full rounded-xl" />
         </div>
       </div>
     );

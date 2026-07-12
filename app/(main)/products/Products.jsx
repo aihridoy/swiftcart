@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import ProductCard from "@/components/ProductCard";
 import { getWishlist, updateWishlist } from "@/actions/wishlist";
 import { session } from "@/actions/auth-utils";
+import { ProductGridSkeleton } from "@/components/skeletons";
 
 const Products = ({ initialProducts }) => {
   const queryClient = useQueryClient();
@@ -321,8 +322,13 @@ const Products = ({ initialProducts }) => {
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center min-h-[500px]">
-        <div className="animate-spin rounded-full h-20 w-20 border-b-2 border-gray-900"></div>
+      <div className="min-h-screen py-10 bg-white">
+        <div className="mx-auto max-w-7xl px-4">
+          <h1 className="text-2xl font-semibold text-gray-800 mb-8 text-center uppercase">
+            All Products
+          </h1>
+          <ProductGridSkeleton count={12} />
+        </div>
       </div>
     );
   }

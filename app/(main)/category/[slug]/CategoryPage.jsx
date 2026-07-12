@@ -10,6 +10,7 @@ import { addToCart, getCart } from "@/actions/cart-utils";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import ProductCard from "@/components/ProductCard";
+import { ProductGridSkeleton } from "@/components/skeletons";
 
 const CategoryPage = ({ params, initialProducts }) => {
   const { slug } = params;
@@ -178,8 +179,11 @@ const CategoryPage = ({ params, initialProducts }) => {
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center min-h-[500px]">
-        <div className="animate-spin rounded-full h-20 w-20 border-b-2 border-gray-900"></div>
+      <div className="container py-10">
+        <h1 className="text-2xl font-semibold text-gray-800 mb-8 text-center uppercase">
+          {formattedCategoryName}
+        </h1>
+        <ProductGridSkeleton count={12} />
       </div>
     );
   }
