@@ -73,10 +73,10 @@ const UserList = () => {
   useEffect(() => {
     async function fetchUser() {
       const res = await session();
-      if (res) {
-        if (res?.user?.role !== "admin") {
-          router.push('/');
-        }
+      if (!res) {
+        router.push('/login');
+      } else if (res?.user?.role !== "admin") {
+        router.push('/');
       }
     }
     fetchUser();

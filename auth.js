@@ -7,13 +7,11 @@ import bcrypt from "bcryptjs";
 import mongoClientPromise from "./service/mongoClientPromise";
 import { dbConnect } from "./service/mongo";
 import { User } from "./models/user-model";
+import { authConfig } from "./auth.config";
 
 export const { handlers: { GET, POST }, signIn, signOut, auth } = NextAuth({
+  ...authConfig,
   adapter: MongoDBAdapter(mongoClientPromise, { databaseName: process.env.ENVIRONMENT }),
-  session: {
-    strategy: "jwt",
-    maxAge: 60 * 60 * 24,
-  },
   providers: [
     Credentials({
       credentials: {
