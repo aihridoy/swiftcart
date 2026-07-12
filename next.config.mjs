@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  experimental: {
+    optimizePackageImports: ["react-icons"],
+  },
   images: {
     remotePatterns: [
       {
@@ -16,12 +19,6 @@ const nextConfig = {
       },
     ],
   },
-//   experimental: {
-//     staleTimes: {
-//       dynamic: 0,
-//       static: 0,
-//     },
-//   },
 };
 
 export default nextConfig;
