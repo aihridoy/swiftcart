@@ -14,6 +14,18 @@ export const POST = async (req) => {
             html,
         });
 
+        // The Resend SDK resolves normally even when the send is rejected
+        // (unverified domain, bad recipient, rate limit, etc) - it reports
+        // the failure via `error`, it doesn't throw. Missing this check
+        // meant rejected sends were reported to the client as success.
+        if (emailResponse.error) {
+            console.error("Resend rejected email:", emailResponse.error);
+            return new Response(
+                JSON.stringify({ success: false, error: emailResponse.error.message }),
+                { status: 502, headers: { "Content-Type": "application/json" } }
+            );
+        }
+
         return new Response(
             JSON.stringify({ success: true, emailResponse }),
             { status: 200, headers: { "Content-Type": "application/json" } }
