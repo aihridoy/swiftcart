@@ -2,6 +2,7 @@
 import { Product } from "@/models/product-model";
 import { dbConnect } from "@/service/mongo";
 import { NextResponse } from "next/server";
+import { session } from "@/actions/auth-utils";
 
 export async function GET(req, { params }) {
   await dbConnect();
@@ -32,9 +33,14 @@ export async function GET(req, { params }) {
 }
 
 export async function DELETE(req, { params }) {
-  await dbConnect();
-
   try {
+    const userSession = await session();
+    if (!userSession || !userSession.user || userSession.user.role !== "admin") {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    await dbConnect();
+
     const { id } = params;
 
     if (!id) {
@@ -58,9 +64,14 @@ export async function DELETE(req, { params }) {
 }
 
 export async function PUT(req, { params }) {
-  await dbConnect();
-
   try {
+    const userSession = await session();
+    if (!userSession || !userSession.user || userSession.user.role !== "admin") {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    await dbConnect();
+
     const { id } = params;
     const body = await req.json();
 
