@@ -1,8 +1,12 @@
 "use client";
 
-const RouteLoader = () => {
+const RouteLoader = ({ fill = false }) => {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center gap-8">
+    <div
+      className={`flex flex-col items-center justify-center gap-8 ${
+        fill ? "flex-1" : "min-h-screen"
+      }`}
+    >
       <div className="relative h-28 w-28">
         <div className="absolute inset-0 rounded-full bg-red-500/20 blur-2xl animate-pulse" />
         <div className="absolute inset-0 rounded-full border-[6px] border-gray-200" />

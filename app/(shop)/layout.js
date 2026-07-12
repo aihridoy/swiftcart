@@ -8,11 +8,13 @@ import CopyRight from "@/components/CopyRight";
 export default function ShopLayout({ children }) {
   return (
     <ClientLayout>
-      <Header />
-      <Navbar />
-      {children}
-      <Footer />
-      <CopyRight />
+      <div className="flex min-h-screen flex-col">
+        <Header />
+        <Navbar />
+        <main className="flex flex-1 flex-col">{children}</main>
+        <Footer />
+        <CopyRight />
+      </div>
     </ClientLayout>
   );
 }
