@@ -7,6 +7,8 @@ export const metadata = {
   description: "Browse the full SwiftCart product catalog.",
 };
 
+export const revalidate = 3600;
+
 async function getAllProducts() {
   try {
     await dbConnect();

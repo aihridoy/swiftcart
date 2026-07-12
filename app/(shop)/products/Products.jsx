@@ -44,6 +44,7 @@ const Products = ({ initialProducts }) => {
     queryKey: ["products"],
     queryFn: () => getProducts(),
     initialData: initialProducts ? { products: initialProducts } : undefined,
+    staleTime: 60 * 1000,
     onError: (error) => {
       toast.error(`Error fetching products: ${error.message}`, {
         position: "top-right",

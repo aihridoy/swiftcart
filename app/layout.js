@@ -1,6 +1,5 @@
-/* eslint-disable @next/next/no-css-tags */
-/* eslint-disable @next/next/no-page-custom-font */
 import localFont from "next/font/local";
+import { Poppins, Roboto } from "next/font/google";
 import "./globals.css";
 import ReactQueryProvider from "@/providers/ReactQueryProvider";
 import { ToastContainer } from "react-toastify";
@@ -17,33 +16,49 @@ const geistMono = localFont({
   variable: "--font-geist-mono",
   weight: "100 900",
 });
+const poppins = Poppins({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-poppins",
+  display: "swap",
+});
+const roboto = Roboto({
+  subsets: ["latin"],
+  weight: ["400", "500", "700"],
+  variable: "--font-roboto",
+  display: "swap",
+});
 
 export const metadata = {
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3000"
+  ),
   title: {
     default: "SwiftCart",
     template: "%s | SwiftCart",
   },
   description:
     "Shop the latest home decor, furniture, and lifestyle products at SwiftCart.",
+  openGraph: {
+    siteName: "SwiftCart",
+    type: "website",
+    title: "SwiftCart",
+    description:
+      "Shop the latest home decor, furniture, and lifestyle products at SwiftCart.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "SwiftCart",
+    description:
+      "Shop the latest home decor, furniture, and lifestyle products at SwiftCart.",
+  },
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="anonymous"
-        />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Roboto:wght@400;500;700&display=swap"
-          rel="stylesheet"
-        />
-      </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${poppins.variable} ${roboto.variable} antialiased`}
       >
         <ReactQueryProvider>
           <ClientLayout>{children}</ClientLayout>

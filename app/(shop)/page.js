@@ -7,6 +7,17 @@ import NewsLetter from "@/components/NewsLetter";
 import ShopByCategory from "@/components/ShopByCategory";
 import Trending from "@/components/Trending";
 
+export const metadata = {
+  title: "Home Decor, Furniture & Lifestyle Products",
+  description:
+    "Shop the latest home decor, furniture, and lifestyle products at SwiftCart. New arrivals, trending picks, and seasonal deals.",
+  openGraph: {
+    title: "SwiftCart - Home Decor, Furniture & Lifestyle Products",
+    description:
+      "Shop the latest home decor, furniture, and lifestyle products at SwiftCart. New arrivals, trending picks, and seasonal deals.",
+  },
+};
+
 export default function Home() {
   return (
     <>
