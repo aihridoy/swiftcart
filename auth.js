@@ -11,7 +11,7 @@ import { authConfig } from "./auth.config";
 
 export const { handlers: { GET, POST }, signIn, signOut, auth } = NextAuth({
   ...authConfig,
-  adapter: MongoDBAdapter(mongoClientPromise, { databaseName: process.env.ENVIRONMENT }),
+  adapter: MongoDBAdapter(mongoClientPromise),
   providers: [
     Credentials({
       credentials: {
