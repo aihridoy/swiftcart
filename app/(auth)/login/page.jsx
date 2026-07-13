@@ -73,6 +73,10 @@ const LoginPage = () => {
           draggable: true,
           progress: undefined,
         });
+        setTimeout(() => {
+          router.push("/");
+          router.refresh();
+        }, 2000);
       }
     } catch (error) {
       console.error("Error during Google sign-in:", error);
@@ -113,6 +117,10 @@ const LoginPage = () => {
           draggable: true,
           progress: undefined,
         });
+        setTimeout(() => {
+          router.push("/");
+          router.refresh();
+        }, 2000);
       }
     } catch (error) {
       console.error("Error during Facebook sign-in:", error);
