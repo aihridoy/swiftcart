@@ -18,7 +18,7 @@ export const authConfig = {
     async jwt({ token, user }) {
       if (user) {
         token.sub = user.id;
-        token.role = user.role;
+        token.role = user.role ?? "user";
         if (user.image) {
           token.picture = user.image;
         }

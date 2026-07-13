@@ -8,6 +8,7 @@ import mongoClientPromise from "./service/mongoClientPromise";
 import { dbConnect } from "./service/mongo";
 import { User } from "./models/user-model";
 import { authConfig } from "./auth.config";
+import { rateLimit, clientIp } from "./service/rate-limit";
 
 export const { handlers: { GET, POST }, signIn, signOut, auth } = NextAuth({
   ...authConfig,
@@ -18,16 +19,24 @@ export const { handlers: { GET, POST }, signIn, signOut, auth } = NextAuth({
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials) {
+      async authorize(credentials, request) {
         if (!credentials?.email || !credentials?.password) {
           throw new Error("Email and password are required");
+        }
+
+        const { allowed } = rateLimit(`login:${clientIp(request)}:${credentials.email}`, {
+          limit: 5,
+          windowMs: 5 * 60 * 1000,
+        });
+        if (!allowed) {
+          throw new Error("Too many login attempts. Please try again later.");
         }
 
         await dbConnect();
         const user = await User.findOne({ email: credentials.email });
 
-        if (!user) {
-          throw new Error("User not found");
+        if (!user || !user.password) {
+          throw new Error("Invalid credentials");
         }
 
         const isMatch = await bcrypt.compare(credentials.password, user.password);
@@ -46,10 +55,12 @@ export const { handlers: { GET, POST }, signIn, signOut, auth } = NextAuth({
     Google({
       clientId: process.env.AUTH_GOOGLE_ID,
       clientSecret: process.env.AUTH_GOOGLE_SECRET,
+      allowDangerousEmailAccountLinking: true,
     }),
     Facebook({
       clientId: process.env.AUTH_FACEBOOK_ID,
       clientSecret: process.env.AUTH_FACEBOOK_SECRET,
+      allowDangerousEmailAccountLinking: true,
       profile(profile) {
         return {
           id: profile.id,
@@ -83,7 +94,7 @@ export const { handlers: { GET, POST }, signIn, signOut, auth } = NextAuth({
     async jwt({ token, user }) {
       if (user) {
         token.sub = user.id;
-        token.role = user.role;
+        token.role = user.role ?? "user";
         if (user.image) {
           token.picture = user.image;
         }
