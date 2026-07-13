@@ -2,9 +2,21 @@ import { NextResponse } from "next/server";
 import { dbConnect } from "@/service/mongo";
 import { User } from "@/models/user-model";
 import bcrypt from "bcryptjs";
+import { rateLimit, clientIp } from "@/service/rate-limit";
 
 export async function POST(req) {
   try {
+    const { allowed, retryAfterSeconds } = rateLimit(`register:${clientIp(req)}`, {
+      limit: 5,
+      windowMs: 5 * 60 * 1000,
+    });
+    if (!allowed) {
+      return NextResponse.json(
+        { message: "Too many registration attempts. Please try again later." },
+        { status: 429, headers: { "Retry-After": String(retryAfterSeconds) } }
+      );
+    }
+
     await dbConnect();
 
     const { name, email, password, role } = await req.json();
