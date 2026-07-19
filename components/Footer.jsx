@@ -4,6 +4,45 @@ import Image from "next/image";
 import Link from "next/link";
 import { FaFacebook, FaInstagram, FaTwitter, FaPinterest } from "react-icons/fa";
 
+// ponytail: static list of real product categories; make it a query if categories churn
+const shopLinks = ["Furniture", "Lighting", "Rugs", "Wall Art"].map((name) => ({
+  name,
+  href: `/category/${name.toLowerCase()}`,
+}));
+
+const supportLinks = [
+  { name: "Contact Us", href: "/contact" },
+  { name: "Track Order", href: "/user-dashboard/orders" },
+  { name: "Your Cart", href: "/cart" },
+  { name: "Wishlist", href: "/wishlist" },
+];
+
+const companyLinks = [
+  { name: "About Us", href: "/about-us" },
+  { name: "All Products", href: "/products" },
+  { name: "Terms & Conditions", href: "/terms-conditions" },
+];
+
+const LinkColumn = ({ title, links }) => (
+  <div>
+    <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wider mb-4">
+      {title}
+    </h3>
+    <ul className="space-y-3">
+      {links.map(({ name, href }) => (
+        <li key={href}>
+          <Link
+            href={href}
+            className="text-gray-600 hover:text-gray-900 transition-colors duration-200"
+          >
+            {name}
+          </Link>
+        </li>
+      ))}
+    </ul>
+  </div>
+);
+
 const Footer = () => {
   return (
     <footer className="bg-gradient-to-b from-gray-50 to-beige-100 pt-16 pb-12 border-t border-gray-200">
@@ -64,128 +103,9 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* Shop Links */}
-          <div>
-            <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wider mb-4">
-              Shop
-            </h3>
-            <ul className="space-y-3">
-              <li>
-                <Link
-                  href="/products/furniture"
-                  className="text-gray-600 hover:text-gray-900 transition-colors duration-200"
-                >
-                  Furniture
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/products/decor"
-                  className="text-gray-600 hover:text-gray-900 transition-colors duration-200"
-                >
-                  Decor
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/products/lighting"
-                  className="text-gray-600 hover:text-gray-900 transition-colors duration-200"
-                >
-                  Lighting
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/products/textiles"
-                  className="text-gray-600 hover:text-gray-900 transition-colors duration-200"
-                >
-                  Textiles
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Support Links */}
-          <div>
-            <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wider mb-4">
-              Support
-            </h3>
-            <ul className="space-y-3">
-              <li>
-                <Link
-                  href="/support/faqs"
-                  className="text-gray-600 hover:text-gray-900 transition-colors duration-200"
-                >
-                  FAQs
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/support/shipping"
-                  className="text-gray-600 hover:text-gray-900 transition-colors duration-200"
-                >
-                  Shipping & Returns
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/support/contact"
-                  className="text-gray-600 hover:text-gray-900 transition-colors duration-200"
-                >
-                  Contact Us
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/support/track-order"
-                  className="text-gray-600 hover:text-gray-900 transition-colors duration-200"
-                >
-                  Track Order
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Company Links */}
-          <div>
-            <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wider mb-4">
-              Company
-            </h3>
-            <ul className="space-y-3">
-              <li>
-                <Link
-                  href="/about"
-                  className="text-gray-600 hover:text-gray-900 transition-colors duration-200"
-                >
-                  About Us
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/blog"
-                  className="text-gray-600 hover:text-gray-900 transition-colors duration-200"
-                >
-                  Blog
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/careers"
-                  className="text-gray-600 hover:text-gray-900 transition-colors duration-200"
-                >
-                  Careers
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/privacy"
-                  className="text-gray-600 hover:text-gray-900 transition-colors duration-200"
-                >
-                  Privacy Policy
-                </Link>
-              </li>
-            </ul>
-          </div>
+          <LinkColumn title="Shop" links={shopLinks} />
+          <LinkColumn title="Support" links={supportLinks} />
+          <LinkColumn title="Company" links={companyLinks} />
         </div>
 
         {/* Bottom Bar */}
