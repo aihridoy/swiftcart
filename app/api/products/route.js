@@ -1,6 +1,7 @@
 import { Product } from "@/models/product-model";
 import { dbConnect } from "@/service/mongo";
 import { NextResponse } from "next/server";
+import { escapeRegExp } from "@/lib/escape-regexp";
 
 export const dynamic = 'force-dynamic';
 
@@ -17,7 +18,7 @@ export async function GET(req) {
         let query = Product.find();
 
         if (category) {
-          query = query.where("category").regex(new RegExp(`^${category}$`, "i"));
+          query = query.where("category").regex(new RegExp(`^${escapeRegExp(category)}$`, "i"));
         }
 
         if (discounted) {

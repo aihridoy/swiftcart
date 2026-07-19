@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { notFound, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "react-toastify";
@@ -74,13 +74,7 @@ export default function UserProfile({ params }) {
   // Handle errors
   useEffect(() => {
     if (error) {
-      if (error.message.includes("User not found") || error.message.includes("Invalid user ID format")) {
-        toast.error("User not found.", {
-          position: "top-right",
-          autoClose: 3000,
-        });
-        router.push("/404");
-      } else if (error.message.includes("Unauthorized")) {
+      if (error.message.includes("Unauthorized")) {
         toast.error("Please log in to view this profile.", {
           position: "top-right",
           autoClose: 3000,
@@ -94,6 +88,15 @@ export default function UserProfile({ params }) {
       }
     }
   }, [error, router]);
+
+  // A missing/invalid user is a 404, not an error screen
+  if (
+    error &&
+    (error.message.includes("User not found") ||
+      error.message.includes("Invalid user ID format"))
+  ) {
+    notFound();
+  }
 
   if (isLoading) {
     return <SkeletonProfile />;

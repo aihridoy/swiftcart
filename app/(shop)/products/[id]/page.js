@@ -1,4 +1,5 @@
 import { cache } from "react";
+import { notFound } from "next/navigation";
 import { dbConnect } from "@/service/mongo";
 import { Product } from "@/models/product-model";
 import ProductDetails from "./ProductDetails";
@@ -52,5 +53,12 @@ export async function generateMetadata({ params }) {
 
 export default async function Page({ params }) {
   const product = await getProduct(params.id);
+
+  // A bad/deleted id used to render the client component, which then failed
+  // its own fetch and showed "Failed to load product details" behind a 200.
+  if (!product) {
+    notFound();
+  }
+
   return <ProductDetails params={params} initialProduct={product} />;
 }
