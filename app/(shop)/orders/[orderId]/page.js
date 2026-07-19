@@ -27,22 +27,6 @@ const OrderDetails = () => {
       return order;
     },
     enabled: !!session && !!orderId,
-    onError: (error) => {
-      if (error.message.includes("Unauthorized")) {
-        toast.error("Please log in to view your order.", {
-          position: "top-right",
-          autoClose: 3000,
-        });
-        setTimeout(() => {
-          router.push("/login");
-        }, 3000);
-      } else {
-        toast.error(`Error loading order: ${error.message}`, {
-          position: "top-right",
-          autoClose: 3000,
-        });
-      }
-    },
   });
 
   // Function to generate and download the PDF receipt

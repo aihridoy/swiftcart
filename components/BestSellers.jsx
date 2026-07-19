@@ -53,12 +53,6 @@ const BestSellers = () => {
   const { data: productsData, error: productsError, isLoading: productsLoading } = useQuery({
     queryKey: ["bestSellers"],
     queryFn: () => getBestSellers({ limit: 8 }),
-    onError: (error) => {
-      toast.error(`Error fetching best sellers: ${error.message}`, {
-        position: "top-right",
-        autoClose: 3000,
-      });
-    },
   });
 
   const { data: wishlistData, isLoading: wishlistLoading } = useQuery({

@@ -68,19 +68,6 @@ const OrderHistory = () => {
     queryKey: ["orders"],
     queryFn: getOrders,
     enabled: !!userSession,
-    onError: (error) => {
-      if (error.message.includes("Unauthorized")) {
-        toast.error("Please log in to view your orders.", {
-          position: "top-right",
-          autoClose: 3000,
-        });
-      } else {
-        toast.error(`Error loading orders: ${error.message}`, {
-          position: "top-right",
-          autoClose: 3000,
-        });
-      }
-    },
   });
 
   // Handle page change

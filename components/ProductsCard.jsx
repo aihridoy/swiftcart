@@ -31,9 +31,6 @@ const ProductCard = ({ product, wishlistData, cartData, queryClient }) => {
     queryKey: ["reviews", product._id],
     queryFn: () => getReviewsByProductId(product._id),
     enabled: !!product._id,
-    onError: (error) => {
-      console.error(`Error fetching reviews for product ${product._id}:`, error);
-    },
   });
 
   // Calculate average rating and total reviews

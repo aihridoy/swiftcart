@@ -50,12 +50,6 @@ const ProductDetails = ({ params, initialProduct }) => {
     queryFn: () => getProductById(id),
     initialData: initialProduct ? { product: initialProduct } : undefined,
     staleTime: 60 * 1000,
-    onError: (error) => {
-      toast.error(`Error fetching product: ${error.message}`, {
-        position: "top-right",
-        autoClose: 3000,
-      });
-    },
   });
 
   // Fetch related products
@@ -63,12 +57,6 @@ const ProductDetails = ({ params, initialProduct }) => {
     queryKey: ["relatedProducts", id],
     queryFn: () => getProducts({ limit: 4, sort: "popularity", category: productData?.product.category }),
     enabled: !!productData?.product.category,
-    onError: (error) => {
-      toast.error(`Error fetching related products: ${error.message}`, {
-        position: "top-right",
-        autoClose: 3000,
-      });
-    },
   });
 
   // Fetch wishlist
@@ -76,20 +64,6 @@ const ProductDetails = ({ params, initialProduct }) => {
     queryKey: ["wishlist"],
     queryFn: getWishlist,
     enabled: !!userSession,
-    onError: (error) => {
-      if (error.message.includes("Unauthorized")) {
-        toast.error("Please log in to view your wishlist.", {
-          position: "top-right",
-          autoClose: 3000,
-        });
-        setTimeout(() => router.push("/login"), 3000);
-      } else {
-        toast.error(`Error fetching wishlist: ${error.message}`, {
-          position: "top-right",
-          autoClose: 3000,
-        });
-      }
-    },
   });
 
   // Fetch cart
@@ -97,32 +71,12 @@ const ProductDetails = ({ params, initialProduct }) => {
     queryKey: ["cart"],
     queryFn: getCart,
     enabled: !!userSession,
-    onError: (error) => {
-      if (error.message.includes("Unauthorized")) {
-        toast.error("Please log in to view your cart.", {
-          position: "top-right",
-          autoClose: 3000,
-        });
-        setTimeout(() => router.push("/login"), 3000);
-      } else {
-        toast.error(`Error fetching cart: ${error.message}`, {
-          position: "top-right",
-          autoClose: 3000,
-        });
-      }
-    },
   });
 
   // Fetch reviews
   const { data: reviewsData, error: reviewsError, isLoading: reviewsLoading } = useQuery({
     queryKey: ["reviews", id],
     queryFn: () => getReviewsByProductId(id),
-    onError: (error) => {
-      toast.error(`Error fetching reviews: ${error.message}`, {
-        position: "top-right",
-        autoClose: 3000,
-      });
-    },
   });
 
   // Wishlist mutation

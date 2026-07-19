@@ -43,25 +43,11 @@ const Checkout = () => {
     queryFn: () => getCartItemById(cartId),
     enabled: !!cartId && sessionStatus === "authenticated",
     staleTime: 0, 
-    cacheTime: 0,
+    gcTime: 0,
     refetchOnMount: true,
     refetchOnWindowFocus: false,
     retry: 3,
     retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
-    onError: (error) => {
-      console.error("Query error:", error);
-      if (error.message.includes("Unauthorized")) {
-        toast.error("Please log in to access checkout.", {
-          position: "top-right",
-          autoClose: 3000,
-        });
-      } else {
-        toast.error(`Error loading checkout: ${error.message}`, {
-          position: "top-right",
-          autoClose: 3000,
-        });
-      }
-    },
   });
 
   // Force refetch when component mounts or cartId changes

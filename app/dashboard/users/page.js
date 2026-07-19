@@ -86,19 +86,6 @@ const UserList = () => {
   const { data, error, isLoading } = useQuery({
     queryKey: ["users", currentPage],
     queryFn: () => getUsers({ page: currentPage, limit }),
-    onError: (error) => {
-      if (error.message.includes("Unauthorized")) {
-        toast.error("Please log in to view users.", {
-          position: "top-right",
-          autoClose: 3000,
-        });
-      } else {
-        toast.error(`Error loading users: ${error.message}`, {
-          position: "top-right",
-          autoClose: 3000,
-        });
-      }
-    },
   });
 
   const users = data?.users || [];

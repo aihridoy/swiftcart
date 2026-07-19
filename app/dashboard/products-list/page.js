@@ -65,8 +65,6 @@ const ProductsPage = () => {
     queryKey: ["products"],
     queryFn: () => getProducts({ sort: "-createdAt" }),
     enabled: !!user && !isLoadingSession,
-    onError: (error) =>
-      toast.error(`Error fetching products: ${error.message}`),
   });
 
   // Mutation for deleting a product

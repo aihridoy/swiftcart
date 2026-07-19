@@ -50,36 +50,18 @@ const UserDashboard = () => {
     queryKey: ["wishlist"],
     queryFn: getWishlist,
     enabled: !!userSession,
-    onError: (error) => {
-      toast.error(`Error fetching wishlist: ${error.message}`, {
-        position: "top-right",
-        autoClose: 3000,
-      });
-    },
   });
 
   const { data: cartData, error: cartError, isLoading: cartLoading } = useQuery({
     queryKey: ["cart"],
     queryFn: getCart,
     enabled: !!userSession,
-    onError: (error) => {
-      toast.error(`Error fetching cart: ${error.message}`, {
-        position: "top-right",
-        autoClose: 3000,
-      });
-    },
   });
 
   const { data: orderData, error: orderError, isLoading: orderLoading } = useQuery({
     queryKey: ["orders"],
     queryFn: getOrders,
     enabled: !!userSession,
-    onError: (error) => {
-      toast.error(`Error loading orders: ${error.message}`, {
-        position: "top-right",
-        autoClose: 3000,
-      });
-    },
   });
 
   if (wishlistLoading || cartLoading || orderLoading) {

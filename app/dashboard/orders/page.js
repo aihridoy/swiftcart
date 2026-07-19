@@ -77,22 +77,6 @@ const OrderList = () => {
   const { data, error, isLoading } = useQuery({
     queryKey: ["orders", currentPage],
     queryFn: () => getOrders({ page: currentPage, limit }),
-    onError: (error) => {
-      if (error.message.includes("Unauthorized")) {
-        toast.error("Please log in to view orders.", {
-          position: "top-right",
-          autoClose: 3000,
-        });
-        setTimeout(() => {
-          router.push("/login");
-        }, 3000);
-      } else {
-        toast.error(`Error loading orders: ${error.message}`, {
-          position: "top-right",
-          autoClose: 3000,
-        });
-      }
-    },
   });
 
   // Mutation for updating order status

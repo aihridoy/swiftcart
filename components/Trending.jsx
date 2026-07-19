@@ -55,17 +55,6 @@ const Trending = () => {
   const { data: productsData, error: productsError, isLoading: productsLoading } = useQuery({
     queryKey: ["trendingProducts"],
     queryFn: () => getProducts({ limit: 12, sort: "-popularityScore" }),
-    onError: (error) => {
-      toast.error(`Error fetching trending products: ${error.message}`, {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-    },
   });
 
   // Fetch wishlist (only when authenticated)
@@ -73,32 +62,6 @@ const Trending = () => {
     queryKey: ["wishlist"],
     queryFn: getWishlist,
     enabled: !!user,
-    onError: (error) => {
-      if (error.message.includes("Unauthorized")) {
-        toast.error("Please log in to view your wishlist.", {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
-        setTimeout(() => {
-          router.push("/login");
-        }, 3000);
-      } else {
-        toast.error(`Error fetching wishlist: ${error.message}`, {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
-      }
-    },
   });
 
   // Fetch cart (only when authenticated)
@@ -106,32 +69,6 @@ const Trending = () => {
     queryKey: ["cart"],
     queryFn: getCart,
     enabled: !!user,
-    onError: (error) => {
-      if (error.message.includes("Unauthorized")) {
-        toast.error("Please log in to view your cart.", {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
-        setTimeout(() => {
-          router.push("/login");
-        }, 3000);
-      } else {
-        toast.error(`Error fetching cart: ${error.message}`, {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
-      }
-    },
   });
 
   // Wishlist mutation

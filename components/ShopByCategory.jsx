@@ -20,17 +20,6 @@ const ShopByCategory = () => {
   const { data, error, isLoading } = useQuery({
     queryKey: ["categoryProducts"],
     queryFn: () => getProducts(),
-    onError: (error) => {
-      toast.error(`Error fetching categories: ${error.message}`, {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-    },
   });
 
   if (isLoading) {

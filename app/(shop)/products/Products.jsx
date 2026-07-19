@@ -45,12 +45,6 @@ const Products = ({ initialProducts }) => {
     queryFn: () => getProducts(),
     initialData: initialProducts ? { products: initialProducts } : undefined,
     staleTime: 60 * 1000,
-    onError: (error) => {
-      toast.error(`Error fetching products: ${error.message}`, {
-        position: "top-right",
-        autoClose: 3000,
-      });
-    },
   });
 
   // Fetch cart
@@ -58,20 +52,6 @@ const Products = ({ initialProducts }) => {
     queryKey: ["cart"],
     queryFn: getCart,
     enabled: status === "authenticated",
-    onError: (error) => {
-      if (error.message.includes("Unauthorized")) {
-        toast.error("Please log in to view your cart.", {
-          position: "top-right",
-          autoClose: 3000,
-        });
-        setTimeout(() => router.push("/login"), 3000);
-      } else {
-        toast.error(`Error fetching cart: ${error.message}`, {
-          position: "top-right",
-          autoClose: 3000,
-        });
-      }
-    },
   });
 
   // Cart mutation
@@ -105,32 +85,6 @@ const Products = ({ initialProducts }) => {
       queryKey: ["wishlist"],
       queryFn: getWishlist,
       enabled: status === "authenticated", // Only run if user is authenticated
-      onError: (error) => {
-        if (error.message.includes("Unauthorized")) {
-          toast.error("Please log in to view your wishlist.", {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-          });
-          setTimeout(() => {
-            router.push("/login");
-          }, 3000);
-        } else {
-          toast.error(`Error fetching wishlist: ${error.message}`, {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-          });
-        }
-      },
     });
 
   // Wishlist mutation

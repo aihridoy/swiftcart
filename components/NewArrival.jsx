@@ -45,12 +45,6 @@ const NewArrival = () => {
   const { data: productsData, error: productsError, isLoading: productsLoading } = useQuery({
     queryKey: ["newArrivalProducts"],
     queryFn: () => getProducts({ limit: 12, sort: "-createdAt" }),
-    onError: (error) => {
-      toast.error(`Error fetching new arrivals: ${error.message}`, {
-        position: "top-right",
-        autoClose: 3000,
-      });
-    },
   });
 
   // Fetch wishlist (only when authenticated)
@@ -58,20 +52,6 @@ const NewArrival = () => {
     queryKey: ["wishlist"],
     queryFn: getWishlist,
     enabled: status === "authenticated",
-    onError: (error) => {
-      if (error.message.includes("Unauthorized")) {
-        toast.error("Please log in to view your wishlist.", {
-          position: "top-right",
-          autoClose: 3000,
-        });
-        setTimeout(() => router.push("/login"), 3000);
-      } else {
-        toast.error(`Error fetching wishlist: ${error.message}`, {
-          position: "top-right",
-          autoClose: 3000,
-        });
-      }
-    },
   });
 
   // Fetch cart (only when authenticated)
@@ -79,20 +59,6 @@ const NewArrival = () => {
     queryKey: ["cart"],
     queryFn: getCart,
     enabled: status === "authenticated",
-    onError: (error) => {
-      if (error.message.includes("Unauthorized")) {
-        toast.error("Please log in to view your cart.", {
-          position: "top-right",
-          autoClose: 3000,
-        });
-        setTimeout(() => router.push("/login"), 3000);
-      } else {
-        toast.error(`Error fetching cart: ${error.message}`, {
-          position: "top-right",
-          autoClose: 3000,
-        });
-      }
-    },
   });
 
   // Loading state for products

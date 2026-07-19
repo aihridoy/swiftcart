@@ -63,11 +63,6 @@ const FeaturedProduct = () => {
   } = useQuery({
     queryKey: ["featuredProduct"],
     queryFn: getProducts,
-    onError: (err) =>
-      toast.error(`Error fetching featured product: ${err.message}`, {
-        position: "top-right",
-        autoClose: 3000,
-      }),
   });
 
   // Featured product
@@ -103,19 +98,6 @@ const FeaturedProduct = () => {
     queryKey: ["wishlist"],
     queryFn: getWishlist,
     enabled: !!user,
-    onError: (error) => {
-      if (error.message.includes("Unauthorized")) {
-        toast.error("Please log in to view your wishlist.", {
-          position: "top-right",
-          autoClose: 3000,
-        });
-      } else {
-        toast.error(`Error fetching wishlist: ${error.message}`, {
-          position: "top-right",
-          autoClose: 3000,
-        });
-      }
-    },
   });
 
   // Cart data
@@ -123,19 +105,6 @@ const FeaturedProduct = () => {
     queryKey: ["cart"],
     queryFn: getCart,
     enabled: !!user,
-    onError: (error) => {
-      if (error.message.includes("Unauthorized")) {
-        toast.error("Please log in to view your cart.", {
-          position: "top-right",
-          autoClose: 3000,
-        });
-      } else {
-        toast.error(`Error fetching cart: ${error.message}`, {
-          position: "top-right",
-          autoClose: 3000,
-        });
-      }
-    },
   });
 
   // Cart mutation
