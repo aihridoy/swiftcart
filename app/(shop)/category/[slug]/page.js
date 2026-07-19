@@ -1,19 +1,19 @@
 import { cache } from "react";
+import { notFound } from "next/navigation";
+import { escapeRegExp } from "@/lib/escape-regexp";
 import { dbConnect } from "@/service/mongo";
 import { Product } from "@/models/product-model";
 import CategoryPage from "./CategoryPage";
 
+// Errors deliberately propagate to the error boundary: swallowing them into an
+// empty array would make a database blip look like a non-existent category.
 const getCategoryProducts = cache(async (category) => {
-  try {
-    await dbConnect();
-    const products = await Product.find()
-      .where("category")
-      .regex(new RegExp(`^${category}$`, "i"))
-      .lean();
-    return JSON.parse(JSON.stringify(products));
-  } catch {
-    return [];
-  }
+  await dbConnect();
+  const products = await Product.find()
+    .where("category")
+    .regex(new RegExp(`^${escapeRegExp(category)}$`, "i"))
+    .lean();
+  return JSON.parse(JSON.stringify(products));
 });
 
 export async function generateStaticParams() {
@@ -47,5 +47,12 @@ export async function generateMetadata({ params }) {
 export default async function Page({ params }) {
   const decodedSlug = decodeURIComponent(params.slug);
   const products = await getCategoryProducts(decodedSlug);
+
+  // Categories only exist by virtue of products carrying them, so an empty
+  // result means the slug is bogus - 404 instead of an empty grid behind a 200.
+  if (products.length === 0) {
+    notFound();
+  }
+
   return <CategoryPage params={params} initialProducts={products} />;
 }

@@ -3,7 +3,17 @@ import { Product } from "@/models/product-model";
 
 const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3000";
 
-const staticRoutes = ["", "/products", "/about-us", "/contact", "/search"];
+const staticRoutes = [
+  "",
+  "/products",
+  "/about-us",
+  "/contact",
+  "/search",
+  "/faqs",
+  "/shipping-returns",
+  "/privacy",
+  "/terms-conditions",
+];
 
 export default async function sitemap() {
   const staticEntries = staticRoutes.map((route) => ({

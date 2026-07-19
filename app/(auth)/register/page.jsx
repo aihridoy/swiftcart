@@ -5,6 +5,7 @@ import Link from "next/link";
 import { signIn } from 'next-auth/react';
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import { getCallbackUrl } from "@/lib/callback-url";
 import { toast } from "react-toastify";
 import { registerUser } from "@/actions/register";
 
@@ -144,7 +145,7 @@ const RegisterPage = () => {
           progress: undefined,
         });
         setTimeout(() => {
-          router.push("/");
+          router.push(getCallbackUrl());
           router.refresh();
         }, 2000);
       }

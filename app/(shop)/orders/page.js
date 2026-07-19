@@ -10,6 +10,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { FaShoppingBag, FaArrowLeft, FaArrowRight, FaEye, FaSpinner } from "react-icons/fa";
 import { session } from "@/actions/auth-utils";
+import LoadError from "@/components/LoadError";
 
 // Skeleton Loader for Orders
 const SkeletonOrderItem = () => (
@@ -68,19 +69,6 @@ const OrderHistory = () => {
     queryKey: ["orders"],
     queryFn: getOrders,
     enabled: !!userSession,
-    onError: (error) => {
-      if (error.message.includes("Unauthorized")) {
-        toast.error("Please log in to view your orders.", {
-          position: "top-right",
-          autoClose: 3000,
-        });
-      } else {
-        toast.error(`Error loading orders: ${error.message}`, {
-          position: "top-right",
-          autoClose: 3000,
-        });
-      }
-    },
   });
 
   // Handle page change
@@ -115,7 +103,7 @@ const OrderHistory = () => {
           </div>
         </div>
         <div className="max-w-6xl mx-auto text-center bg-white/90 backdrop-blur-lg rounded-xl shadow-lg p-6">
-          <p className="text-red-600 text-lg">Failed to load orders. Please try again later.</p>
+          <LoadError message="Failed to load orders. Please try again later." />
         </div>
       </div>
     );

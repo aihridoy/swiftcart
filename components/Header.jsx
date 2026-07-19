@@ -57,12 +57,6 @@ const Header = () => {
     queryKey: ["search", debouncedSearchTerm],
     queryFn: () => searchProducts(debouncedSearchTerm),
     enabled: !!debouncedSearchTerm,
-    onError: (error) => {
-      toast.error(`Error searching products: ${error.message}`, {
-        position: "top-right",
-        autoClose: 3000,
-      });
-    },
   });
 
   // Fetch wishlist
@@ -70,21 +64,6 @@ const Header = () => {
     queryKey: ["wishlist"],
     queryFn: getWishlist,
     enabled: !!user,
-    onError: (error) => {
-      if (error.message.includes("Unauthorized")) {
-        // Do nothing, handled by handleProtectedNavigation
-      } else {
-        toast.error(`Error fetching wishlist: ${error.message}`, {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
-      }
-    },
   });
 
   // Fetch cart
@@ -92,21 +71,6 @@ const Header = () => {
     queryKey: ["cart"],
     queryFn: getCart,
     enabled: !!user,
-    onError: (error) => {
-      if (error.message.includes("Unauthorized")) {
-        // Do nothing, handled by handleProtectedNavigation
-      } else {
-        toast.error(`Error fetching cart: ${error.message}`, {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
-      }
-    },
   });
 
   // Fetch orders
@@ -114,21 +78,6 @@ const Header = () => {
     queryKey: ["orders"],
     queryFn: getOrders,
     enabled: !!user,
-    onError: (error) => {
-      if (error.message.includes("Unauthorized")) {
-        // Do nothing, handled by handleProtectedNavigation
-      } else {
-        toast.error(`Error fetching orders: ${error.message}`, {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
-      }
-    },
   });
 
   // Handle search form submission

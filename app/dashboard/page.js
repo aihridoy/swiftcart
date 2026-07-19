@@ -59,34 +59,16 @@ export default function DashboardPage() {
   const { data: userData, isLoading: usersLoading } = useQuery({
     queryKey: ["users"],
     queryFn: getUsers,
-    onError: (error) => {
-      toast.error(`Error loading users: ${error.message}`, {
-        position: "top-right",
-        autoClose: 3000,
-      });
-    },
   });
 
   const { data: productData, isLoading: productsLoading } = useQuery({
     queryKey: ["products"],
     queryFn: getProducts,
-    onError: (error) => {
-      toast.error(`Error fetching products: ${error.message}`, {
-        position: "top-right",
-        autoClose: 3000,
-      });
-    },
   });
 
   const { data: orderData, isLoading: ordersLoading } = useQuery({
     queryKey: ["orders"],
     queryFn: getOrders,
-    onError: (error) => {
-      toast.error(`Error loading orders: ${error.message}`, {
-        position: "top-right",
-        autoClose: 3000,
-      });
-    },
   });
 
   const isLoading = usersLoading || productsLoading || ordersLoading;

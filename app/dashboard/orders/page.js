@@ -22,6 +22,7 @@ import {
 } from "react-icons/fa";
 import { session } from "@/actions/auth-utils";
 import { useDebounce } from "@/hooks/useDebounce";
+import LoadError from "@/components/LoadError";
 
 // Skeleton Loader Component
 const SkeletonRow = () => (
@@ -77,22 +78,6 @@ const OrderList = () => {
   const { data, error, isLoading } = useQuery({
     queryKey: ["orders", currentPage],
     queryFn: () => getOrders({ page: currentPage, limit }),
-    onError: (error) => {
-      if (error.message.includes("Unauthorized")) {
-        toast.error("Please log in to view orders.", {
-          position: "top-right",
-          autoClose: 3000,
-        });
-        setTimeout(() => {
-          router.push("/login");
-        }, 3000);
-      } else {
-        toast.error(`Error loading orders: ${error.message}`, {
-          position: "top-right",
-          autoClose: 3000,
-        });
-      }
-    },
   });
 
   // Mutation for updating order status
@@ -224,7 +209,7 @@ const OrderList = () => {
       <div className="container mx-auto px-4 py-8 md:py-16 flex justify-center">
         <div className="bg-red-50 p-6 rounded-lg shadow-md flex items-center">
           <FaTimesCircle className="text-red-600 text-xl mr-2" />
-          <p className="text-red-600">Failed to load orders. Please try again later.</p>
+          <LoadError message="Failed to load orders. Please try again later." />
         </div>
       </div>
     );

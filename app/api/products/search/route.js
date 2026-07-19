@@ -1,6 +1,7 @@
 import { Product } from "@/models/product-model";
 import { dbConnect } from "@/service/mongo";
 import { NextResponse } from "next/server";
+import { escapeRegExp } from "@/lib/escape-regexp";
 
 export const dynamic = 'force-dynamic';
 
@@ -10,19 +11,22 @@ export async function GET(req) {
     try {
         const searchParams = req.nextUrl.searchParams;
         const query = searchParams.get("q") || "";
-        const limit = parseInt(searchParams.get("limit")) || 10;
-        
+        const requestedLimit = parseInt(searchParams.get("limit")) || 10;
+        const limit = Math.min(Math.max(requestedLimit, 1), 50);
+
         if (!query.trim()) {
             return NextResponse.json({ products: [] }, { status: 200 });
         }
 
-        // Create a regex search pattern that is case insensitive
-        const searchRegex = new RegExp(query, "i");
-        
-        // Search across multiple fields
+        // Escaped: an unescaped "(" made this route throw a 500 and ".*" matched
+        // the entire catalogue.
+        const searchRegex = new RegExp(escapeRegExp(query.trim()), "i");
+
+        // Search across multiple fields. The field is `title`, not `name` - the
+        // old `name` clause silently never matched anything.
         const products = await Product.find({
             $or: [
-                { name: { $regex: searchRegex } },
+                { title: { $regex: searchRegex } },
                 { description: { $regex: searchRegex } },
                 { category: { $regex: searchRegex } }
             ]

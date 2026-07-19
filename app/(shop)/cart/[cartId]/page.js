@@ -9,6 +9,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { getCartItemById } from "@/actions/cart-utils";
 import { DetailSkeleton } from "@/components/skeletons";
+import LoadError from "@/components/LoadError";
 
 const Checkout = () => {
   const { cartId } = useParams();
@@ -43,25 +44,11 @@ const Checkout = () => {
     queryFn: () => getCartItemById(cartId),
     enabled: !!cartId && sessionStatus === "authenticated",
     staleTime: 0, 
-    cacheTime: 0,
+    gcTime: 0,
     refetchOnMount: true,
     refetchOnWindowFocus: false,
     retry: 3,
     retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
-    onError: (error) => {
-      console.error("Query error:", error);
-      if (error.message.includes("Unauthorized")) {
-        toast.error("Please log in to access checkout.", {
-          position: "top-right",
-          autoClose: 3000,
-        });
-      } else {
-        toast.error(`Error loading checkout: ${error.message}`, {
-          position: "top-right",
-          autoClose: 3000,
-        });
-      }
-    },
   });
 
   // Force refetch when component mounts or cartId changes
@@ -235,7 +222,7 @@ const Checkout = () => {
   if (error) {
     return (
       <div className="container py-16 flex flex-col justify-center items-center">
-        <p className="mb-4">Failed to load checkout. Please try again later.</p>
+        <LoadError message="Failed to load checkout. Please try again later." />
         <button 
           onClick={() => refetch()}
           className="px-4 py-2 bg-primary text-white rounded hover:bg-primary/80"

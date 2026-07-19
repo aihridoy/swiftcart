@@ -4,6 +4,7 @@ import { signIn } from "next-auth/react";
 import Link from "next/link";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import { getCallbackUrl } from "@/lib/callback-url";
 import { toast } from "react-toastify";
 import { login } from "@/actions/auth-utils";
 
@@ -30,7 +31,7 @@ const LoginPage = () => {
           progress: undefined,
         });
         setTimeout(() => {
-          router.push("/");
+          router.push(getCallbackUrl());
           router.refresh();
         }, 2000);
       } 
@@ -74,7 +75,7 @@ const LoginPage = () => {
           progress: undefined,
         });
         setTimeout(() => {
-          router.push("/");
+          router.push(getCallbackUrl());
           router.refresh();
         }, 2000);
       }
@@ -118,7 +119,7 @@ const LoginPage = () => {
           progress: undefined,
         });
         setTimeout(() => {
-          router.push("/");
+          router.push(getCallbackUrl());
           router.refresh();
         }, 2000);
       }

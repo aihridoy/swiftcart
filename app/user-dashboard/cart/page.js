@@ -44,14 +44,6 @@ const UserCart = () => {
     queryKey: ["cart"],
     queryFn: getCart,
     enabled: !!userSession,
-    onError: (error) => {
-      if (!error.message.includes("Unauthorized")) {
-        toast.error(`Error fetching cart: ${error.message}`, {
-          position: "top-right",
-          autoClose: 3000,
-        });
-      }
-    },
   });
 
   // Mutation to remove item from cart

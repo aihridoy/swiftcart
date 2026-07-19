@@ -3,9 +3,9 @@ import Link from "next/link";
 import React from "react";
 
 export const metadata = {
-  title: "Terms and Conditions - LWSkart",
+  title: "Terms and Conditions - SwiftCart",
   description:
-    "Read the Terms and Conditions for using the LWSkart website and purchasing products from our online store.",
+    "Read the Terms and Conditions for using the SwiftCart website and purchasing products from our online store.",
 };
 
 const TermsAndConditionsPage = () => {
@@ -16,7 +16,7 @@ const TermsAndConditionsPage = () => {
           Terms and Conditions
         </h1>
         <p className="text-gray-600 text-center mb-8">
-          Welcome to LWSkart! Please read these Terms and Conditions carefully
+          Welcome to SwiftCart! Please read these Terms and Conditions carefully
           before using our website.
         </p>
 
@@ -24,7 +24,7 @@ const TermsAndConditionsPage = () => {
           <section>
             <h2 className="text-2xl font-semibold mb-4">1. Introduction</h2>
             <p>
-              These Terms and Conditions govern your use of the LWSkart website
+              These Terms and Conditions govern your use of the SwiftCart website
               and the purchase of products from our online store. By accessing
               or using our website, you agree to be bound by these terms. If you
               do not agree with any part of these terms, please do not use our
@@ -37,7 +37,7 @@ const TermsAndConditionsPage = () => {
               2. User Responsibilities
             </h2>
             <p>
-              You agree to use the LWSkart website for lawful purposes only. You
+              You agree to use the SwiftCart website for lawful purposes only. You
               are responsible for maintaining the confidentiality of your
               account and password and for restricting access to your computer
               or device. You agree to accept responsibility for all activities
@@ -74,7 +74,7 @@ const TermsAndConditionsPage = () => {
               4. Orders and Payments
             </h2>
             <p>
-              By placing an order on LWSkart, you agree to pay the total amount
+              By placing an order on SwiftCart, you agree to pay the total amount
               specified at checkout, including any applicable taxes and shipping
               fees. We accept payments via credit/debit cards, PayPal, etc. All
               payments must be made in USD.
@@ -115,7 +115,7 @@ const TermsAndConditionsPage = () => {
               product within 30 days of delivery, provided it is in its original
               condition, unused, and with all packaging and tags intact. To
               initiate a return, please contact our customer support team at
-              support@lwskart.com/ +1-800-555-1234.
+              support@swiftcart.com/ +1-800-555-1234.
             </p>
             <p className="mt-2">
               Refunds will be processed within 7-10 business days after we
@@ -130,8 +130,8 @@ const TermsAndConditionsPage = () => {
               7. Intellectual Property
             </h2>
             <p>
-              All content on the LWSkart website, including text, images, logos,
-              and designs, is the property of LWSkart or its licensors and is
+              All content on the SwiftCart website, including text, images, logos,
+              and designs, is the property of SwiftCart or its licensors and is
               protected by copyright, trademark, and other intellectual property
               laws. You may not reproduce, distribute, or use any content from
               our website without prior written permission.
@@ -143,7 +143,7 @@ const TermsAndConditionsPage = () => {
               8. Limitation of Liability
             </h2>
             <p>
-              LWSkart shall not be liable for any indirect, incidental, special,
+              SwiftCart shall not be liable for any indirect, incidental, special,
               or consequential damages arising from your use of our website or
               the purchase of our products, including but not limited to loss of
               profits, data, or goodwill. Our total liability for any claim
@@ -181,7 +181,7 @@ const TermsAndConditionsPage = () => {
               contact us at:
             </p>
             <ul className="list-disc pl-6 mt-2">
-              <li>Email: support@lwskart.com</li>
+              <li>Email: support@swiftcart.com</li>
               <li>Phone: +1-800-555-1234</li>
               <li>Address: 123 Main St, New York, NY 10001</li>
             </ul>

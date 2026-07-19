@@ -11,6 +11,7 @@ import { addToCart, getCart } from "@/actions/cart-utils";
 import { useSession } from "next-auth/react";
 import ProductCard from "@/components/ProductCard";
 import { ProductGridSkeleton } from "@/components/skeletons";
+import LoadError from "@/components/LoadError";
 
 const SearchPage = () => {
   const queryClient = useQueryClient();
@@ -24,12 +25,6 @@ const SearchPage = () => {
     queryKey: ["search", query],
     queryFn: () => searchProducts(query),
     enabled: !!query,
-    onError: (error) => {
-      toast.error(`Error fetching search results: ${error.message}`, {
-        position: "top-right",
-        autoClose: 3000,
-      });
-    },
   });
 
   // Fetch wishlist
@@ -37,20 +32,6 @@ const SearchPage = () => {
     queryKey: ["wishlist"],
     queryFn: getWishlist,
     enabled: !!session,
-    onError: (error) => {
-      if (error.message.includes("Unauthorized")) {
-        toast.error("Please log in to view your wishlist.", {
-          position: "top-right",
-          autoClose: 3000,
-        });
-        setTimeout(() => router.push("/login"), 3000);
-      } else {
-        toast.error(`Error fetching wishlist: ${error.message}`, {
-          position: "top-right",
-          autoClose: 3000,
-        });
-      }
-    },
   });
 
   // Fetch cart
@@ -58,20 +39,6 @@ const SearchPage = () => {
     queryKey: ["cart"],
     queryFn: getCart,
     enabled: !!session,
-    onError: (error) => {
-      if (error.message.includes("Unauthorized")) {
-        toast.error("Please log in to view your cart.", {
-          position: "top-right",
-          autoClose: 3000,
-        });
-        setTimeout(() => router.push("/login"), 3000);
-      } else {
-        toast.error(`Error fetching cart: ${error.message}`, {
-          position: "top-right",
-          autoClose: 3000,
-        });
-      }
-    },
   });
 
   // Wishlist mutation
@@ -183,7 +150,7 @@ const SearchPage = () => {
   if (error) {
     return (
       <div className="container py-16 flex justify-center">
-        <p>Failed to load search results. Please try again later.</p>
+        <LoadError message="Failed to load search results. Please try again later." />
       </div>
     );
   }

@@ -52,12 +52,6 @@ const Deals = () => {
   const { data: productsData, error: productsError, isLoading: productsLoading } = useQuery({
     queryKey: ["deals"],
     queryFn: () => getProducts({ limit: 8, discounted: true }),
-    onError: (error) => {
-      toast.error(`Error fetching deals: ${error.message}`, {
-        position: "top-right",
-        autoClose: 3000,
-      });
-    },
   });
 
   const { data: wishlistData, isLoading: wishlistLoading } = useQuery({

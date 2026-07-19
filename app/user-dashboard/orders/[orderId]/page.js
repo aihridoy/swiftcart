@@ -11,6 +11,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { PDFDocument, rgb, StandardFonts } from "pdf-lib";
 import { DetailSkeleton } from "@/components/skeletons";
+import LoadError from "@/components/LoadError";
 
 const OrderDetails = () => {
   const { orderId } = useParams();
@@ -27,22 +28,6 @@ const OrderDetails = () => {
       return order;
     },
     enabled: !!session && !!orderId,
-    onError: (error) => {
-      if (error.message.includes("Unauthorized")) {
-        toast.error("Please log in to view your order.", {
-          position: "top-right",
-          autoClose: 3000,
-        });
-        setTimeout(() => {
-          router.push("/login");
-        }, 3000);
-      } else {
-        toast.error(`Error loading order: ${error.message}`, {
-          position: "top-right",
-          autoClose: 3000,
-        });
-      }
-    },
   });
 
   // Function to generate and download the PDF receipt
@@ -349,7 +334,7 @@ const downloadReceipt = async (order) => {
   if (error) {
     return (
       <div className="container py-16 flex justify-center">
-        <p>Failed to load order details. Please try again later.</p>
+        <LoadError message="Failed to load order details. Please try again later." />
       </div>
     );
   }

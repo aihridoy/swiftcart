@@ -10,6 +10,7 @@ import { getCart } from "@/actions/cart-utils";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import ProductCard from "./ProductsCard";
+import LoadError from "@/components/LoadError";
 
 // Skeleton Loader for Product Cards
 const SkeletonProductCard = () => (
@@ -45,12 +46,6 @@ const NewArrival = () => {
   const { data: productsData, error: productsError, isLoading: productsLoading } = useQuery({
     queryKey: ["newArrivalProducts"],
     queryFn: () => getProducts({ limit: 12, sort: "-createdAt" }),
-    onError: (error) => {
-      toast.error(`Error fetching new arrivals: ${error.message}`, {
-        position: "top-right",
-        autoClose: 3000,
-      });
-    },
   });
 
   // Fetch wishlist (only when authenticated)
@@ -58,20 +53,6 @@ const NewArrival = () => {
     queryKey: ["wishlist"],
     queryFn: getWishlist,
     enabled: status === "authenticated",
-    onError: (error) => {
-      if (error.message.includes("Unauthorized")) {
-        toast.error("Please log in to view your wishlist.", {
-          position: "top-right",
-          autoClose: 3000,
-        });
-        setTimeout(() => router.push("/login"), 3000);
-      } else {
-        toast.error(`Error fetching wishlist: ${error.message}`, {
-          position: "top-right",
-          autoClose: 3000,
-        });
-      }
-    },
   });
 
   // Fetch cart (only when authenticated)
@@ -79,20 +60,6 @@ const NewArrival = () => {
     queryKey: ["cart"],
     queryFn: getCart,
     enabled: status === "authenticated",
-    onError: (error) => {
-      if (error.message.includes("Unauthorized")) {
-        toast.error("Please log in to view your cart.", {
-          position: "top-right",
-          autoClose: 3000,
-        });
-        setTimeout(() => router.push("/login"), 3000);
-      } else {
-        toast.error(`Error fetching cart: ${error.message}`, {
-          position: "top-right",
-          autoClose: 3000,
-        });
-      }
-    },
   });
 
   // Loading state for products
@@ -125,7 +92,7 @@ const NewArrival = () => {
         <h2 className="text-2xl font-medium text-gray-800 uppercase mb-6">
           Top New Arrival
         </h2>
-        <p>Failed to load new arrivals. Please try again later.</p>
+        <LoadError message="Failed to load new arrivals. Please try again later." />
       </div>
     );
   }

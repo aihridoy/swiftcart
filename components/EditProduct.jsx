@@ -53,31 +53,7 @@ export default function EditProduct({ params }) {
   const { data: productData, isLoading: isLoadingProduct } = useQuery({
     queryKey: ["product", productId],
     queryFn: () => getProductById(productId),
-    onSuccess: (data) => {
-      if (data.product) {
-        setFormData({
-          title: data.product.title,
-          availability: data.product.availability,
-          brand: data.product.brand,
-          category: data.product.category,
-          sku: data.product.sku,
-          price: data.product.price.toString(),
-          originalPrice: data.product.originalPrice ? data.product.originalPrice.toString() : "",
-          description: data.product.description,
-          quantity: data.product.quantity,
-          mainImage: data.product.mainImage,
-          thumbnails: [...(data.product.thumbnails || []), "", "", "", "", ""].slice(0, 5),
-        });
-      }
-    },
-    onError: (error) => {
-      toast.error(`Error fetching product: ${error.message}`, {
-        position: "top-right",
-        autoClose: 3000,
-      });
-      router.push("/products");
-    }
-  });
+});
 
   const handleChange = (e) => {
     const { name, value } = e.target;

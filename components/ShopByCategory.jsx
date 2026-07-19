@@ -5,6 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 import { getProducts } from '@/actions/products';
 import CategoryItem from '@/components/CategoryItem'; 
+import LoadError from "@/components/LoadError";
 
 // Skeleton Loader for Category Items
 const SkeletonCategoryItem = () => (
@@ -20,17 +21,6 @@ const ShopByCategory = () => {
   const { data, error, isLoading } = useQuery({
     queryKey: ["categoryProducts"],
     queryFn: () => getProducts(),
-    onError: (error) => {
-      toast.error(`Error fetching categories: ${error.message}`, {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-    },
   });
 
   if (isLoading) {
@@ -54,7 +44,7 @@ const ShopByCategory = () => {
         <h2 className="text-2xl font-medium text-gray-800 uppercase mb-6">
           Shop by Category
         </h2>
-        <p className="text-center text-gray-600">Failed to load categories. Please try again later.</p>
+        <LoadError message="Failed to load categories. Please try again later." />
       </div>
     );
   }

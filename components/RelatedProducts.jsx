@@ -11,6 +11,7 @@ import { ProductGridSkeleton } from "@/components/skeletons";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import LoadError from "@/components/LoadError";
 
 const RelatedProducts = ({ relatedProducts, relatedError, relatedLoading }) => {
   const queryClient = useQueryClient();
@@ -24,32 +25,6 @@ const RelatedProducts = ({ relatedProducts, relatedError, relatedLoading }) => {
     queryKey: ["wishlist"],
     queryFn: getWishlist,
     enabled: !!session,
-    onError: (error) => {
-      if (error.message.includes("Unauthorized")) {
-        toast.error("Please log in to view your wishlist.", {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
-        setTimeout(() => {
-          router.push("/login");
-        }, 3000);
-      } else {
-        toast.error(`Error fetching wishlist: ${error.message}`, {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
-      }
-    },
   });
 
   // Fetch cart
@@ -57,32 +32,6 @@ const RelatedProducts = ({ relatedProducts, relatedError, relatedLoading }) => {
     queryKey: ["cart"],
     queryFn: getCart,
     enabled: !!session,
-    onError: (error) => {
-      if (error.message.includes("Unauthorized")) {
-        toast.error("Please log in to view your cart.", {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
-        setTimeout(() => {
-          router.push("/login");
-        }, 3000);
-      } else {
-        toast.error(`Error fetching cart: ${error.message}`, {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
-      }
-    },
   });
 
   // Wishlist mutation
@@ -259,10 +208,7 @@ const RelatedProducts = ({ relatedProducts, relatedError, relatedLoading }) => {
 
       {/* Error State */}
       {relatedError && !relatedLoading && (
-        <div className="text-center text-red-600">
-          <p>Error loading related products: {relatedError}</p>
-          <p>Please try again later.</p>
-        </div>
+        <LoadError message="Failed to load related products. Please try again later." />
       )}
 
       {/* Success State: Render Products */}

@@ -95,25 +95,6 @@ export default function EditProductPage({ params }) {
     queryKey: ["product", productId],
     queryFn: () => getProductById(productId),
     enabled: !!user && !isLoadingSession,
-    onSuccess: (data) => {
-      if (data.product) {
-        if (user && data.product.user && user.id !== data.product.user) {
-          toast.error("You can only edit your own products.", {
-            position: "top-right",
-            autoClose: 3000,
-          });
-          router.push("/products");
-          return;
-        }
-      }
-    },
-    onError: (error) => {
-      toast.error(`Error fetching product: ${error.message}`, {
-        position: "top-right",
-        autoClose: 3000,
-      });
-      router.push("/products");
-    },
   });
 
   // Update form data when product data changes

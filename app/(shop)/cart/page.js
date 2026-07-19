@@ -18,6 +18,7 @@ import { getCart, removeFromCart, updateCartQuantity } from "@/actions/cart-util
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { session } from "@/actions/auth-utils";
+import LoadError from "@/components/LoadError";
 
 // Skeleton Loader for Cart Items
 const SkeletonCartItem = () => (
@@ -63,14 +64,6 @@ const CartPage = () => {
     queryKey: ["cart"],
     queryFn: getCart,
     enabled: !!userSession,
-    onError: (error) => {
-      if (!error.message.includes("Unauthorized")) {
-        toast.error(`Error fetching cart: ${error.message}`, {
-          position: "top-right",
-          autoClose: 3000,
-        });
-      }
-    },
   });
 
   // Mutation to remove item from cart
@@ -269,7 +262,7 @@ const CartPage = () => {
           </div>
         </div>
         <div className="max-w-6xl mx-auto text-center bg-white/90 backdrop-blur-lg rounded-xl shadow-lg p-6">
-          <p className="text-red-600 text-lg">Failed to load cart. Please try again later.</p>
+          <LoadError message="Failed to load cart. Please try again later." />
         </div>
       </div>
     );

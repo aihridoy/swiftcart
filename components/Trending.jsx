@@ -10,6 +10,7 @@ import { addToCart, getCart } from "@/actions/cart-utils";
 import { useRouter } from "next/navigation";
 import ProductCard from "./ProductCard";
 import { session } from "@/actions/auth-utils";
+import LoadError from "@/components/LoadError";
 
 // Skeleton Loader for Product Cards
 const SkeletonProductCard = () => (
@@ -55,17 +56,6 @@ const Trending = () => {
   const { data: productsData, error: productsError, isLoading: productsLoading } = useQuery({
     queryKey: ["trendingProducts"],
     queryFn: () => getProducts({ limit: 12, sort: "-popularityScore" }),
-    onError: (error) => {
-      toast.error(`Error fetching trending products: ${error.message}`, {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-    },
   });
 
   // Fetch wishlist (only when authenticated)
@@ -73,32 +63,6 @@ const Trending = () => {
     queryKey: ["wishlist"],
     queryFn: getWishlist,
     enabled: !!user,
-    onError: (error) => {
-      if (error.message.includes("Unauthorized")) {
-        toast.error("Please log in to view your wishlist.", {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
-        setTimeout(() => {
-          router.push("/login");
-        }, 3000);
-      } else {
-        toast.error(`Error fetching wishlist: ${error.message}`, {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
-      }
-    },
   });
 
   // Fetch cart (only when authenticated)
@@ -106,32 +70,6 @@ const Trending = () => {
     queryKey: ["cart"],
     queryFn: getCart,
     enabled: !!user,
-    onError: (error) => {
-      if (error.message.includes("Unauthorized")) {
-        toast.error("Please log in to view your cart.", {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
-        setTimeout(() => {
-          router.push("/login");
-        }, 3000);
-      } else {
-        toast.error(`Error fetching cart: ${error.message}`, {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
-      }
-    },
   });
 
   // Wishlist mutation
@@ -306,7 +244,7 @@ const Trending = () => {
         <h2 className="text-2xl font-medium text-gray-800 uppercase mb-6">
           Trending Products
         </h2>
-        <p>Failed to load trending products. Please try again later.</p>
+        <LoadError message="Failed to load trending products. Please try again later." />
       </div>
     );
   }

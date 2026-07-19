@@ -19,6 +19,7 @@ import { addToCart, getCart } from "@/actions/cart-utils";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { session } from "@/actions/auth-utils";
+import LoadError from "@/components/LoadError";
 
 // Skeleton Loader for Wishlist Items
 const SkeletonWishlistItem = () => (
@@ -60,22 +61,6 @@ const Wishlist = () => {
     queryKey: ["wishlist"],
     queryFn: getWishlist,
     enabled: !!userSession,
-    onError: (error) => {
-      if (error.message.includes("Unauthorized")) {
-        toast.error("Please log in to view your wishlist.", {
-          position: "top-right",
-          autoClose: 3000,
-        });
-        setTimeout(() => {
-          router.push("/login");
-        }, 3000);
-      } else {
-        toast.error(`Error fetching wishlist: ${error.message}`, {
-          position: "top-right",
-          autoClose: 3000,
-        });
-      }
-    },
   });
 
   // Fetch cart
@@ -87,22 +72,6 @@ const Wishlist = () => {
     queryKey: ["cart"],
     queryFn: getCart,
     enabled: !!userSession,
-    onError: (error) => {
-      if (error.message.includes("Unauthorized")) {
-        toast.error("Please log in to view your cart.", {
-          position: "top-right",
-          autoClose: 3000,
-        });
-        setTimeout(() => {
-          router.push("/login");
-        }, 3000);
-      } else {
-        toast.error(`Error fetching cart: ${error.message}`, {
-          position: "top-right",
-          autoClose: 3000,
-        });
-      }
-    },
   });
 
   // Mutation to remove item from wishlist
@@ -257,9 +226,7 @@ const Wishlist = () => {
           </div>
         </div>
         <div className="max-w-6xl mx-auto text-center bg-white/90 backdrop-blur-lg rounded-xl shadow-lg p-6">
-          <p className="text-red-600 text-lg">
-            Failed to load wishlist. Please try again later.
-          </p>
+          <LoadError message="Failed to load wishlist. Please try again later." />
         </div>
       </div>
     );
