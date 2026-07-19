@@ -33,10 +33,10 @@ const AboutUs = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
             <div>
               <h1 className="text-4xl font-semibold text-gray-800 uppercase mb-4">
-                About LWSkart
+                About SwiftCart
               </h1>
               <p className="text-lg text-gray-600 mb-6">
-                At LWSkart, we’re passionate about bringing you the best in home decor, fashion, electronics, and more. Our mission is to make shopping effortless, affordable, and enjoyable for everyone.
+                At SwiftCart, we’re passionate about bringing you the best in home decor, fashion, electronics, and more. Our mission is to make shopping effortless, affordable, and enjoyable for everyone.
               </p>
               <Link href="/products">
                 <button className="bg-red-500 text-white px-6 py-3 rounded-lg font-medium uppercase hover:bg-red-600 transition">
@@ -47,7 +47,7 @@ const AboutUs = () => {
             <div className="relative h-96">
               <Image
                 src="https://images.unsplash.com/photo-1556228453-efd6c1ff04f6?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                alt="About LWSkart"
+                alt="About SwiftCart"
                 layout="fill"
                 objectFit="cover"
                 className="rounded-lg"
@@ -75,7 +75,7 @@ const AboutUs = () => {
             </div>
             <div>
               <p className="text-gray-600 mb-4">
-                LWSkart was founded in 2020 with a simple vision: to provide high-quality products that inspire and delight. What started as a small online store has grown into a trusted destination for shoppers worldwide.
+                SwiftCart was founded in 2020 with a simple vision: to provide high-quality products that inspire and delight. What started as a small online store has grown into a trusted destination for shoppers worldwide.
               </p>
               <p className="text-gray-600">
                 We pride ourselves on curating a diverse range of products, from stylish furniture to cutting-edge electronics, all while maintaining a commitment to exceptional customer service. Join us on our journey to redefine online shopping!
@@ -179,7 +179,7 @@ const AboutUs = () => {
       <section className="bg-gray-100">
         <div className="container py-16 text-center">
           <h2 className="text-2xl font-medium text-gray-800 uppercase mb-4">
-            Ready to Shop with LWSkart?
+            Ready to Shop with SwiftCart?
           </h2>
           <p className="text-lg text-gray-600 mb-6">
             Discover our wide range of products and start shopping today!

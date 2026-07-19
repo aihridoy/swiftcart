@@ -35,7 +35,7 @@ const ContactUs = () => {
         <p><strong>Message:</strong></p>
         <p style="white-space: pre-wrap;">${formData.message}</p>
         <hr style="border: 0; border-top: 1px solid #ddd; margin: 20px 0;">
-        <p style="color: #777; font-size: 12px;">This email was sent from the LWSkart Contact Us page.</p>
+        <p style="color: #777; font-size: 12px;">This email was sent from the SwiftCart Contact Us page.</p>
       </div>
     `;
 
@@ -218,7 +218,7 @@ const ContactUs = () => {
                         Address
                       </h3>
                       <p className="text-gray-600 leading-relaxed">
-                        123 LWSkart Street, Suite 456
+                        123 SwiftCart Street, Suite 456
                         <br />
                         New York, NY 10001, USA
                       </p>
@@ -245,7 +245,7 @@ const ContactUs = () => {
                       <h3 className="text-lg font-semibold text-gray-800">
                         Email
                       </h3>
-                      <p className="text-gray-600">support@lwskart.com</p>
+                      <p className="text-gray-600">support@swiftcart.com</p>
                     </div>
                   </div>
                 </div>

@@ -11,15 +11,16 @@ const shopLinks = ["Furniture", "Lighting", "Rugs", "Wall Art"].map((name) => ({
 }));
 
 const supportLinks = [
+  { name: "FAQs", href: "/faqs" },
+  { name: "Shipping & Returns", href: "/shipping-returns" },
   { name: "Contact Us", href: "/contact" },
   { name: "Track Order", href: "/user-dashboard/orders" },
-  { name: "Your Cart", href: "/cart" },
-  { name: "Wishlist", href: "/wishlist" },
 ];
 
 const companyLinks = [
   { name: "About Us", href: "/about-us" },
   { name: "All Products", href: "/products" },
+  { name: "Privacy Policy", href: "/privacy" },
   { name: "Terms & Conditions", href: "/terms-conditions" },
 ];
 
