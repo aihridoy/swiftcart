@@ -11,6 +11,7 @@ import { addToCart, getCart } from "@/actions/cart-utils";
 import { useSession } from "next-auth/react";
 import ProductCard from "@/components/ProductCard";
 import { ProductGridSkeleton } from "@/components/skeletons";
+import LoadError from "@/components/LoadError";
 
 const SearchPage = () => {
   const queryClient = useQueryClient();
@@ -149,7 +150,7 @@ const SearchPage = () => {
   if (error) {
     return (
       <div className="container py-16 flex justify-center">
-        <p>Failed to load search results. Please try again later.</p>
+        <LoadError message="Failed to load search results. Please try again later." />
       </div>
     );
   }

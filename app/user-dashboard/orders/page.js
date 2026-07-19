@@ -10,6 +10,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { FaShoppingBag, FaArrowLeft, FaArrowRight, FaEye, FaSpinner } from "react-icons/fa";
 import { session } from "@/actions/auth-utils";
+import LoadError from "@/components/LoadError";
 
 // Skeleton Loader for Orders
 const SkeletonOrderItem = () => (
@@ -102,7 +103,7 @@ const OrderHistory = () => {
           </div>
         </div>
         <div className="container text-center bg-white/90 backdrop-blur-lg rounded-xl shadow-lg p-6">
-          <p className="text-red-600 text-lg">Failed to load orders. Please try again later.</p>
+          <LoadError message="Failed to load orders. Please try again later." />
         </div>
       </div>
     );

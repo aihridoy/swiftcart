@@ -19,6 +19,7 @@ import { addToCart, getCart } from "@/actions/cart-utils";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { session } from "@/actions/auth-utils";
+import LoadError from "@/components/LoadError";
 
 // Skeleton Loader for Wishlist Items
 const SkeletonWishlistItem = () => (
@@ -225,9 +226,7 @@ const Wishlist = () => {
           </div>
         </div>
         <div className="max-w-6xl mx-auto text-center bg-white/90 backdrop-blur-lg rounded-xl shadow-lg p-6">
-          <p className="text-red-600 text-lg">
-            Failed to load wishlist. Please try again later.
-          </p>
+          <LoadError message="Failed to load wishlist. Please try again later." />
         </div>
       </div>
     );

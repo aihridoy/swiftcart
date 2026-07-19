@@ -23,6 +23,7 @@ import { FaXTwitter } from "react-icons/fa6";
 import { ProductDetailSkeleton } from "@/components/skeletons";
 import ProductImageGallery from "@/components/ProductImageGallery";
 import { session } from "@/actions/auth-utils";
+import LoadError from "@/components/LoadError";
 
 const ProductDetails = ({ params, initialProduct }) => {
   const { id } = params;
@@ -347,7 +348,7 @@ const ProductDetails = ({ params, initialProduct }) => {
   if (productError) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <p>Failed to load product details. Please try again later.</p>
+        <LoadError message="Failed to load product details. Please try again later." />
       </div>
     );
   }
@@ -651,7 +652,7 @@ const ProductDetails = ({ params, initialProduct }) => {
                 <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-gray-900"></div>
               </div>
             ) : reviewsError ? (
-              <p className="text-red-600">Failed to load reviews. Please try again later.</p>
+              <LoadError message="Failed to load reviews. Please try again later." />
             ) : reviews.length === 0 ? (
               <p className="text-gray-600">No reviews yet. Be the first to review this product!</p>
             ) : (

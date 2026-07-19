@@ -10,6 +10,7 @@ import { addToCart, getCart } from "@/actions/cart-utils";
 import { useRouter } from "next/navigation";
 import ProductCard from "./ProductCard";
 import { session } from "@/actions/auth-utils";
+import LoadError from "@/components/LoadError";
 
 // Skeleton Loader for Product Cards
 const SkeletonProductCard = () => (
@@ -243,7 +244,7 @@ const Trending = () => {
         <h2 className="text-2xl font-medium text-gray-800 uppercase mb-6">
           Trending Products
         </h2>
-        <p>Failed to load trending products. Please try again later.</p>
+        <LoadError message="Failed to load trending products. Please try again later." />
       </div>
     );
   }

@@ -11,6 +11,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import ProductCard from "@/components/ProductCard";
 import { ProductGridSkeleton } from "@/components/skeletons";
+import LoadError from "@/components/LoadError";
 
 const CategoryPage = ({ params, initialProducts }) => {
   const { slug } = params;
@@ -164,7 +165,7 @@ const CategoryPage = ({ params, initialProducts }) => {
   if (error) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <p>Failed to load products. Please try again later.</p>
+        <LoadError message="Failed to load products. Please try again later." />
       </div>
     );
   }

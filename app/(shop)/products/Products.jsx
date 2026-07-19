@@ -11,6 +11,7 @@ import ProductCard from "@/components/ProductCard";
 import { getWishlist, updateWishlist } from "@/actions/wishlist";
 import { session } from "@/actions/auth-utils";
 import { ProductGridSkeleton } from "@/components/skeletons";
+import LoadError from "@/components/LoadError";
 
 const Products = ({ initialProducts }) => {
   const queryClient = useQueryClient();
@@ -292,7 +293,7 @@ const Products = ({ initialProducts }) => {
     console.error("Error fetching products:", error);
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <p>Failed to load products. Please try again later.</p>
+        <LoadError message="Failed to load products. Please try again later." />
       </div>
     );
   }

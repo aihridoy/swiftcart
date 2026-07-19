@@ -10,6 +10,7 @@ import { getCart } from "@/actions/cart-utils";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import ProductCard from "./ProductsCard";
+import LoadError from "@/components/LoadError";
 
 // Skeleton Loader for Product Cards
 const SkeletonProductCard = () => (
@@ -91,7 +92,7 @@ const NewArrival = () => {
         <h2 className="text-2xl font-medium text-gray-800 uppercase mb-6">
           Top New Arrival
         </h2>
-        <p>Failed to load new arrivals. Please try again later.</p>
+        <LoadError message="Failed to load new arrivals. Please try again later." />
       </div>
     );
   }

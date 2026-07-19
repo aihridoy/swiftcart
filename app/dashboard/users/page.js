@@ -24,6 +24,7 @@ import {
 } from "react-icons/fa";
 import { session } from "@/actions/auth-utils";
 import { useDebounce } from "@/hooks/useDebounce";
+import LoadError from "@/components/LoadError";
 
 const SkeletonRow = () => (
   <tr className="animate-pulse">
@@ -237,7 +238,7 @@ const UserList = () => {
       <div className="container mx-auto px-4 py-8 md:py-16 flex justify-center">
         <div className="bg-red-50 p-6 rounded-lg shadow-md flex items-center">
           <FaExclamationTriangle className="text-red-600 text-xl mr-2" />
-          <p className="text-red-600">Failed to load users. Please try again later.</p>
+          <LoadError message="Failed to load users. Please try again later." />
         </div>
       </div>
     );

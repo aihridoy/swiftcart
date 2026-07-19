@@ -11,6 +11,7 @@ import { ProductGridSkeleton } from "@/components/skeletons";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import LoadError from "@/components/LoadError";
 
 const RelatedProducts = ({ relatedProducts, relatedError, relatedLoading }) => {
   const queryClient = useQueryClient();
@@ -207,10 +208,7 @@ const RelatedProducts = ({ relatedProducts, relatedError, relatedLoading }) => {
 
       {/* Error State */}
       {relatedError && !relatedLoading && (
-        <div className="text-center text-red-600">
-          <p>Error loading related products: {relatedError}</p>
-          <p>Please try again later.</p>
-        </div>
+        <LoadError message="Failed to load related products. Please try again later." />
       )}
 
       {/* Success State: Render Products */}

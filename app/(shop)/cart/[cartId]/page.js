@@ -9,6 +9,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { getCartItemById } from "@/actions/cart-utils";
 import { DetailSkeleton } from "@/components/skeletons";
+import LoadError from "@/components/LoadError";
 
 const Checkout = () => {
   const { cartId } = useParams();
@@ -221,7 +222,7 @@ const Checkout = () => {
   if (error) {
     return (
       <div className="container py-16 flex flex-col justify-center items-center">
-        <p className="mb-4">Failed to load checkout. Please try again later.</p>
+        <LoadError message="Failed to load checkout. Please try again later." />
         <button 
           onClick={() => refetch()}
           className="px-4 py-2 bg-primary text-white rounded hover:bg-primary/80"
