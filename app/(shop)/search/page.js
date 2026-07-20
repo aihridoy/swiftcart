@@ -1,4 +1,5 @@
 import SearchPage from "./SearchPage";
+import { Suspense } from "react";
 
 export const metadata = {
   title: "Search",
@@ -6,5 +7,9 @@ export const metadata = {
 };
 
 export default function Page() {
-  return <SearchPage />;
+  return (
+    <Suspense fallback={null}>
+      <SearchPage />
+    </Suspense>
+  );
 }

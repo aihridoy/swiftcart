@@ -17,21 +17,22 @@ import {
   FiEye,
   FiAlertTriangle,
 } from "react-icons/fi";
-import { Bar, Pie } from "react-chartjs-2";
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  ArcElement,
-  Title,
-  Tooltip,
-  Legend,
-} from "chart.js";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { Skeleton } from "@/components/skeletons";
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, ArcElement, Title, Tooltip, Legend);
+// chart.js + react-chartjs-2 is ~200KB+ that this page doesn't need until
+// after the stats/data above have rendered - load it only on the client,
+// only when this page is actually visited.
+const DashboardCharts = dynamic(() => import("@/components/DashboardCharts"), {
+  ssr: false,
+  loading: () => (
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+      <Skeleton className="h-72 w-full rounded-xl" />
+      <Skeleton className="h-72 w-full rounded-xl" />
+    </div>
+  ),
+});
 
 const STATUS_STYLES = {
   Pending: "bg-yellow-100 text-yellow-800",
@@ -117,43 +118,6 @@ export default function DashboardPage() {
     .sort((a, b) => a.quantity - b.quantity)
     .slice(0, 5);
 
-  const barChartData = {
-    labels: ["Users", "Products", "Orders"],
-    datasets: [
-      {
-        label: "Count",
-        data: [users.length, products.length, orders.length],
-        backgroundColor: ["#3b82f6", "#10b981", "#8b5cf6"],
-        borderRadius: 6,
-      },
-    ],
-  };
-
-  const pieChartData = {
-    labels: ["Users", "Products", "Orders"],
-    datasets: [
-      {
-        data: [users.length, products.length, orders.length],
-        backgroundColor: ["#3b82f6", "#10b981", "#8b5cf6"],
-      },
-    ],
-  };
-
-  const chartOptions = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: { legend: { display: false } },
-    scales: {
-      y: { beginAtZero: true, ticks: { precision: 0 } },
-    },
-  };
-
-  const pieOptions = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: { legend: { position: "bottom" } },
-  };
-
   if (isLoading) {
     return (
       <div className="container py-6">
@@ -202,20 +166,11 @@ export default function DashboardPage() {
       </div>
 
       {/* Charts */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-          <h2 className="text-sm font-semibold text-gray-800 uppercase mb-4">Overview</h2>
-          <div className="h-72">
-            <Bar data={barChartData} options={chartOptions} />
-          </div>
-        </div>
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-          <h2 className="text-sm font-semibold text-gray-800 uppercase mb-4">Distribution</h2>
-          <div className="h-72">
-            <Pie data={pieChartData} options={pieOptions} />
-          </div>
-        </div>
-      </div>
+      <DashboardCharts
+        userCount={users.length}
+        productCount={products.length}
+        orderCount={orders.length}
+      />
 
       {/* Quick Actions */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">

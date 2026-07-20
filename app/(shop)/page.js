@@ -1,15 +1,21 @@
-import Ads from "@/components/Ads";
+import dynamic from "next/dynamic";
 import Banner from "@/components/Banner";
-import BestSellers from "@/components/BestSellers";
-import Deals from "@/components/Deals";
-import FAQHome from "@/components/FAQHome";
-import FeaturedProduct from "@/components/FeaturedProduct";
 import Features from "@/components/Features";
-import NewArrival from "@/components/NewArrival";
-import NewsLetter from "@/components/NewsLetter";
 import ShopByCategory from "@/components/ShopByCategory";
-import Testimonials from "@/components/Testimonials";
-import Trending from "@/components/Trending";
+import NewArrival from "@/components/NewArrival";
+import BestSellers from "@/components/BestSellers";
+import FeaturedProduct from "@/components/FeaturedProduct";
+
+// Below-the-fold sections split into their own chunks instead of bundled
+// with the above-the-fold ones. `ssr: false` isn't usable here (this page
+// is a Server Component - Next.js only allows it from a Client Component),
+// so this only trims initial bundle size, not time-to-first-byte.
+const Deals = dynamic(() => import("@/components/Deals"));
+const Ads = dynamic(() => import("@/components/Ads"));
+const Trending = dynamic(() => import("@/components/Trending"));
+const Testimonials = dynamic(() => import("@/components/Testimonials"));
+const FAQHome = dynamic(() => import("@/components/FAQHome"));
+const NewsLetter = dynamic(() => import("@/components/NewsLetter"));
 
 export const metadata = {
   title: "Home Decor, Furniture & Lifestyle Products",

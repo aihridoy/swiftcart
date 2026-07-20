@@ -16,6 +16,13 @@ export async function POST(request) {
 
     const { productId, quantity = 1 } = await request.json();
 
+    if (!Number.isInteger(quantity) || quantity < 1) {
+      return NextResponse.json(
+        { error: "Quantity must be a positive integer" },
+        { status: 400 }
+      );
+    }
+
     // Validate product
     const product = await Product.findById(productId);
     if (!product) {
