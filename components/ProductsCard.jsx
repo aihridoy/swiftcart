@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import Image from "next/image";
@@ -10,21 +10,12 @@ import { getReviewsByProductId } from "@/actions/review-utils";
 import { updateWishlist } from "@/actions/wishlist";
 import { addToCart } from "@/actions/cart-utils";
 import { useRouter } from "next/navigation";
-import { session } from "@/actions/auth-utils";
+import { useSession } from "next-auth/react";
 
 const ProductCard = ({ product, wishlistData, cartData, queryClient }) => {
   const router = useRouter();
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    async function fetchUser() {
-      const res = await session();
-      if(res) {
-        setUser(res.user);
-      }
-    }
-    fetchUser();
-  }, [])
+  const { data: userSession } = useSession();
+  const user = userSession?.user;
 
   // Fetch reviews for this product
   const { data: reviewsData, error: reviewsError, isLoading: reviewsLoading } = useQuery({

@@ -1,14 +1,14 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { getProducts } from "@/actions/products";
 import { getWishlist, updateWishlist } from "@/actions/wishlist";
 import { addToCart, getCart } from "@/actions/cart-utils";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import ProductCard from "./ProductCard";
-import { session } from "@/actions/auth-utils";
 
 const SkeletonProductCard = () => (
   <div className="bg-white shadow-md rounded-lg overflow-hidden h-[400px] w-full flex flex-col animate-pulse">
@@ -37,17 +37,8 @@ const SkeletonProductCard = () => (
 const Deals = () => {
   const queryClient = useQueryClient();
   const router = useRouter();
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    async function fetchUser() {
-      const res = await session();
-      if (res) {
-        setUser(res.user);
-      }
-    }
-    fetchUser();
-  }, []);
+  const { data: userSession } = useSession();
+  const user = userSession?.user;
 
   const { data: productsData, error: productsError, isLoading: productsLoading } = useQuery({
     queryKey: ["deals"],

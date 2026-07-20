@@ -22,7 +22,6 @@ import {
 import { FaXTwitter } from "react-icons/fa6";
 import { ProductDetailSkeleton } from "@/components/skeletons";
 import ProductImageGallery from "@/components/ProductImageGallery";
-import { session } from "@/actions/auth-utils";
 import LoadError from "@/components/LoadError";
 
 const ProductDetails = ({ params, initialProduct }) => {
@@ -30,20 +29,10 @@ const ProductDetails = ({ params, initialProduct }) => {
   const [quantity, setQuantity] = useState(1);
   const [reviewText, setReviewText] = useState("");
   const [rating, setRating] = useState(0);
-  const [user, setUser] = useState(null);
   const queryClient = useQueryClient();
   const { data: userSession } = useSession();
+  const user = userSession?.user;
   const router = useRouter();
-
-  useEffect(() => {
-        async function fetchUser() {
-          const res = await session();
-          if(res) {
-            setUser(res.user);
-          }
-        }
-        fetchUser();
-      }, []);
 
   // Fetch product details
   const { data: productData, error: productError, isLoading: productLoading } = useQuery({

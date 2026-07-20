@@ -18,7 +18,6 @@ import { getWishlist, updateWishlist } from "@/actions/wishlist";
 import { addToCart, getCart } from "@/actions/cart-utils";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { session } from "@/actions/auth-utils";
 import LoadError from "@/components/LoadError";
 
 // Skeleton Loader for Wishlist Items
@@ -38,23 +37,16 @@ const SkeletonWishlistItem = () => (
 const Wishlist = () => {
   const queryClient = useQueryClient();
   const { data: userSession, status } = useSession();
-  const [user, setUser] = useState(null);
+  const user = userSession?.user;
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
+  const itemsPerPage = 12;
 
   useEffect(() => {
-    async function fetchUser() {
-      const res = await session();
-      if(res) {
-        setUser(res.user);
-      }
-      if (!res?.user) {
-        router.push("/");
-      }
+    if (status === "unauthenticated") {
+      router.push("/");
     }
-    fetchUser();
-  }, [router]);
+  }, [status, router]);
 
   // Fetch wishlist
   const { data, error, isLoading } = useQuery({
@@ -267,32 +259,59 @@ const Wishlist = () => {
             </div>
           </div>
 
-          {/* Right Section (Button) */}
+          {/* Right Section (Buttons) */}
           {wishlist.length > 0 && (
-            <button
-              onClick={() => {
-                wishlist.forEach((product) => {
+            <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+              <button
+                onClick={() => {
+                  wishlist.forEach((product) => {
+                    if (
+                      !isInCart(product._id) &&
+                      product.availability === "In Stock"
+                    ) {
+                      cartMutation.mutate({
+                        productId: product._id,
+                        quantity: 1,
+                      });
+                    }
+                  });
+                }}
+                disabled={cartMutation.isPending}
+                className={`flex items-center justify-center space-x-2 px-4 py-2 rounded-lg font-semibold text-white transition-all duration-300 shadow-md w-full sm:w-auto ${
+                  cartMutation.isPending
+                    ? "bg-gray-400 cursor-not-allowed"
+                    : "bg-blue-600 hover:bg-blue-700 hover:shadow-lg"
+                }`}
+              >
+                <FaShoppingCart />
+                <span>Add All to Cart</span>
+              </button>
+              <button
+                onClick={() => {
                   if (
-                    !isInCart(product._id) &&
-                    product.availability === "In Stock"
-                  ) {
-                    cartMutation.mutate({
+                    !window.confirm(
+                      "Remove all items from your wishlist? This can't be undone."
+                    )
+                  )
+                    return;
+                  wishlist.forEach((product) => {
+                    wishlistMutation.mutate({
                       productId: product._id,
-                      quantity: 1,
+                      action: "remove",
                     });
-                  }
-                });
-              }}
-              disabled={cartMutation.isPending}
-              className={`flex items-center justify-center space-x-2 px-4 py-2 rounded-lg font-semibold text-white transition-all duration-300 shadow-md w-full sm:w-auto ${
-                cartMutation.isPending
-                  ? "bg-gray-400 cursor-not-allowed"
-                  : "bg-blue-600 hover:bg-blue-700 hover:shadow-lg"
-              }`}
-            >
-              <FaShoppingCart />
-              <span>Add All to Cart</span>
-            </button>
+                  });
+                }}
+                disabled={wishlistMutation.isPending}
+                className={`flex items-center justify-center space-x-2 px-4 py-2 rounded-lg font-semibold text-white transition-all duration-300 shadow-md w-full sm:w-auto ${
+                  wishlistMutation.isPending
+                    ? "bg-gray-400 cursor-not-allowed"
+                    : "bg-red-600 hover:bg-red-700 hover:shadow-lg"
+                }`}
+              >
+                <FaTrash />
+                <span>Clear All</span>
+              </button>
+            </div>
           )}
         </div>
 

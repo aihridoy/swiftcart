@@ -11,13 +11,13 @@ import { getCart } from "@/actions/cart-utils";
 import { getOrders } from "@/actions/order-utils";
 import { searchProducts } from "@/actions/products";
 import { useRouter } from "next/navigation";
-import { session } from "@/actions/auth-utils";
+import { useSession } from "next-auth/react";
 import { useDebounce } from "@/hooks/useDebounce";
 
 const Header = () => {
   const queryClient = useQueryClient();
   const router = useRouter();
-  const [user, setUser] = useState(null);
+  const { data: user } = useSession();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
@@ -25,19 +25,6 @@ const Header = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
-  useEffect(() => {
-    const fetchUserSession = async () => {
-      const sessionData = await session();
-      if (!sessionData) {
-        setUser(null);
-        return;
-      }
-      setUser(sessionData);
-    };
-
-    fetchUserSession();
-  }, []);
 
   useEffect(() => {
     setIsDropdownOpen(debouncedSearchTerm.length > 0);
