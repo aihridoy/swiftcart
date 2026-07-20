@@ -8,6 +8,10 @@ const newsletterSchema = new Schema({
         lowercase: true,
         trim: true,
     },
+    unsubscribeToken: {
+        type: String,
+        required: true,
+    },
 }, { timestamps: true });
 
 export const Newsletter = mongoose.models.newsletters ?? mongoose.model("newsletters", newsletterSchema);

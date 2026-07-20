@@ -26,24 +26,12 @@ const ContactUs = () => {
     setIsSubmitting(true);
     setSubmitStatus(null);
 
-    const htmlContent = `
-      <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f9f9f9;">
-        <h2 style="color: #333;">New Contact Form Submission</h2>
-        <p><strong>Name:</strong> ${formData.name}</p>
-        <p><strong>Email:</strong> ${formData.email}</p>
-        <p><strong>Subject:</strong> ${formData.subject}</p>
-        <p><strong>Message:</strong></p>
-        <p style="white-space: pre-wrap;">${formData.message}</p>
-        <hr style="border: 0; border-top: 1px solid #ddd; margin: 20px 0;">
-        <p style="color: #777; font-size: 12px;">This email was sent from the SwiftCart Contact Us page.</p>
-      </div>
-    `;
-
     try {
       const result = await sendEmail({
-        to: "aihridoy976@gmail.com",
-        subject: `Contact Form: ${formData.subject}`,
-        html: htmlContent,
+        name: formData.name,
+        email: formData.email,
+        subject: formData.subject,
+        message: formData.message,
       });
 
       if (result.success) {

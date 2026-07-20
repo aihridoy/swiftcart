@@ -19,10 +19,10 @@ export async function POST(req) {
 
     await dbConnect();
 
-    const { name, email, password, role } = await req.json();
+    const { name, email, password } = await req.json();
 
     // Validate input
-    if (!name || !email || !password || !role) {
+    if (!name || !email || !password) {
       return NextResponse.json(
         { message: "Name, email, and password are required" },
         { status: 400 }
@@ -59,12 +59,14 @@ export async function POST(req) {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    // Create new user
+    // role is never accepted from the client - every self-registration is
+    // a plain "user" account (schema enum: user|admin). Admin accounts are
+    // provisioned separately, not through open registration.
     const newUser = await User.create({
       name,
       email,
       password: hashedPassword,
-      role
+      role: "user",
     });
 
     return NextResponse.json(

@@ -2,22 +2,38 @@
 import { Product } from "@/models/product-model";
 import { dbConnect } from "@/service/mongo";
 import { NextResponse } from "next/server";
+import { rateLimit, clientIp } from "@/service/rate-limit";
 
 export async function POST(req, { params }) {
   await dbConnect();
 
   try {
     const { id } = params;
-    const { incrementBy = 1 } = await req.json();
 
-    const product = await Product.findById(id);
+    // Anonymous view-count ping, no session required by design - but the
+    // increment amount must never come from the client, or anyone can call
+    // this in a loop to inflate rankings arbitrarily. Always +1, rate
+    // limited per IP+product so repeated page loads can't be scripted.
+    const { allowed, retryAfterSeconds } = rateLimit(`popularity:${clientIp(req)}:${id}`, {
+      limit: 10,
+      windowMs: 60 * 1000,
+    });
+    if (!allowed) {
+      return NextResponse.json(
+        { error: "Too many requests" },
+        { status: 429, headers: { "Retry-After": String(retryAfterSeconds) } }
+      );
+    }
+
+    const product = await Product.findByIdAndUpdate(
+      id,
+      { $inc: { popularityScore: 1 } },
+      { new: true }
+    );
 
     if (!product) {
       return NextResponse.json({ error: "Product not found" }, { status: 404 });
     }
-
-    product.popularityScore = (product.popularityScore || 0) + incrementBy;
-    await product.save();
 
     return NextResponse.json(
       {
@@ -30,38 +46,6 @@ export async function POST(req, { params }) {
     console.error("Error incrementing popularity:", error);
     return NextResponse.json(
       { error: "Failed to increment popularity" },
-      { status: 500 }
-    );
-  }
-}
-
-export async function DELETE(req, { params }) {
-  await dbConnect();
-
-  try {
-    const { id } = params;
-
-    if (!id) {
-      return NextResponse.json(
-        { error: "Product ID is required" },
-        { status: 400 }
-      );
-    }
-
-    const deleteProduct = await Product.findByIdAndDelete(id);
-
-    if (!deleteProduct) {
-      return NextResponse.json({ error: "Product not found" }, { status: 404 });
-    }
-
-    return NextResponse.json(
-      { message: "Product deleted successfully" },
-      { status: 200 }
-    );
-  } catch (error) {
-    console.error("Error deleting product:", error);
-    return NextResponse.json(
-      { error: "Failed to delete product" },
       { status: 500 }
     );
   }
