@@ -32,6 +32,22 @@ export const getOrders = async ({ page = 1, limit = 10 } = {}) => {
   }
 };
 
+// Fetch a single order by ID
+export const getOrderById = async (orderId) => {
+  try {
+    const result = await api.get(`/orders/${orderId}`, {
+      headers: {
+        "Cache-Control": "no-cache, no-store, must-revalidate",
+        Pragma: "no-cache",
+        Expires: "0",
+      },
+    });
+    return result.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.error || "Failed to fetch order");
+  }
+};
+
 // Update order status
 export const updateOrderStatus = async ({ orderId, status }) => {
   try {

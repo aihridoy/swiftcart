@@ -1,10 +1,29 @@
 import { dbConnect } from "@/service/mongo";
 import { User } from "@/models/user-model";
 import bcrypt from "bcryptjs";
+import { rateLimit, clientIp } from "@/service/rate-limit";
 
 export const POST = async (req) => {
   try {
+    const { allowed, retryAfterSeconds } = rateLimit(`reset-password:${clientIp(req)}`, {
+      limit: 10,
+      windowMs: 10 * 60 * 1000,
+    });
+    if (!allowed) {
+      return new Response(
+        JSON.stringify({ success: false, error: "Too many attempts. Please try again later." }),
+        { status: 429, headers: { "Content-Type": "application/json", "Retry-After": String(retryAfterSeconds) } }
+      );
+    }
+
     const { token, newPassword } = await req.json();
+
+    if (!token || !newPassword || newPassword.length < 6) {
+      return new Response(
+        JSON.stringify({ success: false, error: "A valid token and a password of at least 6 characters are required" }),
+        { status: 400, headers: { "Content-Type": "application/json" } }
+      );
+    }
 
     await dbConnect();
 
@@ -36,7 +55,7 @@ export const POST = async (req) => {
   } catch (error) {
     console.error("Error in reset-password API:", error);
     return new Response(
-      JSON.stringify({ success: false, error: error.message }),
+      JSON.stringify({ success: false, error: "Something went wrong. Please try again." }),
       { status: 500, headers: { "Content-Type": "application/json" } }
     );
   }

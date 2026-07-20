@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import { updateProduct, getProductById } from "@/actions/products";
-import { session } from "@/actions/auth-utils";
+import { useSession } from "next-auth/react";
 import { toast } from "react-toastify";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -46,8 +46,7 @@ export default function EditProductPage({ params }) {
   const router = useRouter();
 
   const [message, setMessage] = useState("");
-  const [user, setUser] = useState(null);
-  const [isLoadingSession, setIsLoadingSession] = useState(true);
+  const { data: user, status } = useSession();
   const [formData, setFormData] = useState({
     title: "",
     availability: "In Stock",
@@ -62,39 +61,21 @@ export default function EditProductPage({ params }) {
     thumbnails: ["", "", "", "", ""],
   });
 
-  // Fetch user session
   useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        setIsLoadingSession(true);
-        const res = await session();
-        if (res) {
-          setUser(res);
-        } else {
-          toast.error("Please log in to edit a product.", {
-            position: "top-right",
-            autoClose: 3000,
-          });
-          router.push("/login");
-        }
-      } catch (error) {
-        toast.error(`Error fetching session: ${error.message}`, {
-          position: "top-right",
-          autoClose: 3000,
-        });
-        router.push("/login");
-      } finally {
-        setIsLoadingSession(false);
-      }
-    };
-    fetchUser();
-  }, [router]);
+    if (status === "unauthenticated") {
+      toast.error("Please log in to edit a product.", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+      router.push("/login");
+    }
+  }, [status, router]);
 
   // Fetch product data
   const { data: productData, isLoading: isLoadingProduct } = useQuery({
     queryKey: ["product", productId],
     queryFn: () => getProductById(productId),
-    enabled: !!user && !isLoadingSession,
+    enabled: status === "authenticated",
   });
 
   // Update form data when product data changes
@@ -187,7 +168,7 @@ export default function EditProductPage({ params }) {
   };
 
   // Loading state while fetching session
-  if (isLoadingSession) {
+  if (status === "loading") {
     return (
       <div className="min-h-screen bg-gray-50 py-8 px-4">
         <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-md p-8">

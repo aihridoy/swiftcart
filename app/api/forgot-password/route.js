@@ -2,20 +2,35 @@ import { Resend } from "resend";
 import { dbConnect } from "@/service/mongo";
 import { User } from "@/models/user-model";
 import crypto from "crypto";
+import { rateLimit, clientIp } from "@/service/rate-limit";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
+const GENERIC_RESPONSE = { success: true, message: "If that email is registered, we've sent a password reset link." };
 
 export const POST = async (req) => {
   try {
+    const { allowed, retryAfterSeconds } = rateLimit(`forgot-password:${clientIp(req)}`, {
+      limit: 5,
+      windowMs: 10 * 60 * 1000,
+    });
+    if (!allowed) {
+      return new Response(
+        JSON.stringify({ success: false, error: "Too many attempts. Please try again later." }),
+        { status: 429, headers: { "Content-Type": "application/json", "Retry-After": String(retryAfterSeconds) } }
+      );
+    }
+
     const { email } = await req.json();
 
     await dbConnect();
 
+    // Same response whether or not the email is registered, so this can't
+    // be used to enumerate accounts.
     const user = await User.findOne({ email });
     if (!user) {
       return new Response(
-        JSON.stringify({ success: false, error: "Email not found" }),
-        { status: 404, headers: { "Content-Type": "application/json" } }
+        JSON.stringify(GENERIC_RESPONSE),
+        { status: 200, headers: { "Content-Type": "application/json" } }
       );
     }
 
@@ -55,19 +70,19 @@ export const POST = async (req) => {
     if (emailResponse.error) {
       console.error("Resend rejected password reset email:", emailResponse.error);
       return new Response(
-        JSON.stringify({ success: false, error: emailResponse.error.message }),
-        { status: 502, headers: { "Content-Type": "application/json" } }
+        JSON.stringify(GENERIC_RESPONSE),
+        { status: 200, headers: { "Content-Type": "application/json" } }
       );
     }
 
     return new Response(
-      JSON.stringify({ success: true, message: "Password reset email sent" }),
+      JSON.stringify(GENERIC_RESPONSE),
       { status: 200, headers: { "Content-Type": "application/json" } }
     );
   } catch (error) {
     console.error("Error in forgot-password API:", error);
     return new Response(
-      JSON.stringify({ success: false, error: error.message }),
+      JSON.stringify({ success: false, error: "Something went wrong. Please try again." }),
       { status: 500, headers: { "Content-Type": "application/json" } }
     );
   }

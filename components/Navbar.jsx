@@ -5,8 +5,9 @@ import { FaBars } from "react-icons/fa";
 import { session } from "@/actions/auth-utils";
 import SignOut from "./SignOut";
 import ActiveLink from "./ActiveLink";
-import api from "@/lib/axios";
 import MobileMenu from "./MobileMenu";
+import { dbConnect } from "@/service/mongo";
+import { Product } from "@/models/product-model";
 
 const DropdownItem = ({ name, slug, image }) => (
   <Link
@@ -26,38 +27,34 @@ const DropdownItem = ({ name, slug, image }) => (
 
 const Navbar = async () => {
   const userSession = await session();
-  const productsData = await api
-    .get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/products`, {
-      headers: {
-        "Cache-Control": "no-cache, no-store, must-revalidate",
-        Pragma: "no-cache",
-        Expires: "0",
-      },
-    })
-    .then((response) => response.data)
-    .catch((error) => {
-      console.error("Error fetching products:", error);
-      return null;
-    });
 
-  const categoryMap = productsData?.products?.reduce((acc, product) => {
-    const category = product.category;
-    if (!acc[category]) {
-      acc[category] = {
-        name: category
-          .split(" ")
-          .map(
-            (word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
-          )
-          .join(" "),
-        slug: category.toLowerCase(),
-        image: product.mainImage,
-      };
-    }
-    return acc;
-  }, {});
-
-  const categories = categoryMap ? Object.values(categoryMap) : [];
+  // A Server Component making an HTTP round-trip to its own API route just
+  // to read categories was an unnecessary double-hop - query the DB directly
+  // instead. Only category/mainImage are needed, so project just those.
+  let categories = [];
+  try {
+    await dbConnect();
+    const products = await Product.find({}, "category mainImage").lean();
+    const categoryMap = products.reduce((acc, product) => {
+      const category = product.category;
+      if (!acc[category]) {
+        acc[category] = {
+          name: category
+            .split(" ")
+            .map(
+              (word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+            )
+            .join(" "),
+          slug: category.toLowerCase(),
+          image: product.mainImage,
+        };
+      }
+      return acc;
+    }, {});
+    categories = Object.values(categoryMap);
+  } catch (error) {
+    console.error("Error fetching categories:", error);
+  }
 
   const navLinks = [
     { name: "Home", path: "/" },
