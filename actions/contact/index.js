@@ -1,11 +1,11 @@
 import api from "@/lib/axios";
 
-export async function sendEmail({ to, subject, html }) {
+export async function sendEmail({ name, email, subject, message }) {
     try {
-      const response = await api.post(`/send-email`, { to, subject, html });
-      return response.data; 
+      const response = await api.post(`/send-email`, { name, email, subject, message });
+      return response.data;
     } catch (error) {
       console.error("Error in sendEmail action:", error);
-      throw error; 
+      throw error;
     }
   }
