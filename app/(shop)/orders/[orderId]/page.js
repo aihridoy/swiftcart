@@ -3,7 +3,7 @@
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
-import { getOrders } from "@/actions/order-utils";
+import { getOrderById } from "@/actions/order-utils";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
@@ -18,14 +18,11 @@ const OrderDetails = () => {
   const { data: session } = useSession();
   const router = useRouter();
 
-  // Fetch orders and find the specific order by ID
   const { data, error, isLoading } = useQuery({
     queryKey: ["order", orderId],
     queryFn: async () => {
-      const result = await getOrders({ limit: 1000 });
-      const order = result.orders.find((o) => o._id === orderId);
-      if (!order) throw new Error("Order not found");
-      return order;
+      const result = await getOrderById(orderId);
+      return result.order;
     },
     enabled: !!session && !!orderId,
   });

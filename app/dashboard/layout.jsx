@@ -1,5 +1,3 @@
-"use client";
-
 import DashboardSidebar from "@/components/DashboardSidebar";
 import { FiPlus, FiPackage, FiUsers, FiShoppingCart, FiGrid } from "react-icons/fi";
 

@@ -1,6 +1,5 @@
 "use client";
 
-import { session } from "@/actions/auth-utils";
 import { getCart } from "@/actions/cart-utils";
 import { getOrders } from "@/actions/order-utils";
 import { getWishlist } from "@/actions/wishlist";
@@ -29,22 +28,15 @@ const STATUS_STYLES = {
 };
 
 const UserDashboard = () => {
-  const { data: userSession } = useSession();
-  const [user, setUser] = useState(null);
+  const { data: userSession, status } = useSession();
+  const user = userSession?.user;
   const router = useRouter();
 
   useEffect(() => {
-    async function fetchUser() {
-      const res = await session();
-      if (res) {
-        setUser(res.user);
-      }
-      if (!res?.user) {
-        router.push("/");
-      }
+    if (status === "unauthenticated") {
+      router.push("/");
     }
-    fetchUser();
-  }, [router]);
+  }, [status, router]);
 
   const { data: wishlistData, error: wishlistError, isLoading: wishlistLoading } = useQuery({
     queryKey: ["wishlist"],

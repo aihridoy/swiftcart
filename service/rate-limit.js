@@ -21,5 +21,11 @@ export function rateLimit(key, { limit = 5, windowMs = 5 * 60 * 1000 } = {}) {
 }
 
 export function clientIp(request) {
+  // Safe to trust on this app's deployment target (Vercel): their edge
+  // network sets/overwrites x-forwarded-for itself, so a client can't spoof
+  // it by sending its own value - requests never reach the function
+  // without going through that edge first. This would NOT be safe on a
+  // self-hosted origin reachable directly, where a client fully controls
+  // this header.
   return request?.headers?.get?.("x-forwarded-for")?.split(",")[0].trim() || "unknown";
 }

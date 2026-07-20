@@ -5,13 +5,21 @@ import { escapeRegExp } from "@/lib/escape-regexp";
 
 export const dynamic = 'force-dynamic';
 
+const ALLOWED_SORTS = new Set([
+  "price", "-price",
+  "createdAt", "-createdAt",
+  "popularityScore", "-popularityScore",
+  "title", "-title",
+]);
+
 export async function GET(req) {
     await dbConnect();
 
     try {
         const searchParams = req.nextUrl.searchParams;
         const limit = parseInt(searchParams.get("limit")) || 0;
-        const sort = searchParams.get("sort");
+        const rawSort = searchParams.get("sort");
+        const sort = ALLOWED_SORTS.has(rawSort) ? rawSort : undefined;
         const category = searchParams.get("category") || null;
         const discounted = searchParams.get("discounted") === "true";
 

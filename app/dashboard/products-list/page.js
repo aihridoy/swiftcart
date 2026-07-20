@@ -10,16 +10,14 @@ import { toast } from "react-toastify";
 import { FaSearch, FaTimes } from "react-icons/fa";
 
 import { getProducts, deleteProduct } from "@/actions/products";
-import { session } from "@/actions/auth-utils";
+import { useSession } from "next-auth/react";
 import { Skeleton } from "@/components/skeletons";
 import { useDebounce } from "@/hooks/useDebounce";
 import { useConfirm } from "@/hooks/useConfirm";
 
 const ProductsPage = () => {
   const [visibleProducts, setVisibleProducts] = useState(10);
-  const [user, setUser] = useState(null);
-  const [isLoadingSession, setIsLoadingSession] = useState(true);
-  
+
   // Search state
   const [searchTerm, setSearchTerm] = useState("");
   const debouncedSearchTerm = useDebounce(searchTerm, 800);
@@ -27,36 +25,16 @@ const ProductsPage = () => {
   const queryClient = useQueryClient();
   const router = useRouter();
   const [confirm, ConfirmationDialog] = useConfirm();
+  const { data: user, status } = useSession();
 
-  if(user && user?.user?.role !== "admin") {
-    router.push('/');
-  }
-
-  // Fetch session
   useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        setIsLoadingSession(true);
-        const res = await session();
-        if(res?.user?.role !== "admin") {
-          router.push('/');
-        }
-
-        if (!res) {
-          toast.error("Please log in to view products.");
-          router.push("/login");
-        } else {
-          setUser(res);
-        }
-      } catch (error) {
-        toast.error(`Error fetching session: ${error.message}`);
-      } finally {
-        setIsLoadingSession(false);
-      }
-    };
-
-    fetchUser();
-  }, [router]);
+    if (status === "unauthenticated") {
+      toast.error("Please log in to view products.");
+      router.push("/login");
+    } else if (status === "authenticated" && user?.user?.role !== "admin") {
+      router.push("/");
+    }
+  }, [status, user, router]);
 
   // Products query
   const {
@@ -66,7 +44,7 @@ const ProductsPage = () => {
   } = useQuery({
     queryKey: ["products"],
     queryFn: () => getProducts({ sort: "-createdAt" }),
-    enabled: !!user && !isLoadingSession,
+    enabled: status === "authenticated",
   });
 
   // Mutation for deleting a product
@@ -121,7 +99,7 @@ const ProductsPage = () => {
   }, [debouncedSearchTerm]);
 
   // Loading UI
-  if (isLoadingSession || isLoading) {
+  if (status === "loading" || isLoading) {
     return (
       <div className="p-4 sm:p-6">
         <Skeleton className="h-9 w-48 mb-6" />

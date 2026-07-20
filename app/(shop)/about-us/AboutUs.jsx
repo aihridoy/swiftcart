@@ -48,9 +48,8 @@ const AboutUs = () => {
               <Image
                 src="https://images.unsplash.com/photo-1556228453-efd6c1ff04f6?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                 alt="About SwiftCart"
-                layout="fill"
-                objectFit="cover"
-                className="rounded-lg"
+                fill
+                className="object-cover rounded-lg"
               />
             </div>
           </div>
@@ -68,9 +67,8 @@ const AboutUs = () => {
               <Image
                 src="https://images.unsplash.com/photo-1603201667141-5a2d4c673378?q=80&w=2096&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                 alt="Our Story"
-                layout="fill"
-                objectFit="cover"
-                className="rounded-lg"
+                fill
+                className="object-cover rounded-lg"
               />
             </div>
             <div>
@@ -160,9 +158,8 @@ const AboutUs = () => {
                   <Image
                     src={member.image}
                     alt={member.name}
-                    layout="fill"
-                    objectFit="cover"
-                    className="rounded-full"
+                    fill
+                    className="object-cover rounded-full"
                   />
                 </div>
                 <h3 className="text-lg font-semibold text-gray-800">

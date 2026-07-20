@@ -9,7 +9,6 @@ import { toast } from "react-toastify";
 import Link from "next/link";
 import Image from "next/image";
 import { FaShoppingBag, FaArrowLeft, FaArrowRight, FaEye, FaSpinner } from "react-icons/fa";
-import { session } from "@/actions/auth-utils";
 import LoadError from "@/components/LoadError";
 
 // Skeleton Loader for Orders
@@ -47,7 +46,7 @@ const SkeletonOrderItem = () => (
 );
 
 const OrderHistory = () => {
-  const { data: userSession } = useSession();
+  const { data: userSession, status } = useSession();
   const router = useRouter();
 
   // Pagination state
@@ -55,14 +54,10 @@ const OrderHistory = () => {
   const itemsPerPage = 10;
 
   useEffect(() => {
-      async function fetchUser() {
-        const res = await session();
-        if(!res?.user) {
-          router.push("/");
-        }
-      }
-      fetchUser();
-    }, [router]);
+    if (status === "unauthenticated") {
+      router.push("/");
+    }
+  }, [status, router]);
 
   // Fetch orders using React Query
   const { data, error, isLoading } = useQuery({

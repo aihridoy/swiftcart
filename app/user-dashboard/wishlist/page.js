@@ -1,6 +1,5 @@
 "use client";
 
-import { session } from '@/actions/auth-utils';
 import { addToCart, getCart } from '@/actions/cart-utils';
 import { getWishlist, updateWishlist } from '@/actions/wishlist';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -16,23 +15,16 @@ import Image from 'next/image';
 const UserWishlist = () => {
   const queryClient = useQueryClient();
   const { data: userSession, status } = useSession();
-  const [user, setUser] = useState(null);
+  const user = userSession?.user;
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
   useEffect(() => {
-    async function fetchUser() {
-      const res = await session();
-      if(res) {
-        setUser(res.user);
-      }
-      if (!res?.user) {
-        router.push("/");
-      }
+    if (status === "unauthenticated") {
+      router.push("/");
     }
-    fetchUser();
-  }, [router]);
+  }, [status, router]);
 
   // Fetch wishlist
   const { data, error, isLoading } = useQuery({
