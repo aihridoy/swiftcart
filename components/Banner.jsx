@@ -1,13 +1,18 @@
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 const Banner = () => {
   return (
-    <div
-      className="bg-cover bg-no-repeat bg-center py-16 md:py-36 px-4"
-      style={{ backgroundImage: "url('/images/banner-bg.jpg')" }}
-    >
-      <div className="container">
+    <div className="relative py-16 md:py-36 px-4">
+      <Image
+        src="/images/banner-bg.jpg"
+        alt=""
+        fill
+        priority
+        className="object-cover -z-10"
+      />
+      <div className="container relative z-10">
         <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-gray-800 font-medium mb-4 capitalize leading-tight">
           Best collection for <br /> home decoration
         </h1>
