@@ -276,11 +276,19 @@ const ProductDetails = ({ params, initialProduct }) => {
     setRating(value);
   };
 
-  // Increment popularity on page load
+  // Increment popularity once per product per browser session - without
+  // this guard a refresh or client-side re-nav to the same product fires
+  // another increment. sessionStorage keeps it to one view per tab session
+  // (the server also rate-limits per IP+product as a backstop).
   useEffect(() => {
+    if (!id) return;
+    const key = `pop_viewed_${id}`;
+    if (typeof window !== "undefined" && sessionStorage.getItem(key)) return;
+
     const increment = async () => {
       try {
         await incrementPopularity(id, 1);
+        if (typeof window !== "undefined") sessionStorage.setItem(key, "1");
       } catch (error) {
         console.error("Failed to increment popularity:", error);
       }

@@ -3,14 +3,45 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { FiHome } from "react-icons/fi";
+import {
+  FiHome,
+  FiGrid,
+  FiPlus,
+  FiPackage,
+  FiUsers,
+  FiShoppingCart,
+  FiHeart,
+  FiUser,
+} from "react-icons/fi";
 import SignOut from "./SignOut";
 
-export default function DashboardSidebar({ title, navItems }) {
+// Nav definitions live here (a Client Component) rather than being passed
+// down as props: the icons are function references, which a Server
+// Component parent (the layout) cannot serialize to send across the
+// server/client boundary. Keeping them here lets the layouts stay Server
+// Components and pass only a plain string variant.
+const NAV_ITEMS = {
+  admin: [
+    { href: "/dashboard", icon: FiGrid, label: "Overview" },
+    { href: "/dashboard/add-product", icon: FiPlus, label: "Add" },
+    { href: "/dashboard/products-list", icon: FiPackage, label: "Products" },
+    { href: "/dashboard/users", icon: FiUsers, label: "Users" },
+    { href: "/dashboard/orders", icon: FiShoppingCart, label: "Orders" },
+  ],
+  user: [
+    { href: "/user-dashboard", icon: FiGrid, label: "Overview" },
+    { href: "/user-dashboard/wishlist", icon: FiHeart, label: "Wishlist" },
+    { href: "/user-dashboard/cart", icon: FiShoppingCart, label: "Cart" },
+    { href: "/user-dashboard/orders", icon: FiPackage, label: "Orders" },
+    { href: "/user-dashboard/profile", icon: FiUser, label: "Profile" },
+  ],
+};
+
+export default function DashboardSidebar({ title, variant }) {
   const pathname = usePathname();
 
   const items = [
-    ...navItems,
+    ...(NAV_ITEMS[variant] || []),
     { href: "/", icon: FiHome, label: "Home" },
   ];
 
