@@ -111,3 +111,38 @@ export async function POST(req) {
     );
   }
 }
+
+export async function DELETE(req) {
+  await dbConnect();
+
+  try {
+    const userSession = await session();
+    if (!userSession || !userSession.user) {
+      return NextResponse.json(
+        { error: "Unauthorized. Please log in." },
+        { status: 401 }
+      );
+    }
+
+    const userId = userSession.user.id;
+
+    // Atomic single-write clear instead of N concurrent remove requests,
+    // which race on the wishlist doc's version key and fail all but one.
+    const wishlist = await Wishlist.findOneAndUpdate(
+      { user: userId },
+      { $set: { products: [] } },
+      { new: true, upsert: true }
+    );
+
+    return NextResponse.json(
+      { message: "Wishlist cleared", wishlist: wishlist.products },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Error clearing wishlist:", error);
+    return NextResponse.json(
+      { error: "Failed to clear wishlist" },
+      { status: 500 }
+    );
+  }
+}

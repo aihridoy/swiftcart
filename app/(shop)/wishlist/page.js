@@ -14,7 +14,7 @@ import {
   FaSpinner,
   FaShoppingBag,
 } from "react-icons/fa";
-import { getWishlist, updateWishlist } from "@/actions/wishlist";
+import { getWishlist, updateWishlist, clearWishlist } from "@/actions/wishlist";
 import { addToCart, getCart } from "@/actions/cart-utils";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -71,6 +71,34 @@ const Wishlist = () => {
   // Mutation to remove item from wishlist
   const wishlistMutation = useMutation({
     mutationFn: ({ productId, action }) => updateWishlist(productId, action),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries(["wishlist"]);
+      toast.success(data.message, {
+        position: "top-right",
+        autoClose: 3000,
+      });
+    },
+    onError: (error) => {
+      if (error.message.includes("Unauthorized")) {
+        toast.error("Please log in to manage your wishlist.", {
+          position: "top-right",
+          autoClose: 3000,
+        });
+        setTimeout(() => {
+          router.push("/login");
+        }, 3000);
+      } else {
+        toast.error(`Error: ${error.message}`, {
+          position: "top-right",
+          autoClose: 3000,
+        });
+      }
+    },
+  });
+
+  // Mutation to clear the whole wishlist in one request
+  const clearWishlistMutation = useMutation({
+    mutationFn: clearWishlist,
     onSuccess: (data) => {
       queryClient.invalidateQueries(["wishlist"]);
       toast.success(data.message, {
@@ -297,16 +325,11 @@ const Wishlist = () => {
                     confirmText: "Clear All",
                   });
                   if (!ok) return;
-                  wishlist.forEach((product) => {
-                    wishlistMutation.mutate({
-                      productId: product._id,
-                      action: "remove",
-                    });
-                  });
+                  clearWishlistMutation.mutate();
                 }}
-                disabled={wishlistMutation.isPending}
+                disabled={clearWishlistMutation.isPending}
                 className={`flex items-center justify-center space-x-2 px-4 py-2 rounded-lg font-semibold text-white transition-all duration-300 shadow-md w-full sm:w-auto ${
-                  wishlistMutation.isPending
+                  clearWishlistMutation.isPending
                     ? "bg-gray-400 cursor-not-allowed"
                     : "bg-red-600 hover:bg-red-700 hover:shadow-lg"
                 }`}
