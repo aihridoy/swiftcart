@@ -1,121 +1,26 @@
-"use client";
 import Image from "next/image";
 import Link from "next/link";
-import { notFound, useRouter } from "next/navigation";
-import { useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { toast } from "react-toastify";
+import { notFound, redirect } from "next/navigation";
 import { FaUser, FaShoppingCart, FaHeart, FaBox } from "react-icons/fa";
-import { getUserById } from "@/actions/user-utils";
-import { useSession } from "next-auth/react";
+import { session } from "@/actions/auth-utils";
+import { getUserForViewer } from "@/lib/get-user";
 
-const SkeletonProfile = () => (
-  <div className="w-full p-6 animate-pulse">
-    <div className="bg-white shadow-lg rounded-lg overflow-hidden">
-      <div className="bg-primary p-8">
-        <div className="flex items-center space-x-8">
-          <div className="w-32 h-32 rounded-full bg-gray-300 border-4 border-white"></div>
-          <div className="space-y-3">
-            <div className="h-8 w-64 bg-gray-300 rounded"></div>
-            <div className="h-6 w-80 bg-gray-300 rounded"></div>
-          </div>
-        </div>
-      </div>
-      <div className="p-8">
-        <div className="mb-8">
-          <div className="h-8 w-56 bg-gray-200 rounded mb-3"></div>
-          <div className="bg-gray-50 p-6 rounded-lg">
-            <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-              <div>
-                <div className="h-5 w-24 bg-gray-200 rounded mb-2"></div>
-                <div className="h-5 w-40 bg-gray-200 rounded"></div>
-              </div>
-              <div>
-                <div className="h-5 w-24 bg-gray-200 rounded mb-2"></div>
-                <div className="h-5 w-64 bg-gray-200 rounded"></div>
-              </div>
-              <div>
-                <div className="h-5 w-24 bg-gray-200 rounded mb-2"></div>
-                <div className="h-5 w-48 bg-gray-200 rounded"></div>
-              </div>
-              <div>
-                <div className="h-5 w-24 bg-gray-200 rounded mb-2"></div>
-                <div className="h-5 w-40 bg-gray-200 rounded"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="h-8 w-56 bg-gray-200 rounded mb-4"></div>
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-          {Array(4)
-            .fill()
-            .map((_, index) => (
-              <div
-                key={index}
-                className="bg-white border border-gray-200 rounded-lg p-6 h-40 flex flex-col items-center justify-center"
-              >
-                <div className="w-12 h-12 bg-gray-200 rounded-full mb-3"></div>
-                <div className="h-5 w-32 bg-gray-200 rounded mb-2"></div>
-                <div className="h-4 w-40 bg-gray-200 rounded"></div>
-              </div>
-            ))}
-        </div>
-      </div>
-      <div className="bg-gray-50 p-8 border-t border-gray-200">
-        <div className="flex justify-between items-center">
-          <div className="h-5 w-56 bg-gray-200 rounded"></div>
-          <div className="h-10 w-24 bg-gray-200 rounded-md"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-);
+export default async function UserProfile() {
+  const userSession = await session();
+  if (!userSession?.user) {
+    redirect("/login");
+  }
 
-export default function UserProfile() {
-  const { data: userSession, status } = useSession();
-  const router = useRouter();
-
-  const { data, error, isLoading } = useQuery({
-    queryKey: ["user", userSession?.user?.id],
-    queryFn: () => getUserById(userSession?.user?.id),
-    refetchOnWindowFocus: false,
-    retry: false,
-    enabled: !!userSession?.user?.id,
-  });
-
-  useEffect(() => {
-    if (error) {
-      if (error.message.includes("Unauthorized")) {
-        toast.error("Please log in to view this profile.", {
-          position: "top-right",
-          autoClose: 3000,
-        });
-        router.push("/login");
-      } else {
-        toast.error(`Error loading profile: ${error.message}`, {
-          position: "top-right",
-          autoClose: 3000,
-        });
-      }
-    }
-  }, [error, router]);
-
-  const user = data?.user || {};
-
-  const hasProfileImage = !!user.image;
-
-  // A missing/invalid user is a 404, not an error screen
-  if (
-    error &&
-    (error.message.includes("User not found") ||
-      error.message.includes("Invalid user ID format"))
-  ) {
+  const result = await getUserForViewer(userSession.user.id);
+  if (result.status === "unauthorized") {
+    redirect("/login");
+  }
+  if (result.status === "notfound") {
     notFound();
   }
 
-  if (isLoading) {
-    return <SkeletonProfile />;
-  }
+  const user = result.user;
+  const hasProfileImage = !!user.image;
 
   return (
     <div className="w-full min-h-screen bg-gray-100 p-6 mb-12 sm:mb-0">
