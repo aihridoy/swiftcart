@@ -1,13 +1,13 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import Link from "next/link";
 import Image from "next/image";
 import { getProducts } from "@/actions/products";
 import { useRouter } from "next/navigation";
-import { session } from "@/actions/auth-utils";
+import { useSession } from "next-auth/react";
 import { getWishlist, updateWishlist } from "@/actions/wishlist";
 import { addToCart, getCart } from "@/actions/cart-utils";
 import { getReviewsByProductId } from "@/actions/review-utils";
@@ -43,17 +43,8 @@ const FeaturedSkeleton = () => (
 const FeaturedProduct = () => {
   const queryClient = useQueryClient();
   const router = useRouter();
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    async function fetchUser() {
-      const res = await session();
-      if (res) {
-        setUser(res.user);
-      }
-    }
-    fetchUser();
-  }, []);
+  const { data: userSession } = useSession();
+  const user = userSession?.user;
 
   // Products data
   const {

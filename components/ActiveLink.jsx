@@ -6,9 +6,9 @@ import { usePathname } from "next/navigation";
 const ActiveLink = ({ href, children, className = "" }) => {
   const pathname = usePathname();
   
-  const isActive = 
-    href === '/' 
-      ? pathname === '/' 
+  const isActive =
+    href === '/' || href === '/products'
+      ? pathname === href
       : pathname === href || pathname.startsWith(`${href}/`);
   
   const activeClass = isActive 

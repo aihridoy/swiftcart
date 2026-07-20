@@ -9,7 +9,6 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import ProductCard from "@/components/ProductCard";
 import { getWishlist, updateWishlist } from "@/actions/wishlist";
-import { session } from "@/actions/auth-utils";
 import { ProductGridSkeleton } from "@/components/skeletons";
 import LoadError from "@/components/LoadError";
 
@@ -28,17 +27,7 @@ const Products = ({ initialProducts }) => {
   });
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [showFilters, setShowFilters] = useState(false);
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-          async function fetchUser() {
-            const res = await session();
-            if(res) {
-              setUser(res.user);
-            }
-          }
-          fetchUser();
-        }, []);
+  const user = userSession?.user;
 
   // Fetch products
   const { data, error, isLoading } = useQuery({
@@ -445,8 +434,8 @@ const Products = ({ initialProducts }) => {
                   </label>
                   <div className="flex items-center space-x-2">
                     <div className="relative rounded-md shadow-sm flex-1">
-                      <div className="absolute inset-y-0 left-0 pl-2 flex items-center pointer-events-none">
-                        <span className="text-gray-500 sm:text-xs">$</span>
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <span className="text-gray-500 text-sm">$</span>
                       </div>
                       <input
                         type="number"
@@ -454,15 +443,15 @@ const Products = ({ initialProducts }) => {
                         onChange={(e) =>
                           handlePriceRangeChange("min", e.target.value)
                         }
-                        className="block w-full pl-5 pr-2 py-2 text-sm border border-gray-300 rounded-md focus:ring-primary focus:border-primary"
+                        className="block w-full pl-7 pr-2 py-2 text-sm border border-gray-300 rounded-md focus:ring-primary focus:border-primary"
                         placeholder="Min"
                         min="0"
                       />
                     </div>
                     <span className="text-gray-500 text-sm">to</span>
                     <div className="relative rounded-md shadow-sm flex-1">
-                      <div className="absolute inset-y-0 left-0 pl-2 flex items-center pointer-events-none">
-                        <span className="text-gray-500 sm:text-xs">$</span>
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <span className="text-gray-500 text-sm">$</span>
                       </div>
                       <input
                         type="number"
@@ -470,7 +459,7 @@ const Products = ({ initialProducts }) => {
                         onChange={(e) =>
                           handlePriceRangeChange("max", e.target.value)
                         }
-                        className="block w-full pl-5 pr-2 py-2 text-sm border border-gray-300 rounded-md focus:ring-primary focus:border-primary"
+                        className="block w-full pl-7 pr-2 py-2 text-sm border border-gray-300 rounded-md focus:ring-primary focus:border-primary"
                         placeholder="Max"
                         min="0"
                         max={maxProductPrice}

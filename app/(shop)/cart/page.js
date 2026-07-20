@@ -17,7 +17,6 @@ import {
 import { getCart, removeFromCart, updateCartQuantity } from "@/actions/cart-utils";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { session } from "@/actions/auth-utils";
 import LoadError from "@/components/LoadError";
 
 // Skeleton Loader for Cart Items
@@ -38,22 +37,15 @@ const SkeletonCartItem = () => (
 const CartPage = () => {
   const queryClient = useQueryClient();
   const { data: userSession, status } = useSession();
-  const [user, setUser] = useState(null);
-  
+  const user = userSession?.user;
+
   const router = useRouter();
 
   useEffect(() => {
-      async function fetchUser() {
-        const res = await session();
-        if(res) {
-          setUser(res.user);
-        }
-        if(!res?.user) {
-          router.push("/");
-        }
-      }
-      fetchUser();
-    }, [router]);
+    if (status === "unauthenticated") {
+      router.push("/");
+    }
+  }, [status, router]);
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
