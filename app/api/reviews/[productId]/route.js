@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { dbConnect } from "@/service/mongo";
 import { Review } from "@/models/review-model";
+import "@/models/user-model";
 
 export async function GET(request, { params }) {
   try {
