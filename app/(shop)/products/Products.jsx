@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { getProducts } from "@/actions/products";
@@ -25,7 +25,6 @@ const Products = ({ initialProducts }) => {
     rating: 0,
     inStock: false,
   });
-  const [filteredProducts, setFilteredProducts] = useState([]);
   const [showFilters, setShowFilters] = useState(false);
   const user = userSession?.user;
 
@@ -128,9 +127,10 @@ const Products = ({ initialProducts }) => {
     ...new Set(products.map((product) => product.category || "uncategorized")),
   ];
 
-  // Apply sorting and filtering
-  useEffect(() => {
-    if (products.length === 0) return;
+  // Sorting and filtering are a pure derivation of products/filters/sort -
+  // no need for useEffect + extra state round-trip, just compute it.
+  const filteredProducts = useMemo(() => {
+    if (products.length === 0) return [];
 
     let result = [...products];
 
@@ -181,7 +181,7 @@ const Products = ({ initialProducts }) => {
         break;
     }
 
-    setFilteredProducts(result);
+    return result;
   }, [products, sortOption, filters, priceRange]);
 
   // Check if a product is in the cart
