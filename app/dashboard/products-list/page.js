@@ -13,6 +13,7 @@ import { getProducts, deleteProduct } from "@/actions/products";
 import { session } from "@/actions/auth-utils";
 import { Skeleton } from "@/components/skeletons";
 import { useDebounce } from "@/hooks/useDebounce";
+import { useConfirm } from "@/hooks/useConfirm";
 
 const ProductsPage = () => {
   const [visibleProducts, setVisibleProducts] = useState(10);
@@ -25,6 +26,7 @@ const ProductsPage = () => {
 
   const queryClient = useQueryClient();
   const router = useRouter();
+  const [confirm, ConfirmationDialog] = useConfirm();
 
   if(user && user?.user?.role !== "admin") {
     router.push('/');
@@ -97,8 +99,13 @@ const ProductsPage = () => {
 
   const handleShowMore = () => setVisibleProducts((prev) => prev + 10);
 
-  const handleDeleteProduct = (id) => {
-    if (window.confirm("Are you sure you want to delete this product?")) {
+  const handleDeleteProduct = async (id) => {
+    const ok = await confirm({
+      title: "Delete product?",
+      message: "Are you sure you want to delete this product? This can't be undone.",
+      confirmText: "Delete",
+    });
+    if (ok) {
       deleteProductMutation.mutate(id);
     }
   };
@@ -144,6 +151,7 @@ const ProductsPage = () => {
 
   return (
     <div className="container mx-auto px-4 py-8 mb-12 sm:mb-0">
+      <ConfirmationDialog />
       <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
         <h1 className="text-2xl sm:text-3xl font-bold">Product List</h1>
         <Link

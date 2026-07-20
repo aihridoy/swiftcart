@@ -19,6 +19,7 @@ import { addToCart, getCart } from "@/actions/cart-utils";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import LoadError from "@/components/LoadError";
+import { useConfirm } from "@/hooks/useConfirm";
 
 // Skeleton Loader for Wishlist Items
 const SkeletonWishlistItem = () => (
@@ -41,6 +42,7 @@ const Wishlist = () => {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 12;
+  const [confirm, ConfirmationDialog] = useConfirm();
 
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -243,6 +245,7 @@ const Wishlist = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-100 via-blue-50 to-teal-50 py-8 px-4">
+      <ConfirmationDialog />
       {/* Main Content */}
       <div className="max-w-6xl mx-auto">
         <div className="bg-white/90 backdrop-blur-lg rounded-xl shadow-lg p-4 sm:p-6 mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sm:gap-0">
@@ -287,13 +290,13 @@ const Wishlist = () => {
                 <span>Add All to Cart</span>
               </button>
               <button
-                onClick={() => {
-                  if (
-                    !window.confirm(
-                      "Remove all items from your wishlist? This can't be undone."
-                    )
-                  )
-                    return;
+                onClick={async () => {
+                  const ok = await confirm({
+                    title: "Clear wishlist?",
+                    message: "Remove all items from your wishlist? This can't be undone.",
+                    confirmText: "Clear All",
+                  });
+                  if (!ok) return;
                   wishlist.forEach((product) => {
                     wishlistMutation.mutate({
                       productId: product._id,
