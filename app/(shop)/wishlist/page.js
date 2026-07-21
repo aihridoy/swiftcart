@@ -43,6 +43,7 @@ const Wishlist = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 12;
   const [confirm, ConfirmationDialog] = useConfirm();
+  const [isAddingAll, setIsAddingAll] = useState(false);
 
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -159,6 +160,46 @@ const Wishlist = () => {
         (item) => item.product._id.toString() === productId
       ) || false
     );
+  };
+
+  // Add every eligible wishlist item to the cart, then show a single toast
+  const handleAddAllToCart = async () => {
+    if (!user) {
+      toast.error("Please log in to add to cart.", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+      setTimeout(() => {
+        router.push("/login");
+      }, 3000);
+      return;
+    }
+    const toAdd = wishlist.filter(
+      (product) => !isInCart(product._id) && product.availability === "In Stock"
+    );
+    if (toAdd.length === 0) {
+      toast.info("All in-stock items are already in your cart.", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+      return;
+    }
+    setIsAddingAll(true);
+    try {
+      await Promise.all(toAdd.map((product) => addToCart(product._id, 1)));
+      queryClient.invalidateQueries(["cart"]);
+      toast.success(
+        `${toAdd.length} item${toAdd.length > 1 ? "s" : ""} added to cart!`,
+        { position: "top-right", autoClose: 3000 }
+      );
+    } catch (error) {
+      toast.error(`Error: ${error.message}`, {
+        position: "top-right",
+        autoClose: 3000,
+      });
+    } finally {
+      setIsAddingAll(false);
+    }
   };
 
   // Handle removing an item from the wishlist
@@ -294,27 +335,19 @@ const Wishlist = () => {
           {wishlist.length > 0 && (
             <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
               <button
-                onClick={() => {
-                  wishlist.forEach((product) => {
-                    if (
-                      !isInCart(product._id) &&
-                      product.availability === "In Stock"
-                    ) {
-                      cartMutation.mutate({
-                        productId: product._id,
-                        quantity: 1,
-                      });
-                    }
-                  });
-                }}
-                disabled={cartMutation.isPending}
+                onClick={handleAddAllToCart}
+                disabled={isAddingAll}
                 className={`flex items-center justify-center space-x-2 px-4 py-2 rounded-lg font-semibold text-white transition-all duration-300 shadow-md w-full sm:w-auto ${
-                  cartMutation.isPending
+                  isAddingAll
                     ? "bg-gray-400 cursor-not-allowed"
                     : "bg-blue-600 hover:bg-blue-700 hover:shadow-lg"
                 }`}
               >
-                <FaShoppingCart />
+                {isAddingAll ? (
+                  <FaSpinner className="animate-spin" />
+                ) : (
+                  <FaShoppingCart />
+                )}
                 <span>Add All to Cart</span>
               </button>
               <button

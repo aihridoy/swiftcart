@@ -14,10 +14,11 @@ import {
   FaPlus, 
   FaMinus 
 } from "react-icons/fa";
-import { getCart, removeFromCart, updateCartQuantity } from "@/actions/cart-utils";
+import { getCart, removeFromCart, updateCartQuantity, clearCart } from "@/actions/cart-utils";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import LoadError from "@/components/LoadError";
+import { useConfirm } from "@/hooks/useConfirm";
 
 // Skeleton Loader for Cart Items
 const SkeletonCartItem = () => (
@@ -40,6 +41,7 @@ const CartPage = () => {
   const user = userSession?.user;
 
   const router = useRouter();
+  const [confirm, ConfirmationDialog] = useConfirm();
 
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -113,6 +115,55 @@ const CartPage = () => {
       }
     },
   });
+
+  // Mutation to clear the whole cart in one request
+  const clearCartMutation = useMutation({
+    mutationFn: clearCart,
+    onSuccess: (data) => {
+      queryClient.invalidateQueries(["cart"]);
+      toast.success(data.message, {
+        position: "top-right",
+        autoClose: 3000,
+      });
+    },
+    onError: (error) => {
+      if (error.message.includes("Unauthorized")) {
+        toast.error("Please log in to manage your cart.", {
+          position: "top-right",
+          autoClose: 3000,
+        });
+        setTimeout(() => {
+          router.push("/login");
+        }, 3000);
+      } else {
+        toast.error(`Error: ${error.message}`, {
+          position: "top-right",
+          autoClose: 3000,
+        });
+      }
+    },
+  });
+
+  const handleClearCart = async () => {
+    if (!user) {
+      toast.error("Please log in to manage your cart.", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+      setTimeout(() => {
+        router.push("/login");
+      }, 3000);
+      return;
+    }
+    const ok = await confirm({
+      title: "Clear cart?",
+      message: "Remove all items from your cart? This can't be undone.",
+      confirmText: "Clear Cart",
+    });
+    if (!ok) return;
+    if (clearCartMutation.isPending) return;
+    clearCartMutation.mutate();
+  };
 
   // Handle remove from cart
   const handleRemoveFromCart = (productId, e) => {
@@ -281,6 +332,7 @@ const CartPage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-100 via-blue-50 to-teal-50 py-8 px-4">
+      <ConfirmationDialog />
       {/* Main Content */}
       <div className="max-w-6xl mx-auto">
         {/* Cart Summary Card */}
@@ -292,6 +344,24 @@ const CartPage = () => {
               <p className="text-gray-600">{totalItems} {totalItems === 1 ? "item" : "items"}</p>
             </div>
           </div>
+          {cart.items.length > 0 && (
+            <button
+              onClick={handleClearCart}
+              disabled={clearCartMutation.isPending}
+              className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-semibold text-white transition-all duration-300 shadow-md ${
+                clearCartMutation.isPending
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-red-600 hover:bg-red-700 hover:shadow-lg"
+              }`}
+            >
+              {clearCartMutation.isPending ? (
+                <FaSpinner className="animate-spin" />
+              ) : (
+                <FaTrash />
+              )}
+              <span>Clear Cart</span>
+            </button>
+          )}
         </div>
 
         {/* Cart Items or Empty State */}

@@ -117,11 +117,20 @@ export async function DELETE(request) {
 
     await dbConnect();
 
-    const { productId } = await request.json();
+    const { productId, clearAll } = await request.json();
 
     const cart = await Cart.findOne({ user: userSession.user.id });
     if (!cart) {
       return NextResponse.json({ error: "Cart not found" }, { status: 404 });
+    }
+
+    if (clearAll) {
+      cart.items = [];
+      await cart.save();
+      return NextResponse.json(
+        { message: "Cart cleared successfully!", cart },
+        { status: 200 }
+      );
     }
 
     // Remove the item from the cart
