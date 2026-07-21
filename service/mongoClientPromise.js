@@ -9,12 +9,17 @@ if (!process.env.MONGODB_CONNECTION_STRING) {
 }
 
 const uri = process.env.MONGODB_CONNECTION_STRING;
-const options = {};
+// Cap the pool so serverless instances don't each open the driver default of
+// 100 connections and exhaust Atlas's shared-tier connection limit.
+const options = { maxPoolSize: 10 };
 
 let client;
 let mongoClientPromise;
 
-if (process.env.ENVIRONMENT === 'development') {
+// NODE_ENV, not ENVIRONMENT (which was never set) - the wrong check sent dev
+// down the else branch, opening a fresh client on every HMR reload and leaking
+// pools until Atlas neared its max-connections cap.
+if (process.env.NODE_ENV === 'development') {
     // In development mode, use a global variable so that the value
     // is preserved across module reloads caused by HMR (Hot Module Replacement).
     if (!global._mongomongoClientPromise) {
