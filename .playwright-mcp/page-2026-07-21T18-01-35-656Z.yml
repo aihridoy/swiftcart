@@ -1,0 +1,209 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e5]:
+        - link [ref=e7] [cursor=pointer]:
+          - /url: /
+          - img "Logo" [ref=e8]
+        - generic [ref=e10]:
+          - textbox "Search Product" [ref=e14]
+          - button "Search" [ref=e15] [cursor=pointer]
+        - generic [ref=e16]:
+          - link "Wishlist" [ref=e17] [cursor=pointer]:
+            - /url: /wishlist
+          - link "Cart" [ref=e22] [cursor=pointer]:
+            - /url: /cart
+          - link "Orders" [ref=e27] [cursor=pointer]:
+            - /url: /orders
+          - link "Account" [ref=e32] [cursor=pointer]:
+            - /url: /profile/undefined
+    - navigation [ref=e37]:
+      - generic [ref=e38]:
+        - generic [ref=e39]: Categories
+        - generic [ref=e44]:
+          - link "Home" [ref=e45] [cursor=pointer]:
+            - /url: /
+          - link "Shop" [ref=e46] [cursor=pointer]:
+            - /url: /products
+          - link "About Us" [ref=e47] [cursor=pointer]:
+            - /url: /about-us
+          - link "Contact Us" [ref=e48] [cursor=pointer]:
+            - /url: /contact
+        - link "Login" [ref=e51] [cursor=pointer]:
+          - /url: /login
+    - main [ref=e52]:
+      - generic [ref=e54]:
+        - heading "Best collection for home decoration" [level=1] [ref=e55]
+        - paragraph [ref=e56]: Transform your living space with our curated collection of home decor essentials! From elegant furniture to stylish accents, our handpicked pieces blend functionality and aesthetics to elevate every corner of your home. Discover the perfect items to reflect your unique style and create a warm, inviting atmosphere today.
+        - link "Shop Now" [ref=e58] [cursor=pointer]:
+          - /url: /products
+      - generic [ref=e60]:
+        - generic [ref=e61]:
+          - img "Free Shipping" [ref=e62]
+          - generic [ref=e63]:
+            - heading "Free Shipping" [level=4] [ref=e64]
+            - paragraph [ref=e65]: Order over $200
+        - generic [ref=e66]:
+          - img "Money Returns" [ref=e67]
+          - generic [ref=e68]:
+            - heading "Money Returns" [level=4] [ref=e69]
+            - paragraph [ref=e70]: 30 days money returns
+        - generic [ref=e71]:
+          - img "24/7 Support" [ref=e72]
+          - generic [ref=e73]:
+            - heading "24/7 Support" [level=4] [ref=e74]
+            - paragraph [ref=e75]: Customer support
+      - heading "Shop by Category" [level=2] [ref=e77]
+      - generic [ref=e116]:
+        - heading "Top New Arrival" [level=2] [ref=e117]
+        - link [ref=e118] [cursor=pointer]:
+          - /url: /products
+          - button "See All Products" [ref=e119]
+      - heading "Best Sellers" [level=2] [ref=e258]
+      - heading "Deals of the Week" [level=2] [ref=e415]
+      - link [ref=e486] [cursor=pointer]:
+        - /url: /products
+        - img "ads" [ref=e487]
+      - heading "Trending Products" [level=2] [ref=e490]
+      - generic [ref=e628]:
+        - heading "What Our Customers Say" [level=2] [ref=e629]
+        - generic [ref=e630]:
+          - generic [ref=e631]:
+            - generic "5 out of 5 stars" [ref=e632]
+            - paragraph [ref=e643]: "\"Great product.\""
+            - generic [ref=e644]:
+              - paragraph [ref=e645]: Ashraful Islam
+              - paragraph [ref=e646]: on Scented Soy Candle Collection
+          - generic [ref=e647]:
+            - generic "5 out of 5 stars" [ref=e648]
+            - paragraph [ref=e659]: "\"Arrived healthy with no snapped leaves, which almost never happens with plant deliveries. It's already pushing out a new leaf two weeks in.\""
+            - generic [ref=e660]:
+              - paragraph [ref=e661]: Odessa King
+              - paragraph [ref=e662]: on Monstera Deliciosa Plant
+          - generic [ref=e663]:
+            - generic "5 out of 5 stars" [ref=e664]
+            - paragraph [ref=e675]: "\"Finally got our entryway clutter under control. The weave is tight and even, no loose threads, and they stack neatly when not in use.\""
+            - generic [ref=e676]:
+              - paragraph [ref=e677]: Clare Young
+              - paragraph [ref=e678]: on Woven Storage Baskets Set
+          - generic [ref=e679]:
+            - generic "5 out of 5 stars" [ref=e680]
+            - paragraph [ref=e691]: "\"We measured three times before ordering and it fit the corner perfectly. Deep enough to nap on, firm enough not to sink in. Genuinely one of the best furniture purchases we've made.\""
+            - generic [ref=e692]:
+              - paragraph [ref=e693]: Kasimir Duke
+              - paragraph [ref=e694]: on Sectional Corner Sofa
+          - generic [ref=e695]:
+            - generic "5 out of 5 stars" [ref=e696]
+            - paragraph [ref=e707]: "\"This mirror is the first thing people comment on when they walk into our hallway. The wood frame is thicker and sturdier than I expected from the pictures.\""
+            - generic [ref=e708]:
+              - paragraph [ref=e709]: Kyla Gross
+              - paragraph [ref=e710]: on Round Wooden Mirror
+          - generic [ref=e711]:
+            - generic "5 out of 5 stars" [ref=e712]
+            - paragraph [ref=e723]: "\"Bought this as a housewarming gift and almost kept it for myself. The set looks way more expensive than it is - great as a centerpiece with or without flowers in it.\""
+            - generic [ref=e724]:
+              - paragraph [ref=e725]: Jasmine Brock
+              - paragraph [ref=e726]: on Ceramic Vase Collection
+      - generic [ref=e727]:
+        - heading "Frequently Asked Questions" [level=2] [ref=e728]
+        - generic [ref=e729]:
+          - generic [ref=e730]:
+            - button "How long does shipping take?" [expanded] [ref=e731] [cursor=pointer]
+            - paragraph [ref=e735]: Most orders arrive within 3-7 business days. Orders over $200 ship free; you'll get a confirmation email with tracking details as soon as your order leaves the warehouse.
+          - button "What's your return policy?" [ref=e737] [cursor=pointer]
+          - button "What payment methods do you accept?" [ref=e742] [cursor=pointer]
+          - button "How can I track my order?" [ref=e747] [cursor=pointer]
+          - button "Can I change or cancel my order after placing it?" [ref=e752] [cursor=pointer]
+      - generic [ref=e758]:
+        - generic [ref=e759]: Join 50,000+ Happy Subscribers
+        - heading "Never Miss a Great Deal" [level=2] [ref=e762]
+        - paragraph [ref=e763]: Get exclusive offers, new arrivals & home decor inspiration delivered to your inbox weekly
+        - form "Newsletter subscription form" [ref=e764]:
+          - generic [ref=e766]:
+            - textbox "Email address" [ref=e767]:
+              - /placeholder: Enter your email address
+            - button "Subscribe to newsletter" [ref=e768] [cursor=pointer]:
+              - generic [ref=e769]: Subscribe
+        - generic [ref=e772]:
+          - generic [ref=e773]:
+            - heading "Exclusive Deals" [level=3] [ref=e777]
+            - paragraph [ref=e778]: Up to 40% off subscriber-only offers
+          - generic [ref=e779]:
+            - heading "Weekly Updates" [level=3] [ref=e783]
+            - paragraph [ref=e784]: New arrivals & trending products
+          - generic [ref=e785]:
+            - heading "Design Tips" [level=3] [ref=e789]
+            - paragraph [ref=e790]: Expert home decor inspiration
+        - generic [ref=e791]:
+          - generic [ref=e792]: 100% Privacy Protected
+          - generic [ref=e797]: No Spam, Ever
+          - link "Unsubscribe anytime" [ref=e802] [cursor=pointer]:
+            - /url: /unsubscribe
+    - contentinfo [ref=e803]:
+      - generic [ref=e804]:
+        - generic [ref=e805]:
+          - generic [ref=e806]:
+            - link [ref=e807] [cursor=pointer]:
+              - /url: /
+              - img "SwiftCart Logo" [ref=e808]
+            - paragraph [ref=e809]: Transform your space with our curated collection of home and decor essentials. At SwiftCart, we create homes that inspire comfort and style.
+            - generic [ref=e810]:
+              - link "Visit SwiftCart on Facebook" [ref=e811] [cursor=pointer]:
+                - /url: https://facebook.com
+              - link "Visit SwiftCart on Instagram" [ref=e814] [cursor=pointer]:
+                - /url: https://instagram.com
+              - link "Visit SwiftCart on Twitter" [ref=e817] [cursor=pointer]:
+                - /url: https://twitter.com
+              - link "Visit SwiftCart on Pinterest" [ref=e820] [cursor=pointer]:
+                - /url: https://pinterest.com
+          - generic [ref=e823]:
+            - heading "Shop" [level=3] [ref=e824]
+            - list [ref=e825]:
+              - listitem [ref=e826]:
+                - link "Furniture" [ref=e827] [cursor=pointer]:
+                  - /url: /category/furniture
+              - listitem [ref=e828]:
+                - link "Lighting" [ref=e829] [cursor=pointer]:
+                  - /url: /category/lighting
+              - listitem [ref=e830]:
+                - link "Rugs" [ref=e831] [cursor=pointer]:
+                  - /url: /category/rugs
+              - listitem [ref=e832]:
+                - link "Wall Art" [ref=e833] [cursor=pointer]:
+                  - /url: /category/wall art
+          - generic [ref=e834]:
+            - heading "Support" [level=3] [ref=e835]
+            - list [ref=e836]:
+              - listitem [ref=e837]:
+                - link "FAQs" [ref=e838] [cursor=pointer]:
+                  - /url: /faqs
+              - listitem [ref=e839]:
+                - link "Shipping & Returns" [ref=e840] [cursor=pointer]:
+                  - /url: /shipping-returns
+              - listitem [ref=e841]:
+                - link "Contact Us" [ref=e842] [cursor=pointer]:
+                  - /url: /contact
+              - listitem [ref=e843]:
+                - link "Track Order" [ref=e844] [cursor=pointer]:
+                  - /url: /user-dashboard/orders
+          - generic [ref=e845]:
+            - heading "Company" [level=3] [ref=e846]
+            - list [ref=e847]:
+              - listitem [ref=e848]:
+                - link "About Us" [ref=e849] [cursor=pointer]:
+                  - /url: /about-us
+              - listitem [ref=e850]:
+                - link "All Products" [ref=e851] [cursor=pointer]:
+                  - /url: /products
+              - listitem [ref=e852]:
+                - link "Privacy Policy" [ref=e853] [cursor=pointer]:
+                  - /url: /privacy
+              - listitem [ref=e854]:
+                - link "Terms & Conditions" [ref=e855] [cursor=pointer]:
+                  - /url: /terms-conditions
+        - paragraph [ref=e857]: © 2026 SwiftCart. All rights reserved.
+    - generic [ref=e859]:
+      - paragraph [ref=e860]: © TailCommerce - All Rights Reserved
+      - img "Payment Methods" [ref=e862]
+  - region "Notifications Alt+T"
+  - alert [ref=e863]

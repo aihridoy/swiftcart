@@ -1,0 +1,28 @@
+[     316ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://localhost:3000/login:0
+[     624ms] [INFO] %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/compiled/react-dom/cjs/react-dom.development.js:38559
+[   13574ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3000/login:0
+[   13598ms] [ERROR] Unexpected error during login: Error: Read more at https://errors.authjs.dev#callbackrouteerror
+    at Module.callback (webpack-internal:///(action-browser)/./node_modules/@auth/core/lib/actions/callback/index.js:398:23)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async AuthInternal (webpack-internal:///(action-browser)/./node_modules/@auth/core/lib/index.js:70:24)
+    at async Auth (webpack-internal:///(action-browser)/./node_modules/@auth/core/index.js:130:34)
+    at async signIn (webpack-internal:///(action-browser)/./node_modules/next-auth/lib/actions.js:53:17)
+    at async login (webpack-internal:///(action-browser)/./actions/auth-utils/index.js:17:26)
+    at async /Users/aihridoy/swiftcart/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:39:418
+    at async rk (/Users/aihridoy/swiftcart/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:38:8148)
+    at async r3 (/Users/aihridoy/swiftcart/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:41:1256)
+    at async doRender (/Users/aihridoy/swiftcart/node_modules/next/dist/server/base-server.js:1427:30)
+    at async cacheEntry.responseCache.get.routeKind (/Users/aihridoy/swiftcart/node_modules/next/dist/server/base-server.js:1588:28)
+    at async DevServer.renderToResponseWithComponentsImpl (/Users/aihridoy/swiftcart/node_modules/next/dist/server/base-server.js:1496:28)
+    at async DevServer.renderPageComponent (/Users/aihridoy/swiftcart/node_modules/next/dist/server/base-server.js:1924:24)
+    at async DevServer.renderToResponseImpl (/Users/aihridoy/swiftcart/node_modules/next/dist/server/base-server.js:1962:32)
+    at async DevServer.pipeImpl (/Users/aihridoy/swiftcart/node_modules/next/dist/server/base-server.js:922:25)
+    at async NextNodeServer.handleCatchallRenderRequest (/Users/aihridoy/swiftcart/node_modules/next/dist/server/next-server.js:272:17)
+    at async DevServer.handleRequestImpl (/Users/aihridoy/swiftcart/node_modules/next/dist/server/base-server.js:818:17)
+    at async /Users/aihridoy/swiftcart/node_modules/next/dist/server/dev/next-dev-server.js:339:20
+    at async Span.traceAsyncFn (/Users/aihridoy/swiftcart/node_modules/next/dist/trace/trace.js:154:20)
+    at async DevServer.handleRequest (/Users/aihridoy/swiftcart/node_modules/next/dist/server/dev/next-dev-server.js:336:24)
+    at async invokeRender (/Users/aihridoy/swiftcart/node_modules/next/dist/server/lib/router-server.js:178:21)
+    at async handleRequest (/Users/aihridoy/swiftcart/node_modules/next/dist/server/lib/router-server.js:355:24)
+    at async requestHandlerImpl (/Users/aihridoy/swiftcart/node_modules/next/dist/server/lib/router-server.js:379:13)
+    at async Server.requestListener (/Users/aihridoy/swiftcart/node_modules/next/dist/server/lib/start-server.js:141:13) @ webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/app-index.js:32

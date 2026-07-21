@@ -148,6 +148,17 @@ const UserList = () => {
     }
   };
 
+  // Some accounts (e.g. older OAuth signups) have no createdAt; render a dash
+  // instead of "Invalid Date".
+  const formatDate = (value) => {
+    const d = new Date(value);
+    return isNaN(d.getTime()) ? "—" : d.toLocaleDateString();
+  };
+  const formatTime = (value) => {
+    const d = new Date(value);
+    return isNaN(d.getTime()) ? "" : d.toLocaleTimeString();
+  };
+
   // Get initials for avatar placeholder
   const getInitials = (name) => {
     if (!name) return "U";
@@ -410,16 +421,16 @@ const UserList = () => {
                       {/* Mobile-only created date */}
                       <p className="text-xs text-gray-500 md:hidden mt-1 flex items-center justify-center">
                         <FaCalendarAlt className="mr-1" />
-                        {new Date(user.createdAt).toLocaleDateString()}
+                        {formatDate(user.createdAt)}
                       </p>
                     </td>
                     <td className="hidden md:table-cell p-2 md:p-4 text-gray-600">
                       <div className="flex items-center">
                         <FaCalendarAlt className="mr-2 text-gray-400" />
-                        {new Date(user.createdAt).toLocaleDateString()}
+                        {formatDate(user.createdAt)}
                       </div>
                       <div className="text-xs text-gray-500">
-                        {new Date(user.createdAt).toLocaleTimeString()}
+                        {formatTime(user.createdAt)}
                       </div>
                     </td>
                     <td className="p-2 md:p-4">

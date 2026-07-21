@@ -1,0 +1,525 @@
+- generic [active] [ref=f8e1]:
+  - generic [ref=f8e2]:
+    - banner [ref=f8e3]:
+      - generic [ref=f8e5]:
+        - link [ref=f8e7] [cursor=pointer]:
+          - /url: /
+          - img "Logo" [ref=f8e8]
+        - generic [ref=f8e10]:
+          - textbox "Search Product" [ref=f8e14]
+          - button "Search" [ref=f8e15] [cursor=pointer]
+        - generic [ref=f8e16]:
+          - link "Wishlist" [ref=f8e17] [cursor=pointer]:
+            - /url: /wishlist
+          - link "Cart" [ref=f8e22] [cursor=pointer]:
+            - /url: /cart
+          - link "Orders" [ref=f8e27] [cursor=pointer]:
+            - /url: /orders
+          - link "Account" [ref=f8e32] [cursor=pointer]:
+            - /url: /profile/680fdbcb4d5371f75bda1716
+    - navigation [ref=f8e37]:
+      - generic [ref=f8e38]:
+        - generic [ref=f8e39]: Categories
+        - generic [ref=f8e44]:
+          - link "Home" [ref=f8e45] [cursor=pointer]:
+            - /url: /
+          - link "Shop" [ref=f8e46] [cursor=pointer]:
+            - /url: /products
+          - link "About Us" [ref=f8e47] [cursor=pointer]:
+            - /url: /about-us
+          - link "Contact Us" [ref=f8e48] [cursor=pointer]:
+            - /url: /contact
+          - link "Dashboard" [ref=f8e49] [cursor=pointer]:
+            - /url: /dashboard
+        - generic [ref=f8e51]:
+          - generic [ref=f8e52]: Welcome, Ai Hridoy!
+          - button "Sign Out" [ref=f8e54] [cursor=pointer]
+    - main [ref=f8e55]:
+      - generic [ref=f8e57]:
+        - heading "All Products" [level=1] [ref=f8e58]
+        - generic [ref=f8e59]:
+          - generic [ref=f8e60]:
+            - generic [ref=f8e61]:
+              - generic [ref=f8e62]: "Sort by:"
+              - combobox "Sort by:" [ref=f8e63]:
+                - option "Featured" [selected]
+                - 'option "Price: Low to High"'
+                - 'option "Price: High to Low"'
+                - 'option "Name: A-Z"'
+                - 'option "Name: Z-A"'
+                - option "Highest Rated"
+            - generic [ref=f8e64]: Showing 20 of 30 products
+          - generic [ref=f8e66]:
+            - generic [ref=f8e67]:
+              - generic [ref=f8e68]: Category
+              - combobox "Category" [ref=f8e69]:
+                - option "All" [selected]
+                - option "Wall Art"
+                - option "Lighting"
+                - option "Plants"
+                - option "Pillows & Throws"
+                - option "Rugs"
+                - option "Storage"
+                - option "Tables"
+                - option "Home Fragrance"
+                - option "Decorative Accessories"
+                - option "Ottomans"
+                - option "Mirrors"
+                - option "Vases"
+                - option "Sofa"
+                - option "Wall Decor"
+                - option "Furniture"
+                - option "Office Accessories"
+                - option "Chairs"
+                - option "Planters"
+            - generic [ref=f8e70]:
+              - generic [ref=f8e71]: Minimum Rating
+              - combobox "Minimum Rating" [ref=f8e72]:
+                - option "Any Rating" [selected]
+                - option "1+ Star"
+                - option "2+ Stars"
+                - option "3+ Stars"
+                - option "4+ Stars"
+                - option "5 Stars"
+            - generic [ref=f8e73]:
+              - generic [ref=f8e74]: Price Range
+              - generic [ref=f8e75]:
+                - spinbutton "$ Min" [ref=f8e76]
+                - generic [ref=f8e77]: to
+                - spinbutton "$ Max" [ref=f8e78]
+            - generic [ref=f8e79]:
+              - generic [ref=f8e80]:
+                - checkbox "In Stock Only" [ref=f8e81]
+                - generic [ref=f8e82]: In Stock Only
+              - button "Reset Filters" [ref=f8e83] [cursor=pointer]
+        - generic [ref=f8e84]:
+          - generic [ref=f8e85]:
+            - generic [ref=f8e86]:
+              - link [ref=f8e87] [cursor=pointer]:
+                - /url: /products/680fdcf34d5371f75bda1779
+                - img "Abstract Canvas Wall Art" [ref=f8e88]
+              - generic [ref=f8e89]:
+                - link "View Product" [ref=f8e90] [cursor=pointer]:
+                  - /url: /products/680fdcf34d5371f75bda1779
+                - button "Add to Wishlist" [ref=f8e93] [cursor=pointer]
+            - generic [ref=f8e96]:
+              - link [ref=f8e97] [cursor=pointer]:
+                - /url: /products/680fdcf34d5371f75bda1779
+                - heading "Abstract Canvas Wall Art" [level=4] [ref=f8e98]
+              - generic [ref=f8e99]:
+                - paragraph [ref=f8e100]: $229.00
+                - paragraph [ref=f8e101]: $299.00
+              - generic [ref=f8e102]: (0)
+              - button "Add to cart" [ref=f8e115] [cursor=pointer]
+          - generic [ref=f8e116]:
+            - generic [ref=f8e117]:
+              - link [ref=f8e118] [cursor=pointer]:
+                - /url: /products/680fdcf34d5371f75bda1773
+                - img "Ceramic Table Lamp" [ref=f8e119]
+              - generic [ref=f8e120]:
+                - link "View Product" [ref=f8e121] [cursor=pointer]:
+                  - /url: /products/680fdcf34d5371f75bda1773
+                - button "Add to Wishlist" [ref=f8e124] [cursor=pointer]
+            - generic [ref=f8e127]:
+              - link [ref=f8e128] [cursor=pointer]:
+                - /url: /products/680fdcf34d5371f75bda1773
+                - heading "Ceramic Table Lamp" [level=4] [ref=f8e129]
+              - generic [ref=f8e130]:
+                - paragraph [ref=f8e131]: $149.00
+                - paragraph [ref=f8e132]: $189.00
+              - generic [ref=f8e133]: (0)
+              - button "Add to cart" [ref=f8e146] [cursor=pointer]
+          - generic [ref=f8e147]:
+            - generic [ref=f8e148]:
+              - link [ref=f8e149] [cursor=pointer]:
+                - /url: /products/680fdcf34d5371f75bda1778
+                - img "Monstera Deliciosa Plant" [ref=f8e150]
+              - generic [ref=f8e151]:
+                - link "View Product" [ref=f8e152] [cursor=pointer]:
+                  - /url: /products/680fdcf34d5371f75bda1778
+                - button "Add to Wishlist" [ref=f8e155] [cursor=pointer]
+            - generic [ref=f8e158]:
+              - link [ref=f8e159] [cursor=pointer]:
+                - /url: /products/680fdcf34d5371f75bda1778
+                - heading "Monstera Deliciosa Plant" [level=4] [ref=f8e160]
+              - generic [ref=f8e161]:
+                - paragraph [ref=f8e162]: $75.00
+                - paragraph [ref=f8e163]: $95.00
+              - generic [ref=f8e164]: (0)
+              - button "Add to cart" [ref=f8e177] [cursor=pointer]
+          - generic [ref=f8e178]:
+            - generic [ref=f8e179]:
+              - link [ref=f8e180] [cursor=pointer]:
+                - /url: /products/680fdcf34d5371f75bda1789
+                - img "Wool Chunky Knit Throw" [ref=f8e181]
+              - generic [ref=f8e182]:
+                - link "View Product" [ref=f8e183] [cursor=pointer]:
+                  - /url: /products/680fdcf34d5371f75bda1789
+                - button "Add to Wishlist" [ref=f8e186] [cursor=pointer]
+            - generic [ref=f8e189]:
+              - link [ref=f8e190] [cursor=pointer]:
+                - /url: /products/680fdcf34d5371f75bda1789
+                - heading "Wool Chunky Knit Throw" [level=4] [ref=f8e191]
+              - generic [ref=f8e192]:
+                - paragraph [ref=f8e193]: $149.00
+                - paragraph [ref=f8e194]: $189.00
+              - generic [ref=f8e195]: (0)
+              - button "Add to cart" [ref=f8e208] [cursor=pointer]
+          - generic [ref=f8e209]:
+            - generic [ref=f8e210]:
+              - link [ref=f8e211] [cursor=pointer]:
+                - /url: /products/680fdcf34d5371f75bda1775
+                - img "Geometric Area Rug" [ref=f8e212]
+              - generic [ref=f8e213]:
+                - link "View Product" [ref=f8e214] [cursor=pointer]:
+                  - /url: /products/680fdcf34d5371f75bda1775
+                - button "Add to Wishlist" [ref=f8e217] [cursor=pointer]
+            - generic [ref=f8e220]:
+              - link [ref=f8e221] [cursor=pointer]:
+                - /url: /products/680fdcf34d5371f75bda1775
+                - heading "Geometric Area Rug" [level=4] [ref=f8e222]
+              - generic [ref=f8e223]:
+                - paragraph [ref=f8e224]: $279.00
+                - paragraph [ref=f8e225]: $349.00
+              - generic [ref=f8e226]: (0)
+              - button "Add to cart" [ref=f8e239] [cursor=pointer]
+          - generic [ref=f8e240]:
+            - generic [ref=f8e241]:
+              - link [ref=f8e242] [cursor=pointer]:
+                - /url: /products/680fdcf34d5371f75bda1777
+                - img "Floating Wall Shelves Set" [ref=f8e243]
+              - generic [ref=f8e244]:
+                - link "View Product" [ref=f8e245] [cursor=pointer]:
+                  - /url: /products/680fdcf34d5371f75bda1777
+                - button "Add to Wishlist" [ref=f8e248] [cursor=pointer]
+            - generic [ref=f8e251]:
+              - link [ref=f8e252] [cursor=pointer]:
+                - /url: /products/680fdcf34d5371f75bda1777
+                - heading "Floating Wall Shelves Set" [level=4] [ref=f8e253]
+              - generic [ref=f8e254]:
+                - paragraph [ref=f8e255]: $119.00
+                - paragraph [ref=f8e256]: $159.00
+              - generic [ref=f8e257]: (0)
+              - button "Add to cart" [ref=f8e270] [cursor=pointer]
+          - generic [ref=f8e271]:
+            - generic [ref=f8e272]:
+              - link [ref=f8e273] [cursor=pointer]:
+                - /url: /products/680fdcf34d5371f75bda1781
+                - img "Glass Pendant Light" [ref=f8e274]
+              - generic [ref=f8e275]:
+                - link "View Product" [ref=f8e276] [cursor=pointer]:
+                  - /url: /products/680fdcf34d5371f75bda1781
+                - button "Add to Wishlist" [ref=f8e279] [cursor=pointer]
+            - generic [ref=f8e282]:
+              - link [ref=f8e283] [cursor=pointer]:
+                - /url: /products/680fdcf34d5371f75bda1781
+                - heading "Glass Pendant Light" [level=4] [ref=f8e284]
+              - generic [ref=f8e285]:
+                - paragraph [ref=f8e286]: $179.00
+                - paragraph [ref=f8e287]: $229.00
+              - generic [ref=f8e288]: (0)
+              - button "Add to cart" [ref=f8e301] [cursor=pointer]
+          - generic [ref=f8e302]:
+            - generic [ref=f8e303]:
+              - link [ref=f8e304] [cursor=pointer]:
+                - /url: /products/680fdcf34d5371f75bda1784
+                - img "Rustic Farmhouse Dining Table" [ref=f8e305]
+              - generic [ref=f8e306]:
+                - link "View Product" [ref=f8e307] [cursor=pointer]:
+                  - /url: /products/680fdcf34d5371f75bda1784
+                - button "Add to Wishlist" [ref=f8e310] [cursor=pointer]
+            - generic [ref=f8e313]:
+              - link [ref=f8e314] [cursor=pointer]:
+                - /url: /products/680fdcf34d5371f75bda1784
+                - heading "Rustic Farmhouse Dining Table" [level=4] [ref=f8e315]
+              - generic [ref=f8e316]:
+                - paragraph [ref=f8e317]: $899.00
+                - paragraph [ref=f8e318]: $1199.00
+              - generic [ref=f8e319]: (0)
+              - button "Add to cart" [ref=f8e332] [cursor=pointer]
+          - generic [ref=f8e333]:
+            - generic [ref=f8e334]:
+              - link [ref=f8e335] [cursor=pointer]:
+                - /url: /products/680fdcf34d5371f75bda1796
+                - img "Scented Soy Candle Collection" [ref=f8e336]
+              - generic [ref=f8e337]:
+                - link "View Product" [ref=f8e338] [cursor=pointer]:
+                  - /url: /products/680fdcf34d5371f75bda1796
+                - button "Add to Wishlist" [ref=f8e341] [cursor=pointer]
+            - generic [ref=f8e344]:
+              - link [ref=f8e345] [cursor=pointer]:
+                - /url: /products/680fdcf34d5371f75bda1796
+                - heading "Scented Soy Candle Collection" [level=4] [ref=f8e346]
+              - generic [ref=f8e347]:
+                - paragraph [ref=f8e348]: $69.00
+                - paragraph [ref=f8e349]: $89.00
+              - generic [ref=f8e350]: (0)
+              - button "Add to cart" [ref=f8e363] [cursor=pointer]
+          - generic [ref=f8e364]:
+            - generic [ref=f8e365]:
+              - link [ref=f8e366] [cursor=pointer]:
+                - /url: /products/680fdcf34d5371f75bda1792
+                - img "Framed Botanical Prints Set" [ref=f8e367]
+              - generic [ref=f8e368]:
+                - link "View Product" [ref=f8e369] [cursor=pointer]:
+                  - /url: /products/680fdcf34d5371f75bda1792
+                - button "Add to Wishlist" [ref=f8e372] [cursor=pointer]
+            - generic [ref=f8e375]:
+              - link [ref=f8e376] [cursor=pointer]:
+                - /url: /products/680fdcf34d5371f75bda1792
+                - heading "Framed Botanical Prints Set" [level=4] [ref=f8e377]
+              - generic [ref=f8e378]:
+                - paragraph [ref=f8e379]: $159.00
+                - paragraph [ref=f8e380]: $199.00
+              - generic [ref=f8e381]: (0)
+              - button "Add to cart" [ref=f8e394] [cursor=pointer]
+          - generic [ref=f8e395]:
+            - generic [ref=f8e396]:
+              - link [ref=f8e397] [cursor=pointer]:
+                - /url: /products/680fdcf34d5371f75bda1782
+                - img "Linen Throw Pillows Set" [ref=f8e398]
+              - generic [ref=f8e399]:
+                - link "View Product" [ref=f8e400] [cursor=pointer]:
+                  - /url: /products/680fdcf34d5371f75bda1782
+                - button "Add to Wishlist" [ref=f8e403] [cursor=pointer]
+            - generic [ref=f8e406]:
+              - link [ref=f8e407] [cursor=pointer]:
+                - /url: /products/680fdcf34d5371f75bda1782
+                - heading "Linen Throw Pillows Set" [level=4] [ref=f8e408]
+              - generic [ref=f8e409]:
+                - paragraph [ref=f8e410]: $89.00
+                - paragraph [ref=f8e411]: $119.00
+              - generic [ref=f8e412]: (0)
+              - button "Add to cart" [ref=f8e425] [cursor=pointer]
+          - generic [ref=f8e426]:
+            - generic [ref=f8e427]:
+              - link [ref=f8e428] [cursor=pointer]:
+                - /url: /products/680fdcf34d5371f75bda1788
+                - img "Modern Bookcase" [ref=f8e429]
+              - generic [ref=f8e430]:
+                - link "View Product" [ref=f8e431] [cursor=pointer]:
+                  - /url: /products/680fdcf34d5371f75bda1788
+                - button "Add to Wishlist" [ref=f8e434] [cursor=pointer]
+            - generic [ref=f8e437]:
+              - link [ref=f8e438] [cursor=pointer]:
+                - /url: /products/680fdcf34d5371f75bda1788
+                - heading "Modern Bookcase" [level=4] [ref=f8e439]
+              - generic [ref=f8e440]:
+                - paragraph [ref=f8e441]: $399.00
+                - paragraph [ref=f8e442]: $499.00
+              - generic [ref=f8e443]: (0)
+              - button "Add to cart" [ref=f8e456] [cursor=pointer]
+          - generic [ref=f8e457]:
+            - generic [ref=f8e458]:
+              - link [ref=f8e459] [cursor=pointer]:
+                - /url: /products/680fdcf34d5371f75bda1771
+                - img "Scandinavian Coffee Table" [ref=f8e460]
+              - generic [ref=f8e461]:
+                - link "View Product" [ref=f8e462] [cursor=pointer]:
+                  - /url: /products/680fdcf34d5371f75bda1771
+                - button "Add to Wishlist" [ref=f8e465] [cursor=pointer]
+            - generic [ref=f8e468]:
+              - link [ref=f8e469] [cursor=pointer]:
+                - /url: /products/680fdcf34d5371f75bda1771
+                - heading "Scandinavian Coffee Table" [level=4] [ref=f8e470]
+              - generic [ref=f8e471]:
+                - paragraph [ref=f8e472]: $399.00
+                - paragraph [ref=f8e473]: $499.00
+              - generic [ref=f8e474]: (0)
+              - button "Add to cart" [ref=f8e487] [cursor=pointer]
+          - generic [ref=f8e488]:
+            - generic [ref=f8e489]:
+              - link [ref=f8e490] [cursor=pointer]:
+                - /url: /products/680fdcf34d5371f75bda1776
+                - img "Marble Decorative Bowl" [ref=f8e491]
+              - generic [ref=f8e492]:
+                - link "View Product" [ref=f8e493] [cursor=pointer]:
+                  - /url: /products/680fdcf34d5371f75bda1776
+                - button "Add to Wishlist" [ref=f8e496] [cursor=pointer]
+            - generic [ref=f8e499]:
+              - link [ref=f8e500] [cursor=pointer]:
+                - /url: /products/680fdcf34d5371f75bda1776
+                - heading "Marble Decorative Bowl" [level=4] [ref=f8e501]
+              - generic [ref=f8e502]:
+                - paragraph [ref=f8e503]: $85.00
+                - paragraph [ref=f8e504]: $110.00
+              - generic [ref=f8e505]: (0)
+              - button "Add to cart" [ref=f8e518] [cursor=pointer]
+          - generic [ref=f8e519]:
+            - generic [ref=f8e520]:
+              - link [ref=f8e521] [cursor=pointer]:
+                - /url: /products/680fdcf34d5371f75bda1780
+                - img "Moroccan Pouffe Ottoman" [ref=f8e522]
+              - generic [ref=f8e523]:
+                - link "View Product" [ref=f8e524] [cursor=pointer]:
+                  - /url: /products/680fdcf34d5371f75bda1780
+                - button "Add to Wishlist" [ref=f8e527] [cursor=pointer]
+            - generic [ref=f8e530]:
+              - link [ref=f8e531] [cursor=pointer]:
+                - /url: /products/680fdcf34d5371f75bda1780
+                - heading "Moroccan Pouffe Ottoman" [level=4] [ref=f8e532]
+              - generic [ref=f8e533]:
+                - paragraph [ref=f8e534]: $149.00
+                - paragraph [ref=f8e535]: $199.00
+              - generic [ref=f8e536]: (0)
+              - button "Add to cart" [ref=f8e549] [cursor=pointer]
+          - generic [ref=f8e550]:
+            - generic [ref=f8e551]:
+              - link [ref=f8e552] [cursor=pointer]:
+                - /url: /products/680fdcf34d5371f75bda1783
+                - img "Round Wooden Mirror" [ref=f8e553]
+              - generic [ref=f8e554]:
+                - link "View Product" [ref=f8e555] [cursor=pointer]:
+                  - /url: /products/680fdcf34d5371f75bda1783
+                - button "Add to Wishlist" [ref=f8e558] [cursor=pointer]
+            - generic [ref=f8e561]:
+              - link [ref=f8e562] [cursor=pointer]:
+                - /url: /products/680fdcf34d5371f75bda1783
+                - heading "Round Wooden Mirror" [level=4] [ref=f8e563]
+              - generic [ref=f8e564]:
+                - paragraph [ref=f8e565]: $159.00
+                - paragraph [ref=f8e566]: $199.00
+              - generic [ref=f8e567]: (0)
+              - button "Add to cart" [ref=f8e580] [cursor=pointer]
+          - generic [ref=f8e581]:
+            - generic [ref=f8e582]:
+              - link [ref=f8e583] [cursor=pointer]:
+                - /url: /products/680fdcf34d5371f75bda1785
+                - img "Ceramic Vase Collection" [ref=f8e584]
+              - generic [ref=f8e585]:
+                - link "View Product" [ref=f8e586] [cursor=pointer]:
+                  - /url: /products/680fdcf34d5371f75bda1785
+                - button "Add to Wishlist" [ref=f8e589] [cursor=pointer]
+            - generic [ref=f8e592]:
+              - link [ref=f8e593] [cursor=pointer]:
+                - /url: /products/680fdcf34d5371f75bda1785
+                - heading "Ceramic Vase Collection" [level=4] [ref=f8e594]
+              - generic [ref=f8e595]:
+                - paragraph [ref=f8e596]: $129.00
+                - paragraph [ref=f8e597]: $169.00
+              - generic [ref=f8e598]: (0)
+              - button "Add to cart" [ref=f8e611] [cursor=pointer]
+          - generic [ref=f8e612]:
+            - generic [ref=f8e613]:
+              - link [ref=f8e614] [cursor=pointer]:
+                - /url: /products/680fdcf34d5371f75bda1793
+                - img "Sectional Corner Sofa" [ref=f8e615]
+              - generic [ref=f8e616]:
+                - link "View Product" [ref=f8e617] [cursor=pointer]:
+                  - /url: /products/680fdcf34d5371f75bda1793
+                - button "Add to Wishlist" [ref=f8e620] [cursor=pointer]
+            - generic [ref=f8e623]:
+              - link [ref=f8e624] [cursor=pointer]:
+                - /url: /products/680fdcf34d5371f75bda1793
+                - heading "Sectional Corner Sofa" [level=4] [ref=f8e625]
+              - generic [ref=f8e626]:
+                - paragraph [ref=f8e627]: $1799.00
+                - paragraph [ref=f8e628]: $2299.00
+              - generic [ref=f8e629]: (0)
+              - button "Add to cart" [ref=f8e642] [cursor=pointer]
+          - generic [ref=f8e643]:
+            - generic [ref=f8e644]:
+              - link [ref=f8e645] [cursor=pointer]:
+                - /url: /products/680fdcf34d5371f75bda1794
+                - img "Copper Wall Clock" [ref=f8e646]
+              - generic [ref=f8e647]:
+                - link "View Product" [ref=f8e648] [cursor=pointer]:
+                  - /url: /products/680fdcf34d5371f75bda1794
+                - button "Add to Wishlist" [ref=f8e651] [cursor=pointer]
+            - generic [ref=f8e654]:
+              - link [ref=f8e655] [cursor=pointer]:
+                - /url: /products/680fdcf34d5371f75bda1794
+                - heading "Copper Wall Clock" [level=4] [ref=f8e656]
+              - generic [ref=f8e657]:
+                - paragraph [ref=f8e658]: $89.00
+                - paragraph [ref=f8e659]: $119.00
+              - generic [ref=f8e660]: (0)
+              - button "Add to cart" [ref=f8e673] [cursor=pointer]
+          - generic [ref=f8e674]:
+            - generic [ref=f8e675]:
+              - link [ref=f8e676] [cursor=pointer]:
+                - /url: /products/680fdcf34d5371f75bda1795
+                - img "Reclaimed Wood Side Table" [ref=f8e677]
+              - generic [ref=f8e678]:
+                - link "View Product" [ref=f8e679] [cursor=pointer]:
+                  - /url: /products/680fdcf34d5371f75bda1795
+                - button "Add to Wishlist" [ref=f8e682] [cursor=pointer]
+            - generic [ref=f8e685]:
+              - link [ref=f8e686] [cursor=pointer]:
+                - /url: /products/680fdcf34d5371f75bda1795
+                - heading "Reclaimed Wood Side Table" [level=4] [ref=f8e687]
+              - generic [ref=f8e688]:
+                - paragraph [ref=f8e689]: $199.00
+                - paragraph [ref=f8e690]: $249.00
+              - generic [ref=f8e691]: (0)
+              - button "Add to cart" [ref=f8e704] [cursor=pointer]
+        - button "Show More" [ref=f8e706] [cursor=pointer]
+    - contentinfo [ref=f8e707]:
+      - generic [ref=f8e708]:
+        - generic [ref=f8e709]:
+          - generic [ref=f8e710]:
+            - link [ref=f8e711] [cursor=pointer]:
+              - /url: /
+              - img "SwiftCart Logo" [ref=f8e712]
+            - paragraph [ref=f8e713]: Transform your space with our curated collection of home and decor essentials. At SwiftCart, we create homes that inspire comfort and style.
+            - generic [ref=f8e714]:
+              - link "Visit SwiftCart on Facebook" [ref=f8e715] [cursor=pointer]:
+                - /url: https://facebook.com
+              - link "Visit SwiftCart on Instagram" [ref=f8e718] [cursor=pointer]:
+                - /url: https://instagram.com
+              - link "Visit SwiftCart on Twitter" [ref=f8e721] [cursor=pointer]:
+                - /url: https://twitter.com
+              - link "Visit SwiftCart on Pinterest" [ref=f8e724] [cursor=pointer]:
+                - /url: https://pinterest.com
+          - generic [ref=f8e727]:
+            - heading "Shop" [level=3] [ref=f8e728]
+            - list [ref=f8e729]:
+              - listitem [ref=f8e730]:
+                - link "Furniture" [ref=f8e731] [cursor=pointer]:
+                  - /url: /category/furniture
+              - listitem [ref=f8e732]:
+                - link "Lighting" [ref=f8e733] [cursor=pointer]:
+                  - /url: /category/lighting
+              - listitem [ref=f8e734]:
+                - link "Rugs" [ref=f8e735] [cursor=pointer]:
+                  - /url: /category/rugs
+              - listitem [ref=f8e736]:
+                - link "Wall Art" [ref=f8e737] [cursor=pointer]:
+                  - /url: /category/wall art
+          - generic [ref=f8e738]:
+            - heading "Support" [level=3] [ref=f8e739]
+            - list [ref=f8e740]:
+              - listitem [ref=f8e741]:
+                - link "FAQs" [ref=f8e742] [cursor=pointer]:
+                  - /url: /faqs
+              - listitem [ref=f8e743]:
+                - link "Shipping & Returns" [ref=f8e744] [cursor=pointer]:
+                  - /url: /shipping-returns
+              - listitem [ref=f8e745]:
+                - link "Contact Us" [ref=f8e746] [cursor=pointer]:
+                  - /url: /contact
+              - listitem [ref=f8e747]:
+                - link "Track Order" [ref=f8e748] [cursor=pointer]:
+                  - /url: /user-dashboard/orders
+          - generic [ref=f8e749]:
+            - heading "Company" [level=3] [ref=f8e750]
+            - list [ref=f8e751]:
+              - listitem [ref=f8e752]:
+                - link "About Us" [ref=f8e753] [cursor=pointer]:
+                  - /url: /about-us
+              - listitem [ref=f8e754]:
+                - link "All Products" [ref=f8e755] [cursor=pointer]:
+                  - /url: /products
+              - listitem [ref=f8e756]:
+                - link "Privacy Policy" [ref=f8e757] [cursor=pointer]:
+                  - /url: /privacy
+              - listitem [ref=f8e758]:
+                - link "Terms & Conditions" [ref=f8e759] [cursor=pointer]:
+                  - /url: /terms-conditions
+        - paragraph [ref=f8e761]: © 2026 SwiftCart. All rights reserved.
+    - generic [ref=f8e763]:
+      - paragraph [ref=f8e764]: © TailCommerce - All Rights Reserved
+      - img "Payment Methods" [ref=f8e766]
+  - region "Notifications Alt+T"
+  - button "Open Tanstack query devtools" [ref=f8e817] [cursor=pointer]
+  - alert [ref=f8e866]

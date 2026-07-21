@@ -57,13 +57,11 @@ const ProductsPage = () => {
     onError: (error) => toast.error(`Error deleting product: ${error.message}`),
   });
 
-  // Filter user products
-  const userProducts =
-    products?.products?.filter((product) => product.user === user?.user?.id) ||
-    [];
+  // Admins manage the whole catalog, not only products they authored.
+  const allProducts = products?.products || [];
 
   // Filter products based on search term
-  const filteredProducts = userProducts.filter((product) => {
+  const filteredProducts = allProducts.filter((product) => {
     if (!debouncedSearchTerm) return true;
     
     const searchLower = debouncedSearchTerm.toLowerCase();

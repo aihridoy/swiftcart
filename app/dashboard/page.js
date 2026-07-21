@@ -68,8 +68,11 @@ export default function DashboardPage() {
   });
 
   const { data: orderData, isLoading: ordersLoading } = useQuery({
-    queryKey: ["orders"],
-    queryFn: getOrders,
+    // Pull all orders, not the default first page of 10 - otherwise the count,
+    // revenue, and recent-orders list only reflect the first 10.
+    // ponytail: big limit instead of a dedicated stats endpoint; add one if order volume outgrows a single fetch.
+    queryKey: ["orders", "dashboard"],
+    queryFn: () => getOrders({ page: 1, limit: 100000 }),
   });
 
   const isLoading = usersLoading || productsLoading || ordersLoading;
