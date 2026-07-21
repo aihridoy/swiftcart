@@ -13,7 +13,11 @@ export async function dbConnect() {
     }
 
     if (!cached.promise) {
-        cached.promise = mongoose.connect(String(MONGODB_URI)).then((m) => m);
+        // maxPoolSize caps the mongoose pool (driver default is 100) so it and
+        // the native adapter client don't together exhaust Atlas's connection limit.
+        cached.promise = mongoose
+            .connect(String(MONGODB_URI), { maxPoolSize: 10 })
+            .then((m) => m);
     }
 
     try {
