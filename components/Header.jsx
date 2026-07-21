@@ -252,7 +252,7 @@ const Header = () => {
               onClick={() => handleProtectedNavigation("/orders")}
             />
             <NavItem
-              href={`/profile/${user?.user?.id}`}
+              href={user?.user?.id ? `/profile/${user.user.id}` : "/login"}
               icon={<FaUser />}
               label="Account"
               onClick={() => handleProtectedNavigation("/profile")}

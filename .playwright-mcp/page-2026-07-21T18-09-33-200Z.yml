@@ -1,0 +1,114 @@
+- generic [active] [ref=f15e1]:
+  - generic [ref=f15e2]:
+    - banner [ref=f15e3]:
+      - generic [ref=f15e5]:
+        - link [ref=f15e7] [cursor=pointer]:
+          - /url: /
+          - img "Logo" [ref=f15e8]
+        - generic [ref=f15e10]:
+          - textbox "Search Product" [ref=f15e14]
+          - button "Search" [ref=f15e15] [cursor=pointer]
+        - generic [ref=f15e16]:
+          - link "Wishlist" [ref=f15e17] [cursor=pointer]:
+            - /url: /wishlist
+          - link "Cart" [ref=f15e22] [cursor=pointer]:
+            - /url: /cart
+          - link "Orders" [ref=f15e27] [cursor=pointer]:
+            - /url: /orders
+          - link "Account" [ref=f15e32] [cursor=pointer]:
+            - /url: /profile/undefined
+    - navigation [ref=f15e37]:
+      - generic [ref=f15e38]:
+        - generic [ref=f15e39]: Categories
+        - generic [ref=f15e44]:
+          - link "Home" [ref=f15e45] [cursor=pointer]:
+            - /url: /
+          - link "Shop" [ref=f15e46] [cursor=pointer]:
+            - /url: /products
+          - link "About Us" [ref=f15e47] [cursor=pointer]:
+            - /url: /about-us
+          - link "Contact Us" [ref=f15e48] [cursor=pointer]:
+            - /url: /contact
+          - link "Dashboard" [ref=f15e49] [cursor=pointer]:
+            - /url: /dashboard
+        - generic [ref=f15e51]:
+          - generic [ref=f15e52]: Welcome, Ai Hridoy!
+          - button "Sign Out" [ref=f15e54] [cursor=pointer]
+    - main [ref=f15e55]:
+      - generic [ref=f15e57]:
+        - generic [ref=f15e62]:
+          - heading "Wishlist Items" [level=2] [ref=f15e63]
+          - paragraph [ref=f15e64]: 0 items
+        - generic [ref=f15e65]:
+          - heading "Your Wishlist is Empty" [level=2] [ref=f15e68]
+          - paragraph [ref=f15e69]: Start adding your favorite products to your wishlist!
+          - link "Browse Products" [ref=f15e70] [cursor=pointer]:
+            - /url: /products
+    - contentinfo [ref=f15e74]:
+      - generic [ref=f15e75]:
+        - generic [ref=f15e76]:
+          - generic [ref=f15e77]:
+            - link [ref=f15e78] [cursor=pointer]:
+              - /url: /
+              - img "SwiftCart Logo" [ref=f15e79]
+            - paragraph [ref=f15e80]: Transform your space with our curated collection of home and decor essentials. At SwiftCart, we create homes that inspire comfort and style.
+            - generic [ref=f15e81]:
+              - link "Visit SwiftCart on Facebook" [ref=f15e82] [cursor=pointer]:
+                - /url: https://facebook.com
+              - link "Visit SwiftCart on Instagram" [ref=f15e85] [cursor=pointer]:
+                - /url: https://instagram.com
+              - link "Visit SwiftCart on Twitter" [ref=f15e88] [cursor=pointer]:
+                - /url: https://twitter.com
+              - link "Visit SwiftCart on Pinterest" [ref=f15e91] [cursor=pointer]:
+                - /url: https://pinterest.com
+          - generic [ref=f15e94]:
+            - heading "Shop" [level=3] [ref=f15e95]
+            - list [ref=f15e96]:
+              - listitem [ref=f15e97]:
+                - link "Furniture" [ref=f15e98] [cursor=pointer]:
+                  - /url: /category/furniture
+              - listitem [ref=f15e99]:
+                - link "Lighting" [ref=f15e100] [cursor=pointer]:
+                  - /url: /category/lighting
+              - listitem [ref=f15e101]:
+                - link "Rugs" [ref=f15e102] [cursor=pointer]:
+                  - /url: /category/rugs
+              - listitem [ref=f15e103]:
+                - link "Wall Art" [ref=f15e104] [cursor=pointer]:
+                  - /url: /category/wall art
+          - generic [ref=f15e105]:
+            - heading "Support" [level=3] [ref=f15e106]
+            - list [ref=f15e107]:
+              - listitem [ref=f15e108]:
+                - link "FAQs" [ref=f15e109] [cursor=pointer]:
+                  - /url: /faqs
+              - listitem [ref=f15e110]:
+                - link "Shipping & Returns" [ref=f15e111] [cursor=pointer]:
+                  - /url: /shipping-returns
+              - listitem [ref=f15e112]:
+                - link "Contact Us" [ref=f15e113] [cursor=pointer]:
+                  - /url: /contact
+              - listitem [ref=f15e114]:
+                - link "Track Order" [ref=f15e115] [cursor=pointer]:
+                  - /url: /user-dashboard/orders
+          - generic [ref=f15e116]:
+            - heading "Company" [level=3] [ref=f15e117]
+            - list [ref=f15e118]:
+              - listitem [ref=f15e119]:
+                - link "About Us" [ref=f15e120] [cursor=pointer]:
+                  - /url: /about-us
+              - listitem [ref=f15e121]:
+                - link "All Products" [ref=f15e122] [cursor=pointer]:
+                  - /url: /products
+              - listitem [ref=f15e123]:
+                - link "Privacy Policy" [ref=f15e124] [cursor=pointer]:
+                  - /url: /privacy
+              - listitem [ref=f15e125]:
+                - link "Terms & Conditions" [ref=f15e126] [cursor=pointer]:
+                  - /url: /terms-conditions
+        - paragraph [ref=f15e128]: © 2026 SwiftCart. All rights reserved.
+    - generic [ref=f15e130]:
+      - paragraph [ref=f15e131]: © TailCommerce - All Rights Reserved
+      - img "Payment Methods" [ref=f15e133]
+  - region "Notifications Alt+T"
+  - alert [ref=f15e134]

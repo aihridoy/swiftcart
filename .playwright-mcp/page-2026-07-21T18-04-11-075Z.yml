@@ -1,0 +1,31 @@
+- generic [active] [ref=f2e1]:
+  - generic [ref=f2e5]:
+    - heading "Login" [level=2] [ref=f2e6]
+    - paragraph [ref=f2e7]: Welcome back, customer
+    - generic [ref=f2e8]:
+      - generic [ref=f2e9]:
+        - generic [ref=f2e10]:
+          - generic [ref=f2e11]: Email address
+          - textbox "Email address" [ref=f2e12]:
+            - /placeholder: youremail@domain.com
+        - generic [ref=f2e13]:
+          - generic [ref=f2e14]: Password
+          - generic [ref=f2e15]:
+            - textbox "Password" [ref=f2e16]:
+              - /placeholder: "*******"
+            - button "Show password" [ref=f2e17] [cursor=pointer]
+      - generic [ref=f2e20]:
+        - generic [ref=f2e21]:
+          - checkbox "Remember me" [ref=f2e22] [cursor=pointer]
+          - generic [ref=f2e23] [cursor=pointer]: Remember me
+        - link "Forgot password?" [ref=f2e24] [cursor=pointer]:
+          - /url: /forgot-password
+      - button "Login" [ref=f2e26] [cursor=pointer]
+    - generic [ref=f2e27]: Or login with
+    - button "Google" [ref=f2e31] [cursor=pointer]
+    - paragraph [ref=f2e32]:
+      - text: Don't have an account?
+      - link "Register now" [ref=f2e33] [cursor=pointer]:
+        - /url: /register
+  - region "Notifications Alt+T"
+  - alert [ref=f2e34]

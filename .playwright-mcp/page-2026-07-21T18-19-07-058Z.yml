@@ -1,0 +1,73 @@
+- generic [active] [ref=f20e1]:
+  - generic [ref=f20e2]:
+    - complementary [ref=f20e3]:
+      - generic [ref=f20e4]:
+        - link [ref=f20e5] [cursor=pointer]:
+          - /url: /
+          - img "SwiftCart" [ref=f20e6]
+        - paragraph [ref=f20e7]: Admin
+      - navigation [ref=f20e8]:
+        - list [ref=f20e9]:
+          - listitem [ref=f20e10]:
+            - link "Overview" [ref=f20e11] [cursor=pointer]:
+              - /url: /dashboard
+          - listitem [ref=f20e18]:
+            - link "Add" [ref=f20e19] [cursor=pointer]:
+              - /url: /dashboard/add-product
+          - listitem [ref=f20e22]:
+            - link "Products" [ref=f20e23] [cursor=pointer]:
+              - /url: /dashboard/products-list
+          - listitem [ref=f20e29]:
+            - link "Users" [ref=f20e30] [cursor=pointer]:
+              - /url: /dashboard/users
+          - listitem [ref=f20e37]:
+            - link "Orders" [ref=f20e38] [cursor=pointer]:
+              - /url: /dashboard/orders
+          - listitem [ref=f20e44]:
+            - link "Home" [ref=f20e45] [cursor=pointer]:
+              - /url: /
+      - button "Sign Out" [ref=f20e52] [cursor=pointer]
+    - main [ref=f20e53]:
+      - generic [ref=f20e54]:
+        - heading "Users" [level=1] [ref=f20e56]
+        - table [ref=f20e81]:
+          - rowgroup [ref=f20e82]:
+            - row [ref=f20e83]:
+              - columnheader [ref=f20e84]
+              - columnheader [ref=f20e88]
+              - columnheader [ref=f20e92]
+              - columnheader [ref=f20e96]
+              - columnheader "Actions" [ref=f20e100]
+          - rowgroup [ref=f20e101]:
+            - row [ref=f20e102]:
+              - cell [ref=f20e103]
+              - cell [ref=f20e107]
+              - cell [ref=f20e109]
+              - cell [ref=f20e111]
+              - cell [ref=f20e113]
+            - row [ref=f20e115]:
+              - cell [ref=f20e116]
+              - cell [ref=f20e120]
+              - cell [ref=f20e122]
+              - cell [ref=f20e124]
+              - cell [ref=f20e126]
+            - row [ref=f20e128]:
+              - cell [ref=f20e129]
+              - cell [ref=f20e133]
+              - cell [ref=f20e135]
+              - cell [ref=f20e137]
+              - cell [ref=f20e139]
+            - row [ref=f20e141]:
+              - cell [ref=f20e142]
+              - cell [ref=f20e146]
+              - cell [ref=f20e148]
+              - cell [ref=f20e150]
+              - cell [ref=f20e152]
+            - row [ref=f20e154]:
+              - cell [ref=f20e155]
+              - cell [ref=f20e159]
+              - cell [ref=f20e161]
+              - cell [ref=f20e163]
+              - cell [ref=f20e165]
+  - region "Notifications Alt+T"
+  - alert [ref=f20e167]
