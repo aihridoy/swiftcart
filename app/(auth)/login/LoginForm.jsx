@@ -6,11 +6,13 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { getCallbackUrl } from "@/lib/callback-url";
 import { toast } from "react-toastify";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { login } from "@/actions/auth-utils";
 
 const LoginPage = () => {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -162,14 +164,24 @@ const LoginPage = () => {
               <label htmlFor="password" className="text-gray-600 mb-2 block">
                 Password
               </label>
-              <input
-                type="password"
-                name="password"
-                id="password"
-                className="block w-full border border-gray-300 px-4 py-3 text-gray-600 text-sm rounded focus:ring-0 focus:border-primary placeholder-gray-400"
-                placeholder="*******"
-                required
-              />
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  id="password"
+                  className="block w-full border border-gray-300 px-4 py-3 pr-11 text-gray-600 text-sm rounded focus:ring-0 focus:border-primary placeholder-gray-400"
+                  placeholder="*******"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((s) => !s)}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                  className="absolute inset-y-0 right-0 flex items-center px-3 text-gray-400 hover:text-gray-600"
+                >
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                </button>
+              </div>
             </div>
           </div>
 
