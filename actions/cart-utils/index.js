@@ -52,6 +52,23 @@ export const removeFromCart = async (productId) => {
   }
 };
 
+// Clear the entire cart in a single request
+export const clearCart = async () => {
+  try {
+    const result = await api.delete('/cart', {
+      data: { clearAll: true },
+      headers: {
+        "Cache-Control": "no-cache, no-store, must-revalidate",
+        Pragma: "no-cache",
+        Expires: "0",
+      },
+    });
+    return result.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.error || error.message);
+  }
+};
+
 // Update product quantity in cart
 export const updateCartQuantity = async (productId, quantity) => {
   try {
