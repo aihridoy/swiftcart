@@ -1,19 +1,17 @@
-import { Poppins, Roboto } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import ReactQueryProvider from "@/providers/ReactQueryProvider";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ClientLayout from "./ClientLayout";
 
-const poppins = Poppins({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+const poppins = localFont({
+  src: "./fonts/GeistVF.woff",
   variable: "--font-poppins",
   display: "swap",
 });
-const roboto = Roboto({
-  subsets: ["latin"],
-  weight: ["400", "500", "700"],
+const roboto = localFont({
+  src: "./fonts/GeistVF.woff",
   variable: "--font-roboto",
   display: "swap",
 });

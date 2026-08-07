@@ -5,6 +5,7 @@ import { dbConnect } from "@/service/mongo";
 import { Order } from "@/models/order-model";
 import { Cart } from "@/models/cart-model";
 import { Product } from "@/models/product-model";
+import { buildOrderItems, stockReservation } from "@/lib/checkout-integrity";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -96,6 +97,7 @@ async function sendOrderEmail({ to, subject, html }) {
 }
 
 export async function POST(request) {
+  let transaction;
   try {
     const userSession = await session();
     if (!userSession || !userSession.user) {
@@ -109,72 +111,69 @@ export async function POST(request) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
-    await dbConnect();
+    const mongo = await dbConnect();
+    transaction = await mongo.startSession();
+    let order;
 
-    // Find the cart to get the items
-    const cart = await Cart.findById(cartId).populate("items.product");
-    if (!cart || cart.user.toString() !== userSession.user.id) {
-      return NextResponse.json({ error: "Cart not found" }, { status: 404 });
-    }
+    await transaction.withTransaction(async () => {
+      const cart = await Cart.findById(cartId)
+        .session(transaction)
+        .populate("items.product");
 
-    if (cart.items.length === 0) {
-      return NextResponse.json({ error: "Cart is empty" }, { status: 400 });
-    }
-
-    // Verify stock is still available for every item - never trust client-submitted totals
-    for (const item of cart.items) {
-      if (
-        !item.product ||
-        item.product.availability !== "In Stock" ||
-        item.quantity > item.product.quantity
-      ) {
-        return NextResponse.json(
-          {
-            error: `${item.product?.title || "An item"} in your cart is no longer available in that quantity`,
-          },
-          { status: 400 }
-        );
+      if (!cart || cart.user.toString() !== userSession.user.id) {
+        throw Object.assign(new Error("Cart not found"), { status: 404 });
       }
-    }
+      if (cart.items.length === 0) {
+        throw Object.assign(new Error("Cart is empty"), { status: 400 });
+      }
 
-    // Recompute pricing server-side from the cart's own stored prices
-    const subtotal = cart.items.reduce(
-      (sum, item) => sum + item.price * item.quantity,
-      0
-    );
-    const shipping = 0;
-    const total = subtotal + shipping;
+      for (const item of cart.items) {
+        if (!item.product) {
+          throw Object.assign(new Error("A product in your cart no longer exists"), { status: 400 });
+        }
 
-    // Create the order
-    const order = new Order({
-      user: userSession.user.id,
-      items: cart.items.map((item) => ({
-        product: item.product._id,
-        quantity: item.quantity,
-        price: item.price,
-      })),
-      shippingDetails,
-      paymentDetails,
-      subtotal,
-      shipping,
-      total,
-      status: "Pending",
-    });
+        const reservation = stockReservation(item.product._id, item.quantity);
+        const reserved = await Product.findOneAndUpdate(
+          reservation.filter,
+          reservation.update,
+          { new: true, session: transaction }
+        );
+        if (!reserved) {
+          throw Object.assign(
+            new Error(`${item.product.title || "An item"} is no longer available in that quantity`),
+            { status: 409 }
+          );
+        }
+        if (reserved.quantity === 0) {
+          await Product.updateOne(
+            { _id: reserved._id },
+            { $set: { availability: "Out of Stock" } },
+            { session: transaction }
+          );
+        }
+      }
 
-    await order.save();
-
-    // Decrement stock for each purchased item
-    for (const item of cart.items) {
-      const remaining = Math.max(item.product.quantity - item.quantity, 0);
-      await Product.findByIdAndUpdate(item.product._id, {
-        quantity: remaining,
-        availability: remaining <= 0 ? "Out of Stock" : "In Stock",
+      const orderItems = buildOrderItems(cart.items);
+      const subtotal = orderItems.reduce(
+        (sum, item) => sum + item.price * item.quantity,
+        0
+      );
+      const shipping = 0;
+      order = new Order({
+        user: userSession.user.id,
+        items: orderItems,
+        shippingDetails,
+        paymentDetails,
+        subtotal,
+        shipping,
+        total: subtotal + shipping,
+        status: "Pending",
       });
-    }
+      await order.save({ session: transaction });
 
-    // Clear the cart by removing all items
-    cart.items = [];
-    await cart.save();
+      cart.items = [];
+      await cart.save({ session: transaction });
+    });
 
     await order.populate("items.product");
 
@@ -190,7 +189,12 @@ export async function POST(request) {
     );
   } catch (error) {
     console.error("Error creating order:", error);
-    return NextResponse.json({ error: "Failed to create order" }, { status: 500 });
+    return NextResponse.json(
+      { error: error.status ? error.message : "Failed to create order" },
+      { status: error.status || 500 }
+    );
+  } finally {
+    await transaction?.endSession();
   }
 }
 

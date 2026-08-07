@@ -3,6 +3,7 @@ import { dbConnect } from "@/service/mongo";
 import { User } from "@/models/user-model";
 import crypto from "crypto";
 import { rateLimit, clientIp } from "@/service/rate-limit";
+import { hashResetToken } from "@/lib/password-reset-token";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 const GENERIC_RESPONSE = { success: true, message: "If that email is registered, we've sent a password reset link." };
@@ -39,7 +40,7 @@ export const POST = async (req) => {
     const resetTokenExpires = Date.now() + 60 * 60 * 1000; // 1 hour from now
 
     // Save the token and expiration to the user's record
-    user.resetPasswordToken = resetToken;
+    user.resetPasswordToken = hashResetToken(resetToken);
     user.resetPasswordExpires = resetTokenExpires;
     await user.save();
 
