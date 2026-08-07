@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unescaped-entities */
 "use client";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import Link from "next/link";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -8,9 +8,11 @@ import { getCallbackUrl } from "@/lib/callback-url";
 import { toast } from "react-toastify";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { login } from "@/actions/auth-utils";
+import { refreshSessionAndNavigate } from "@/lib/login-session";
 
 const LoginPage = () => {
   const router = useRouter();
+  const { update } = useSession();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
@@ -32,10 +34,11 @@ const LoginPage = () => {
           draggable: true,
           progress: undefined,
         });
-        setTimeout(() => {
-          router.push(getCallbackUrl());
-          router.refresh();
-        }, 2000);
+        await refreshSessionAndNavigate({
+          update,
+          router,
+          target: getCallbackUrl(),
+        });
       } 
     } catch (error) {
       console.error("Unexpected error during login:", error);
