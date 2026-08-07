@@ -4,7 +4,7 @@ import Image from "next/image";
 
 const Banner = () => {
   return (
-    <div className="relative py-16 md:py-36 px-4">
+    <section className="relative px-4 py-16 md:flex md:min-h-[calc(100dvh-9rem)] md:items-center md:py-12">
       <Image
         src="/images/banner-bg.jpg"
         alt=""
@@ -28,7 +28,7 @@ const Banner = () => {
           </Link>
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 
