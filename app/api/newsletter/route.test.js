@@ -7,7 +7,7 @@ vi.mock("@/service/mongo", () => ({
 vi.mock("@/models/newsletter-model", () => ({
   Newsletter: {
     findOne: vi.fn(),
-    findOneAndDelete: vi.fn(),
+    deleteOne: vi.fn(),
     create: vi.fn(),
   },
 }));
@@ -58,25 +58,35 @@ describe("DELETE /api/newsletter", () => {
   beforeEach(() => vi.clearAllMocks());
 
   it("rejects an invalid email", async () => {
-    const res = await DELETE(req({ email: "bad" }));
+    const res = await DELETE(req({ email: "bad", token: "token" }));
     const data = await res.json();
     expect(res.status).toBe(400);
     expect(data.success).toBe(false);
   });
 
-  it("404s when the email isn't subscribed", async () => {
-    Newsletter.findOneAndDelete.mockResolvedValue(null);
-    const res = await DELETE(req({ email: "a@b.com" }));
+  it("rejects a token that does not match a subscriber", async () => {
+    Newsletter.findOne.mockResolvedValue({
+      _id: "subscriber-id",
+      email: "a@b.com",
+      unsubscribeToken: "different-token",
+    });
+    const res = await DELETE(req({ email: "a@b.com", token: "wrong-token" }));
     const data = await res.json();
-    expect(res.status).toBe(404);
+    expect(res.status).toBe(401);
     expect(data.success).toBe(false);
+    expect(Newsletter.deleteOne).not.toHaveBeenCalled();
   });
 
   it("unsubscribes an existing email", async () => {
-    Newsletter.findOneAndDelete.mockResolvedValue({ email: "a@b.com" });
-    const res = await DELETE(req({ email: "a@b.com" }));
+    Newsletter.findOne.mockResolvedValue({
+      _id: "subscriber-id",
+      email: "a@b.com",
+      unsubscribeToken: "valid-token",
+    });
+    const res = await DELETE(req({ email: "a@b.com", token: "valid-token" }));
     const data = await res.json();
     expect(res.status).toBe(200);
     expect(data.success).toBe(true);
+    expect(Newsletter.deleteOne).toHaveBeenCalledWith({ _id: "subscriber-id" });
   });
 });

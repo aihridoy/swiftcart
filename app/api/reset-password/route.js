@@ -2,6 +2,7 @@ import { dbConnect } from "@/service/mongo";
 import { User } from "@/models/user-model";
 import bcrypt from "bcryptjs";
 import { rateLimit, clientIp } from "@/service/rate-limit";
+import { hashResetToken } from "@/lib/password-reset-token";
 
 export const POST = async (req) => {
   try {
@@ -28,7 +29,7 @@ export const POST = async (req) => {
     await dbConnect();
 
     const user = await User.findOne({
-      resetPasswordToken: token,
+      resetPasswordToken: hashResetToken(token),
       resetPasswordExpires: { $gt: Date.now() }, // Check if the token hasn't expired
     });
 

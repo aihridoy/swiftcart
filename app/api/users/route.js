@@ -4,6 +4,8 @@ import { User } from "@/models/user-model";
 import { dbConnect } from "@/service/mongo";
 import { session } from "@/actions/auth-utils";
 
+export const dynamic = "force-dynamic";
+
 export async function GET() {
   try {
     const userSession = await session();
