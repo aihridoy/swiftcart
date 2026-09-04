@@ -1,7 +1,7 @@
 /**
  * Seeds (or repairs) the two public demo accounts.
  *
- *   node --env-file=.env.local scripts/seed-demo.js
+ *   npm run seed:demo
  *
  * Idempotent: run it as often as you like. It upserts by email, always resets
  * the password to the published one, and always re-asserts role and isDemo, so
@@ -28,7 +28,7 @@ async function main() {
   const uri = process.env.MONGODB_CONNECTION_STRING;
   if (!uri) {
     console.error("MONGODB_CONNECTION_STRING is not set.");
-    console.error("Try: node --env-file=.env.local scripts/seed-demo.js");
+    console.error("Run this through `npm run seed:demo`, which loads .env and .env.local.");
     process.exit(1);
   }
 
