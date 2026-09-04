@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "test": "vitest run",
-    "seed:demo": "node --env-file-if-exists=.env.local scripts/seed-demo.js"
+    "seed:demo": "node --env-file-if-exists=.env --env-file-if-exists=.env.local scripts/seed-demo.js"
   },
   "dependencies": {
     "@auth/mongodb-adapter": "^3.8.0",
