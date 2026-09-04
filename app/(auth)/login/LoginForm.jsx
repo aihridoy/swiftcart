@@ -9,12 +9,40 @@ import { toast } from "react-toastify";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { login } from "@/actions/auth-utils";
 import { refreshSessionAndNavigate } from "@/lib/login-session";
+import { DEMO_ADMIN_EMAIL, DEMO_USER_EMAIL, DEMO_PASSWORD } from "@/lib/demo-account";
 
 const LoginPage = () => {
   const router = useRouter();
   const { update } = useSession();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [demoLoading, setDemoLoading] = useState(null);
+
+  // One click instead of copying credentials out of the page. Goes through the
+  // same server action as a normal sign-in, so nothing about the auth path is
+  // special-cased for the demo.
+  const signInAsDemo = async (email, label) => {
+    setDemoLoading(label);
+    const formData = new FormData();
+    formData.append("email", email);
+    formData.append("password", DEMO_PASSWORD);
+    try {
+      const result = await login(formData);
+      if (result) {
+        toast.success(`Signed in as ${label}. Redirecting...`);
+        await refreshSessionAndNavigate({
+          update,
+          router,
+          target: email === DEMO_ADMIN_EMAIL ? "/dashboard" : getCallbackUrl(),
+        });
+      }
+    } catch (error) {
+      console.error("Demo sign-in failed:", error);
+      toast.error("Demo sign-in is unavailable right now. Please try again.");
+    } finally {
+      setDemoLoading(null);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -147,6 +175,32 @@ const LoginPage = () => {
       <div className="w-full max-w-lg mx-auto shadow px-6 py-7 rounded bg-white">
         <h2 className="text-2xl uppercase font-medium mb-1 text-center">Login</h2>
         <p className="text-gray-600 mb-6 text-sm text-center">Welcome back, customer</p>
+
+        <div className="mb-6 rounded border border-dashed border-gray-300 bg-gray-50 p-4">
+          <p className="text-sm font-medium text-gray-700">Just looking around?</p>
+          <p className="mt-1 text-xs text-gray-500">
+            Sign in with a demo account. The admin is read-only, so nothing you
+            click will change anyone&apos;s data.
+          </p>
+          <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
+            <button
+              type="button"
+              onClick={() => signInAsDemo(DEMO_ADMIN_EMAIL, "demo admin")}
+              disabled={demoLoading !== null || isSubmitting}
+              className="rounded border border-primary px-4 py-2 text-sm font-medium text-primary transition hover:bg-primary hover:text-white disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {demoLoading === "demo admin" ? "Signing in..." : "Demo admin (read-only)"}
+            </button>
+            <button
+              type="button"
+              onClick={() => signInAsDemo(DEMO_USER_EMAIL, "demo shopper")}
+              disabled={demoLoading !== null || isSubmitting}
+              className="rounded border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {demoLoading === "demo shopper" ? "Signing in..." : "Demo shopper"}
+            </button>
+          </div>
+        </div>
 
         <form onSubmit={handleSubmit} autoComplete="off">
           <div className="space-y-4">

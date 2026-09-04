@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { session } from "@/actions/auth-utils";
+import { guardDemoWrite } from "@/lib/admin-guard";
+import { DEMO_REVIEW_BLOCKED } from "@/lib/demo-account";
 import { Review } from "@/models/review-model";
 import { dbConnect } from "@/service/mongo";
 import { Product } from "@/models/product-model";
@@ -11,6 +13,11 @@ export async function POST(request) {
     if (!userSession) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+
+    // Reviews render publicly on product pages, so the shared demo account is
+    // not allowed to post them. Every other shopper action stays available.
+    const demoDenied = guardDemoWrite(userSession, DEMO_REVIEW_BLOCKED);
+    if (demoDenied) return demoDenied;
 
     // Parse request body
     const { productId, review, rating } = await request.json();
