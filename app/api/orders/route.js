@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
 import { session } from "@/actions/auth-utils";
+import { guardAdmin } from "@/lib/admin-guard";
 import { dbConnect } from "@/service/mongo";
 import { Order } from "@/models/order-model";
 import { Cart } from "@/models/cart-model";
@@ -263,9 +264,8 @@ export async function GET(request) {
 export async function PATCH(request) {
   try {
     const userSession = await session();
-    if (!userSession || !userSession.user || userSession.user.role !== "admin") {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const denied = guardAdmin(userSession, { write: true });
+    if (denied) return denied;
 
     const body = await request.json();
     const { orderId, status } = body;

@@ -10,6 +10,7 @@ export const authConfig = {
     async session({ session, token }) {
       session.user.id = token.sub;
       session.user.role = token.role;
+      session.user.isDemo = token.isDemo === true;
       if (token.picture) {
         session.user.image = token.picture;
       }
@@ -19,6 +20,7 @@ export const authConfig = {
       if (user) {
         token.sub = user.id;
         token.role = user.role ?? "user";
+        token.isDemo = user.isDemo === true;
         if (user.image) {
           token.picture = user.image;
         }

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { dbConnect } from "@/service/mongo";
 import { Product } from "@/models/product-model";
 import { session } from "@/actions/auth-utils";
+import { guardAdmin } from "@/lib/admin-guard";
 
 export async function POST(req) {
   await dbConnect();
@@ -10,9 +11,8 @@ export async function POST(req) {
     const body = await req.json(); 
     
     const userSession = await session();
-    if (!userSession || !userSession.user || userSession.user.role !== "admin") {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const denied = guardAdmin(userSession, { write: true });
+    if (denied) return denied;
 
     const { title, brand, category, sku, price, description, mainImage, quantity } = body;
     if (!title || !brand || !category || !sku || !price || !description || !mainImage || !quantity) {

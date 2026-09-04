@@ -12,6 +12,32 @@ SwiftCart is a cutting-edge e-commerce platform meticulously designed for home a
 
 *Experience the future of home decor shopping with our fully-featured e-commerce platform!*
 
+### Demo accounts
+
+The dashboards are the most interesting part of the project and they sit behind
+a signup, so two seeded accounts are available from the login page — one click,
+no registration.
+
+| Account | Email | Password | What it can do |
+| --- | --- | --- | --- |
+| Demo admin | `admin@demo.swiftcart` | `demo1234` | Read every dashboard. Creating, editing and deleting are refused. |
+| Demo shopper | `shopper@demo.swiftcart` | `demo1234` | Shop normally — cart, wishlist, checkout. Cannot post reviews. |
+
+Both restrictions are enforced server-side in `lib/admin-guard.js`, not by
+hiding buttons, so a demo token cannot mutate anything by calling the API
+directly. Customer names and email addresses are masked in the admin users list
+for demo sessions (`lib/demo-account.js`), so a public login never exposes a
+real person's details.
+
+To create or repair the accounts:
+
+```bash
+npm run seed:demo
+```
+
+Idempotent — it upserts by email and re-asserts the password, role and demo
+flag each run.
+
 ---
 
 ## 📖 Overview

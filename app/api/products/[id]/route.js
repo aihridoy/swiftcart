@@ -3,6 +3,7 @@ import { Product } from "@/models/product-model";
 import { dbConnect } from "@/service/mongo";
 import { NextResponse } from "next/server";
 import { session } from "@/actions/auth-utils";
+import { guardAdmin } from "@/lib/admin-guard";
 
 export async function GET(req, { params }) {
   await dbConnect();
@@ -35,9 +36,8 @@ export async function GET(req, { params }) {
 export async function DELETE(req, { params }) {
   try {
     const userSession = await session();
-    if (!userSession || !userSession.user || userSession.user.role !== "admin") {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const denied = guardAdmin(userSession, { write: true });
+    if (denied) return denied;
 
     await dbConnect();
 
@@ -66,9 +66,8 @@ export async function DELETE(req, { params }) {
 export async function PUT(req, { params }) {
   try {
     const userSession = await session();
-    if (!userSession || !userSession.user || userSession.user.role !== "admin") {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const denied = guardAdmin(userSession, { write: true });
+    if (denied) return denied;
 
     await dbConnect();
 
